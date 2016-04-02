@@ -1,0 +1,2 @@
+
+& "$PSScriptRoot\..\..\Restore.cmd"
