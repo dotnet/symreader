@@ -1,6 +1,6 @@
 # Microsoft.DiaSymReader
 
-Provides managed definitions for COM interfaces exposed by DiaSymReader APIs ([ISymUnmanagedReader](https://msdn.microsoft.com/en-us/library/isymunmanagedreader.aspx), [ISymUnmanagedBinder](https://msdn.microsoft.com/en-us/library/isymunmanagedbinder.aspx), etc.) for reading Windows and Portable PDBs.
+Provides managed definitions for COM interfaces exposed by DiaSymReader APIs ([ISymUnmanagedReader](https://msdn.microsoft.com/en-us/library/isymunmanagedreader.aspx), [ISymUnmanagedBinder](https://msdn.microsoft.com/en-us/library/isymunmanagedbinder.aspx), etc.) for reading Windows and [Portable PDBs](https://github.com/dotnet/core/blob/master/Documentation/diagnostics/portable_pdb.md).
 
 The implementation of these interfaces for Windows PDBs is provided by [Microsoft.DiaSymReader.Native](https://www.nuget.org/packages/Microsoft.DiaSymReader.Native) package. The implementation for Portable PDBs is provided by [Microsoft.DiaSymReader.PortablePdb](https://www.nuget.org/packages/Microsoft.DiaSymReader.PortablePdb) package. 
 
