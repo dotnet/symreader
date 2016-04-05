@@ -17,7 +17,8 @@
 
   <!-- settings for strong name signing -->
   <PropertyGroup>
-    <RunningInMicroBuild Condition="Exists('$(TF_BUILD_BUILDDIRECTORY)\MicroBuild\MicroBuild.Signing.dll')">true</RunningInMicroBuild>
+    <MicroBuildSigningLibrary>$(Build.StagingDirectory)\MicroBuild\Plugins\MicroBuild.Signing.dll</MicroBuildSigningLibrary>
+    <RunningInMicroBuild Condition="Exists('$(MicroBuildSigningLibrary)')">true</RunningInMicroBuild>
     <ShouldSignBuild Condition="'$(RealSignBuild)' == 'true' OR ('$(RunningInMicroBuild)' == 'true' AND '$(SignType)' == 'real')">true</ShouldSignBuild>
   </PropertyGroup>
 
