@@ -17,6 +17,13 @@
     -->
     <BaseNuGetRuntimeIdentifier Condition="'$(OS)' == 'Windows_NT'">win7</BaseNuGetRuntimeIdentifier>
   </PropertyGroup>
+  
+    <!-- settings for strong name signing -->
+  <PropertyGroup>
+    <MicroBuildSigningLibrary>$(BUILD_ARTIFACTSTAGINGDIRECTORY)\MicroBuild\Plugins\MicroBuild.Plugins.Signing.1.0.174\build\MicroBuild.Signing.dll</MicroBuildSigningLibrary>
+    <RunningInMicroBuild Condition="Exists('$(MicroBuildSigningLibrary)')">true</RunningInMicroBuild>
+    <ShouldSignBuild Condition="'$(RealSignBuild)' == 'true' OR ('$(RunningInMicroBuild)' == 'true' AND '$(SignType)' == 'real')">true</ShouldSignBuild>
+  </PropertyGroup>
 
   <!-- Import the global NuGet packages -->
   <PropertyGroup>
