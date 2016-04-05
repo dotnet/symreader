@@ -9,7 +9,7 @@
     </AssembliesToSign>
   </ItemGroup>
 
-  <UsingTask TaskName="SignFiles" AssemblyFile="$(TF_BUILD_BUILDDIRECTORY)\MicroBuild\MicroBuild.Signing.dll"/>
+  <UsingTask TaskName="SignFiles" AssemblyFile="$(MicroBuildSigningLibrary)"/>
 
   <Target Name="Build">
     <ItemGroup>
