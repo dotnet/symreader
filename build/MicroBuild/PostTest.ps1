@@ -22,7 +22,7 @@ try
 		Write-Host "  Uploading '$nupkg'"
 		
 	    & "$NuGetExePath" push "$nupkg" `
-			-Source ("https://www.myget.org/F/{0}/api/v2/package -f $FeedName)`
+			-Source ("https://www.myget.org/F/{0}/api/v2/package" -f $FeedName)`
 			-ApiKey $apiKey `
 			-NonInteractive `
 			-Verbosity quiet
