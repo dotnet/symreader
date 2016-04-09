@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <Choose>
-    <When Condition="$(BuildNumber) == ''">
+    <When Condition="$(BUILD_BUILDNUMBER) == ''">
       <PropertyGroup>
         <NuGetVersionSuffix>rc2</NuGetVersionSuffix>
         <BuildVersion>$(AssemblyVersion).0</BuildVersion>
