@@ -14,8 +14,9 @@
 
     <Otherwise>
       <PropertyGroup>
-        <NuGetVersionSuffix>rc2-$(BuildNumber.Split('.')[0])-$(BuildNumber.Split('.')[1].PadLeft(2,'0'))</NuGetVersionSuffix>
-        <BuildVersion>$(AssemblyVersion).$(BuildNumber.Split('.')[0])</BuildVersion>
+        <ShortBuildNumber>$(BuildNumber.Substring(3))</ShortBuildNumber>
+        <NuGetVersionSuffix>rc2-$(ShortBuildNumber.Split('.')[0])-$(ShortBuildNumber.Split('.')[1].PadLeft(2,'0'))</NuGetVersionSuffix>
+        <BuildVersion>$(AssemblyVersion).$(ShortBuildNumber.Split('.')[0])</BuildVersion>
       </PropertyGroup>
     </Otherwise>
   </Choose>
