@@ -5,7 +5,7 @@
 
   <!-- settings for strong name signing -->
   <ItemGroup>
-    <MicroBuildSigningLibrariesV2 Include="$(BUILD_ARTIFACTSTAGINGDIRECTORY)\MicroBuild\Plugins\MicroBuild.Plugins.Signing.1.0.*\build\MicroBuild.Signing.dll" />
+    <MicroBuildSigningLibrariesV2 Include="$(BUILD_ARTIFACTSTAGINGDIRECTORY)\MicroBuild\Plugins\MicroBuild.Plugins.Signing.*\build\MicroBuild.Signing.dll" />
   </ItemGroup>
   
   <PropertyGroup>
