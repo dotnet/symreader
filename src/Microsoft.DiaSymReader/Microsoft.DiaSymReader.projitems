@@ -9,6 +9,19 @@
     <Import_RootNamespace>Microsoft.DiaSymReader</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\InteropUtilities.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ComStreamWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\SymUnmanagedAsyncStepInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\SymUnmanagedExtensions.Namespace.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\SymUnmanagedExtensions.Constant.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\SymUnmanagedExtensions.Variable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\SymUnmanagedExtensions.Scope.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\SymUnmanagedExtensions.Document.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\SymUnmanagedExtensions.Method.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\SymUnmanagedExtensions.Reader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\SymUnmanagedExtensions.Binder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\SymUnmanagedSequencePoint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\SymUnmanagedStreamFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISymUnmanagedBinder3.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IMetadataImportProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISymUnmanagedBinder4.cs" />
@@ -29,6 +42,5 @@
     <Compile Include="$(MSBuildThisFileDirectory)ISymUnmanagedScope.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISymUnmanagedScope2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISymUnmanagedVariable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SymUnmanagedSequencePoint.cs" />
   </ItemGroup>
 </Project>
