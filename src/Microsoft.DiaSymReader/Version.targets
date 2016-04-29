@@ -7,7 +7,7 @@
   <Choose>
     <When Condition="$(BUILD_BUILDNUMBER) == ''">
       <PropertyGroup>
-        <NuGetVersionSuffix>rc2</NuGetVersionSuffix>
+        <NuGetVersionSuffix>rc3</NuGetVersionSuffix>
         <BuildVersion>$(AssemblyVersion).0</BuildVersion>
       </PropertyGroup>
     </When>
@@ -15,7 +15,7 @@
     <Otherwise>
       <PropertyGroup>
         <ShortBuildNumber>$(BUILD_BUILDNUMBER.Substring(3))</ShortBuildNumber>
-        <NuGetVersionSuffix>rc2-$(ShortBuildNumber.Split('.')[0])-$(ShortBuildNumber.Split('.')[1].PadLeft(2,'0'))</NuGetVersionSuffix>
+        <NuGetVersionSuffix>rc3-$(ShortBuildNumber.Split('.')[0])-$(ShortBuildNumber.Split('.')[1].PadLeft(2,'0'))</NuGetVersionSuffix>
         <BuildVersion>$(AssemblyVersion).$(ShortBuildNumber.Split('.')[0])</BuildVersion>
       </PropertyGroup>
     </Otherwise>
