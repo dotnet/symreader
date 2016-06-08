@@ -13,6 +13,7 @@
     <RootNamespace>Microsoft.DiaSymReader</RootNamespace>
     <AssemblyName>Microsoft.DiaSymReader</AssemblyName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ServiceablePackage>true</ServiceablePackage>
     <SolutionDir Condition="'$(SolutionDir)' == '' OR '$(SolutionDir)' == '*Undefined*'">..\..\..\</SolutionDir>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
