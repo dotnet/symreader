@@ -21,6 +21,7 @@
     <projectUrl>http://msdn.com/roslyn</projectUrl>
     <releaseNotes>Preview of DiaSymReader interop library</releaseNotes>
     <tags>DiaSymReader ISymUnmanagedReader PDB COM interop debugging</tags>
+    <serviceable>true</serviceable>
   </metadata>
   <files>
     <file src="Portable\Microsoft.DiaSymReader.dll" target="lib\netstandard1.1" />
