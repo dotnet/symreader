@@ -10,7 +10,7 @@
   </ItemGroup>
   <Target Name="Build" Inputs="@(NuSpec)" Outputs="@(NuSpec-&gt;NuGet\$(NuGetVersionType)\%(Identity).$(NuGetVersion).nupkg">
     <PropertyGroup>
-      <NuGetArguments>-prop currentVersion="$(NuGetVersion)" coreFXVersionSuffix="$(CoreFXVersionSuffix)"</NuGetArguments>
+      <NuGetArguments>-prop currentVersion="$(NuGetVersion)" -prop coreFXVersionSuffix="$(CoreFXVersionSuffix)"</NuGetArguments>
       <NuGetOutDir>$(OutDir)NuGet\$(NuGetVersionType)</NuGetOutDir>
     </PropertyGroup>
     <!-- clean our output directory -->
