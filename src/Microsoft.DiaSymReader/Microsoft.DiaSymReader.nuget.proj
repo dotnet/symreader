@@ -3,13 +3,14 @@
   <ImportGroup Label="Settings">
     <Import Project="Version.targets" />
     <Import Project="..\..\build\Targets\Settings.targets" />
+    <Import Project="..\..\build\Targets\VSL.Versions.targets" />
   </ImportGroup>
   <ItemGroup Label="Redist">
     <NuSpec Include="Microsoft.DiaSymReader.nuspec" />
   </ItemGroup>
   <Target Name="Build" Inputs="@(NuSpec)" Outputs="@(NuSpec-&gt;NuGet\$(NuGetVersionType)\%(Identity).$(NuGetVersion).nupkg">
     <PropertyGroup>
-      <NuGetArguments>-prop currentVersion="$(NuGetVersion)"</NuGetArguments>
+      <NuGetArguments>-prop currentVersion="$(NuGetVersion)" coreFXVersionSuffix="$(CoreFXVersionSuffix)"</NuGetArguments>
       <NuGetOutDir>$(OutDir)NuGet\$(NuGetVersionType)</NuGetOutDir>
     </PropertyGroup>
     <!-- clean our output directory -->
