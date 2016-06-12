@@ -22,7 +22,7 @@
   </Choose>
   
   <Choose>
-    <When Condition="$(IsReleaseVersion)" >
+    <When Condition="'$(IsReleaseVersion)' == 'true'" >
       <PropertyGroup>
         <NuGetVersion>$(AssemblyVersion)</NuGetVersion>
       </PropertyGroup>
