@@ -8,10 +8,10 @@
   <ItemGroup Label="Redist">
     <NuSpec Include="Microsoft.DiaSymReader.nuspec" />
   </ItemGroup>
-  <Target Name="Build" Inputs="@(NuSpec)" Outputs="@(NuSpec-&gt;NuGet\$(NuGetVersionType)\%(Identity).$(NuGetVersion).nupkg">
+  <Target Name="Build" Inputs="@(NuSpec)" Outputs="@(NuSpec-&gt;NuGet\%(Identity).$(NuGetVersion).nupkg">
     <PropertyGroup>
       <NuGetArguments>-prop currentVersion="$(NuGetVersion)" -prop coreFXVersionSuffix="$(CoreFXVersionSuffix)"</NuGetArguments>
-      <NuGetOutDir>$(OutDir)NuGet\$(NuGetVersionType)</NuGetOutDir>
+      <NuGetOutDir>$(OutDir)NuGet</NuGetOutDir>
     </PropertyGroup>
     <!-- clean our output directory -->
     <MakeDir Directories="$(NuGetOutDir)" Condition="!Exists('$(NuGetOutDir)')" />

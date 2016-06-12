@@ -25,14 +25,12 @@
     <When Condition="$(IsReleaseVersion)" >
       <PropertyGroup>
         <NuGetVersion>$(AssemblyVersion)</NuGetVersion>
-        <NuGetVersionType>Release</NuGetVersionType>
       </PropertyGroup>
     </When>
     
     <Otherwise>
       <PropertyGroup>
         <NuGetVersion>$(AssemblyVersion)-$(NuGetVersionSuffix)</NuGetVersion>
-        <NuGetVersionType>PerBuildPreRelease</NuGetVersionType>
       </PropertyGroup>
     </Otherwise>
   </Choose>
