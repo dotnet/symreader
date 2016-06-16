@@ -1,7 +1,0 @@
-<!--
-  Lists dotnet repos containing packages this repo depends on.
-  The latest and LKG versions of these dependencies are maintained on github.com/dotnet/versions.
--->
-<dependencies>
-  <repo name="corefx" channel="master" commonVersionSuffix="CoreFXVersionSuffix"/>
-</dependencies>
