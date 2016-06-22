@@ -4,8 +4,7 @@
   <PropertyGroup>
     <TargetNetFX20>true</TargetNetFX20>
   </PropertyGroup>
-  <ImportGroup Label="Settings">
-    <Import Project="..\Version.targets" />
+  <ImportGroup>
     <Import Project="..\..\..\build\Targets\Settings.targets" />
   </ImportGroup>
   <PropertyGroup>
@@ -31,7 +30,7 @@
     <Compile Include="ExtensionAttribute.cs" />
   </ItemGroup>
   <Import Project="..\Microsoft.DiaSymReader.projitems" Label="Shared" />
-  <ImportGroup Label="Targets">
+  <ImportGroup>
     <Import Project="..\..\..\build\Targets\VSL.Imports.targets" />
   </ImportGroup>
 </Project>

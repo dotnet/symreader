@@ -1,6 +1,0 @@
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <!-- Pre-release version of CoreFX dependencies (empty for release). Used e.g. in used in .nuspec files. -->
-    <CoreFXVersionSuffix>-rc4-24211-01</CoreFXVersionSuffix>
-  </PropertyGroup>
-</Project>
