@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup>
-    <Import Project="..\Targets\Settings.targets" />
-    <Import Project="..\Targets\Signing.targets" />
+    <Import Project="..\Targets\Dependencies.props"/>
+    <Import Project="..\Targets\Layout.props" />
+    <Import Project="..\Toolset\MicroBuild.props" />
   </ImportGroup>
-  
-  <ItemGroup>    
-    <AssembliesToSign Include="$(OutDir)NetFX20\Microsoft.DiaSymReader.dll">
-        <AuthenticodeCertificateName>MicrosoftSHA1Win8WinBlue</AuthenticodeCertificateName>
+
+  <ItemGroup>
+    <AssembliesToSign Include="$(OutDirBase)Microsoft.DiaSymReader\NetFX20\Microsoft.DiaSymReader.dll">
+      <AuthenticodeCertificateName>MicrosoftSHA1Win8WinBlue</AuthenticodeCertificateName>
     </AssembliesToSign>
-    <AssembliesToSign Include="$(OutDir)Portable\Microsoft.DiaSymReader.dll">
-        <AuthenticodeCertificateName>WindowsPhone623</AuthenticodeCertificateName>
+    <AssembliesToSign Include="$(OutDirBase)Microsoft.DiaSymReader\Portable\Microsoft.DiaSymReader.dll">
+      <AuthenticodeCertificateName>WindowsPhone623</AuthenticodeCertificateName>
     </AssembliesToSign>
   </ItemGroup>
-
-  <UsingTask TaskName="SignFiles" AssemblyFile="$(MicroBuildSigningLibrary)"/>
 
   <Target Name="Build">
     <ItemGroup>
@@ -25,10 +24,9 @@
     </ItemGroup>
 
     <Message Text="Signing using authenticode certificate '%(AssembliesToSign.AuthenticodeCertificateName)' for @(AssembliesToSign)"/>
-    <Message Text="OutDir: $(OutDir); Inter: $(MSBuildProjectDirectory)\obj\Signing; $(SignType)"/>
     <SignFiles Files="@(AssembliesToSign)"
-               BinariesDirectory="$(OutDir)"
-               IntermediatesDirectory="$(MSBuildProjectDirectory)\obj\Signing"
+               BinariesDirectory="$(OutDirBase)"
+               IntermediatesDirectory="$(IntermediateOutputPath)"
                Type="$(SignType)" />
   </Target>
 </Project>
