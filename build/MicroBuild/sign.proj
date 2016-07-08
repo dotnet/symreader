@@ -7,10 +7,10 @@
   </ImportGroup>
 
   <ItemGroup>
-    <AssembliesToSign Include="$(OutDirBase)Microsoft.DiaSymReader\NetFX20\Microsoft.DiaSymReader.dll">
+    <AssembliesToSign Include="$(OutDirBase)\Microsoft.DiaSymReader\NetFX20\Microsoft.DiaSymReader.dll">
       <AuthenticodeCertificateName>MicrosoftSHA1Win8WinBlue</AuthenticodeCertificateName>
     </AssembliesToSign>
-    <AssembliesToSign Include="$(OutDirBase)Microsoft.DiaSymReader\Portable\Microsoft.DiaSymReader.dll">
+    <AssembliesToSign Include="$(OutDirBase)\Microsoft.DiaSymReader\Portable\Microsoft.DiaSymReader.dll">
       <AuthenticodeCertificateName>WindowsPhone623</AuthenticodeCertificateName>
     </AssembliesToSign>
   </ItemGroup>
