@@ -78,8 +78,11 @@ static addExtendedEmailPublisher(def job) {
 static addBuildSteps(def job, def projectName, def opsysName, def configName, def isPR) {
   def unit32JobName = getJobName(opsysName, configName, 'unit32')
   def unit32FullJobName = Utilities.getFullJobName(projectName, unit32JobName, isPR)
+  
+  def unit64JobName = getJobName(opsysName, configName, 'unit64')
+  def unit64FullJobName = Utilities.getFullJobName(projectName, unit64JobName, isPR)
 
-  def downstreamFullJobNames = "${unit32FullJobName}"
+  def downstreamFullJobNames = "${unit32FullJobName}, ${unit64FullJobName}"
 
   def officialSwitch = ''
 
@@ -142,7 +145,7 @@ set TMP=%TEMP%
 [true, false].each { isPR ->
   ['windows'].each { opsysName ->
     ['debug', 'release'].each { configName ->
-        ['build', 'unit32'].each { testName ->
+        ['build', 'unit32', 'unit64'].each { testName ->
         def projectName = GithubProject
 
         def branchName = GithubBranchName
