@@ -15,11 +15,11 @@
     </dependencies>
     <language>en-US</language>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <version>$currentVersion$</version>
+    <version>$version$</version>
     <authors>Microsoft</authors>
     <licenseUrl>http://go.microsoft.com/fwlink/?LinkId=394369</licenseUrl>
-    <projectUrl>http://msdn.com/roslyn</projectUrl>
-    <releaseNotes>Preview of DiaSymReader interop library</releaseNotes>
+    <projectUrl>https://github.com/dotnet/symreader</projectUrl>
+    <releaseNotes>Microsoft DiaSymReader interop interfaces and utilities</releaseNotes>
     <tags>DiaSymReader ISymUnmanagedReader PDB COM interop debugging</tags>
     <serviceable>true</serviceable>
   </metadata>
