@@ -17,7 +17,7 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <version>$version$</version>
     <authors>Microsoft</authors>
-    <licenseUrl>http://go.microsoft.com/fwlink/?LinkId=394369</licenseUrl>
+    <licenseUrl>http://go.microsoft.com/fwlink/?LinkId=529443</licenseUrl>
     <projectUrl>https://github.com/dotnet/symreader</projectUrl>
     <releaseNotes>Microsoft DiaSymReader interop interfaces and utilities</releaseNotes>
     <tags>DiaSymReader ISymUnmanagedReader PDB COM interop debugging</tags>
