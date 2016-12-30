@@ -76,6 +76,18 @@ namespace Microsoft.DiaSymReader
             return entryPoint;
         }
 
+        public static ISymUnmanagedDocument GetDocument(this ISymUnmanagedReader reader, string name)
+        {
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
+            ISymUnmanagedDocument document;
+            ThrowExceptionForHR(reader.GetDocument(name, default(Guid), default(Guid), default(Guid), out document));
+            return document;
+        }
+
         public static ISymUnmanagedDocument[] GetDocuments(this ISymUnmanagedReader reader)
         {
             if (reader == null)
@@ -100,7 +112,27 @@ namespace Microsoft.DiaSymReader
 
         public static ISymUnmanagedMethod GetMethod(this ISymUnmanagedReader reader, int methodToken)
         {
-            return GetMethodByVersion(reader, methodToken, methodVersion: 1);
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
+            ISymUnmanagedMethod method;
+            int hr = reader.GetMethod(methodToken, out method);
+            ThrowExceptionForHR(hr);
+
+            if (hr < 0)
+            {
+                // method has no symbol info
+                return null;
+            }
+
+            if (method == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            return method;
         }
 
         public static ISymUnmanagedMethod GetMethodByVersion(this ISymUnmanagedReader reader, int methodToken, int methodVersion)
@@ -110,7 +142,7 @@ namespace Microsoft.DiaSymReader
                 throw new ArgumentNullException(nameof(reader));
             }
 
-            ISymUnmanagedMethod method = null;
+            ISymUnmanagedMethod method;
             int hr = reader.GetMethodByVersion(methodToken, methodVersion, out method);
             ThrowExceptionForHR(hr);
 
@@ -126,6 +158,18 @@ namespace Microsoft.DiaSymReader
             }
 
             return method;
+        }
+
+        public static int GetMethodVersion(this ISymUnmanagedReader reader, ISymUnmanagedMethod method)
+        {
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
+            int version;
+            ThrowExceptionForHR(reader.GetMethodVersion(method, out version));
+            return version;
         }
     }
 }

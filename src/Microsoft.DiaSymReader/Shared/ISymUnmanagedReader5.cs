@@ -7,10 +7,10 @@ using System.Runtime.InteropServices.ComTypes;
 namespace Microsoft.DiaSymReader
 {
     [ComImport]
-    [Guid("E65C58B7-2948-434D-8A6D-481740A00C16")]
+    [Guid("6576c987-7e8d-4298-a6e1-6f9783165f07")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [ComVisible(false)]
-    public interface ISymUnmanagedReader4 : ISymUnmanagedReader3
+    public interface ISymUnmanagedReader5 : ISymUnmanagedReader4
     {
         #region ISymUnmanagedReader methods
 
@@ -169,7 +169,7 @@ namespace Microsoft.DiaSymReader
         /// Checkes whether the id stored in the PDB matches the PDB ID stored in the PE/COFF Debug Directory.
         /// </summary>
         [PreserveSig]
-        int MatchesModule(Guid guid, uint stamp, int age, [MarshalAs(UnmanagedType.Bool)]out bool result);
+        new int MatchesModule(Guid guid, uint stamp, int age, [MarshalAs(UnmanagedType.Bool)]out bool result);
 
         /// <summary>
         /// Returns a pointer to Portable Debug Metadata. Only available for Portable PDBs.
@@ -181,11 +181,18 @@ namespace Microsoft.DiaSymReader
         /// Null if the PDB is not portable.
         /// </param>
         /// <param name="size">Size of the metadata block.</param>
+        /// <returns>
+        /// S_OK if the PDB is portable, S_FALSE if it isn't.
+        /// </returns>
+        /// <remarks>
+        /// If the store was updated via <see cref="UpdateSymbolStore(string, IStream)"/> 
+        /// returns the metadata of the latest update.
+        /// </remarks>
         [PreserveSig]
-        unsafe int GetPortableDebugMetadata(out byte* metadata, out int size);
+        new unsafe int GetPortableDebugMetadata(out byte* metadata, out int size);
 
         /// <summary>
-        /// Returns a pointer to Source Server data stored in the PDB (source link data for Portable PDB or srcsvr section for Windows PDB).
+        /// Returns a pointer to Source Server data stored in the PDB.
         /// </summary>
         /// <param name="data">
         /// A pointer to memory where Source Server data start. The memory is owned by the SymReader and 
@@ -194,15 +201,31 @@ namespace Microsoft.DiaSymReader
         /// Null if the PDB doesn't contain Source Server data.
         /// </param>
         /// <param name="size">Size of the data in bytes.</param>
-        /// <remarks>
-        /// This method is a replacement for <see cref="M:ISymUnmanagedSourceServerModule.GetSourceServerData"/>. 
-        /// The reader doesn't implement <see cref="M:ISymUnmanagedSourceServerModule.GetSourceServerData"/> since 
-        /// the format of the returned data is completely different for Portable PDBs, which the callers wouldn't expect.
-        /// The native diasymreader may implement <see cref="GetSourceServerData(out byte*, out int)"/> by simply calling 
-        /// to <see cref="M:ISymUnmanagedSourceServerModule.GetSourceServerData"/>. 
-        /// </remarks>
+        /// <returns>
+        /// S_OK if the PDB contains Source Server data, S_FALSE if it doesn't.
+        /// </returns>
         [PreserveSig]
-        unsafe int GetSourceServerData(out byte* data, out int size);
+        new unsafe int GetSourceServerData(out byte* data, out int size);
+
+        #endregion
+
+        #region ISymUnmanagedReader5 methods
+
+        /// <summary>
+        /// Returns a pointer to Portable Debug Metadata of the specified version (EnC generation). Only available for Portable PDBs.
+        /// </summary>
+        /// <param name="version">
+        /// EnC 1-based version number. Version 1 corresponds to the baseline.
+        /// </param>
+        /// <param name="metadata">
+        /// A pointer to memory where Portable Debug Metadata start. The memory is owned by the SymReader and 
+        /// valid until <see cref="ISymUnmanagedDispose.Destroy"/> is invoked. 
+        /// 
+        /// Null if the PDB is not portable.
+        /// </param>
+        /// <param name="size">Size of the metadata block.</param>
+        [PreserveSig]
+        unsafe int GetPortableDebugMetadataByVersion(int version, out byte* metadata, out int size);
 
         #endregion
     }

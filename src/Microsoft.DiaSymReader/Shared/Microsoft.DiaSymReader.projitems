@@ -22,10 +22,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\SymUnmanagedExtensions.Binder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\SymUnmanagedSequencePoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\SymUnmanagedStreamFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ISymUnmanagedEncUpdate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISymUnmanagedBinder3.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IMetadataImportProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISymUnmanagedBinder4.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISymUnmanagedReader4.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ISymUnmanagedReader5.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SymUnmanagedLineDelta.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SymUnmanagedSearchPolicy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISymEncUnmanagedMethod.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISymUnmanagedAsyncMethod.cs" />
