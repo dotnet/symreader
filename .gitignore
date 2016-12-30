@@ -6,6 +6,7 @@
 *.user
 *.sln.docstates
 .vs/
+*.VC.db
 
 # Build results
 [Aa]rtifacts/
@@ -21,8 +22,8 @@ x64/
 # NuGet restore semaphore
 build/ToolsetPackages/toolsetpackages.semaphore
 
-# NuGet package
-src/Tools/UploadNugetZip/*.zip
+# NuGet
+nuget.exe
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
