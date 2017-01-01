@@ -20,7 +20,7 @@ namespace Microsoft.DiaSymReader
             int offset,
             int bufferLength,
             out int count,
-            [In, Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] char[] name);
+            [In, Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] char[] name);
 
         /// <summary>
         /// Get the Line information associated with <paramref name="offset"/>.
