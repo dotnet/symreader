@@ -10,8 +10,9 @@
   Defines the following properties:
     BuildVersion
     NuGetVersion
+    VsixVersion
     
-  -->  
+  -->
   
   <Choose>
     <When Condition="$(BUILD_BUILDNUMBER) == ''">
@@ -19,6 +20,7 @@
         <NuGetMoniker>dev</NuGetMoniker>
         <NuGetVersionSuffix>dev</NuGetVersionSuffix>
         <BuildVersion>$(AssemblyVersion).0</BuildVersion>
+        <VsixVersion>$(AssemblyVersion).9000000</VsixVersion>
       </PropertyGroup>
     </When>
 
@@ -28,6 +30,7 @@
         <BuildNumberBuildOfTheDayPadded>$(BUILD_BUILDNUMBER.Split('.')[1].PadLeft(2,'0'))</BuildNumberBuildOfTheDayPadded>
         <NuGetVersionSuffix>$(NuGetMoniker)-$(BuildNumberFiveDigitDateStamp)-$(BuildNumberBuildOfTheDayPadded)</NuGetVersionSuffix>
         <BuildVersion>$(AssemblyVersion).$(BuildNumberFiveDigitDateStamp)</BuildVersion>
+        <VsixVersion>$(AssemblyVersion).$(BuildNumberFiveDigitDateStamp)$(BuildNumberBuildOfTheDayPadded)</VsixVersion>
       </PropertyGroup>
     </Otherwise>
   </Choose>
