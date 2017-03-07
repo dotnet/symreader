@@ -13,24 +13,24 @@ namespace Microsoft.DiaSymReader
     public unsafe interface IMetadataImport
     {
         [PreserveSig]
-        void CloseEnum(int enumHandle);
+        void CloseEnum(void* enumHandle);
 
         [PreserveSig]
-        int CountEnum(int enumHandle, out int count);
+        int CountEnum(void* enumHandle, out int count);
 
         [PreserveSig]
-        int ResetEnum(int enumHandle, int position);
+        int ResetEnum(void* enumHandle, int position);
 
         [PreserveSig]
         int EnumTypeDefs(
-            ref int enumHandle,
+            ref void* enumHandle,
             [Out]int* typeDefs, 
             int bufferLength,
             [Out]int* count);
 
         [PreserveSig]
         int EnumInterfaceImpls(
-            ref int enumHandle,
+            ref void* enumHandle,
             int typeDef,
             [Out]int* interfaceImpls,
             int bufferLength,
@@ -38,7 +38,7 @@ namespace Microsoft.DiaSymReader
 
         [PreserveSig]
         int EnumTypeRefs(
-            ref int enumHandle,
+            ref void* enumHandle,
             [Out]int* typeRefs,
             int bufferLength,
             [Out]int* count);
@@ -113,7 +113,7 @@ namespace Microsoft.DiaSymReader
 
         [PreserveSig]
         int EnumMembers(
-            ref int enumHandle,
+            ref void* enumHandle,
             int typeDef,
             [Out]int* memberDefs,
             int bufferLength,
@@ -121,7 +121,7 @@ namespace Microsoft.DiaSymReader
 
         [PreserveSig]
         int EnumMembersWithName(
-            ref int enumHandle, 
+            ref void* enumHandle, 
             int typeDef,
             string name,
             [Out]int* memberDefs,
@@ -130,7 +130,7 @@ namespace Microsoft.DiaSymReader
 
         [PreserveSig]
         int EnumMethods(
-            ref int enumHandle,
+            ref void* enumHandle,
             int typeDef,
             [Out]int* methodDefs,
             int bufferLength,
@@ -138,7 +138,7 @@ namespace Microsoft.DiaSymReader
 
         [PreserveSig]
         int EnumMethodsWithName(
-            ref int enumHandle,
+            ref void* enumHandle,
             int typeDef,
             string name,
             [Out]int* methodDefs,
@@ -147,7 +147,7 @@ namespace Microsoft.DiaSymReader
 
         [PreserveSig]
         int EnumFields(
-            ref int enumHandle,
+            ref void* enumHandle,
             int typeDef,
             [Out]int* fieldDefs,
             int bufferLength,
@@ -155,7 +155,7 @@ namespace Microsoft.DiaSymReader
 
         [PreserveSig]
         int EnumFieldsWithName(
-            ref int enumHandle,
+            ref void* enumHandle,
             int typeDef,
             string name,
             [Out]int* fieldDefs,
@@ -164,7 +164,7 @@ namespace Microsoft.DiaSymReader
 
         [PreserveSig]
         int EnumParams(
-            ref int enumHandle,
+            ref void* enumHandle,
             int methodDef,
             [Out]int* paramDefs,
             int bufferLength,
@@ -172,7 +172,7 @@ namespace Microsoft.DiaSymReader
 
         [PreserveSig]
         int EnumMemberRefs(
-            ref int enumHandle,
+            ref void* enumHandle,
             int parentToken,
             [Out]int* memberRefs,
             int bufferLength,
@@ -180,7 +180,7 @@ namespace Microsoft.DiaSymReader
 
         [PreserveSig]
         int EnumMethodImpls(
-            ref int enumHandle, 
+            ref void* enumHandle, 
             int typeDef,
             [Out]int* implementationTokens, 
             [Out]int* declarationTokens,
@@ -189,7 +189,7 @@ namespace Microsoft.DiaSymReader
 
         [PreserveSig]
         int EnumPermissionSets(
-            ref int enumHandle, 
+            ref void* enumHandle, 
             int token, // TypeDef, MethodDef or Assembly
             uint action, // DeclarativeSecurityAction
             [Out]int* declSecurityTokens,
@@ -253,7 +253,7 @@ namespace Microsoft.DiaSymReader
 
         [PreserveSig]
         int EnumProperties(
-           ref int enumHandle,
+           ref void* enumHandle,
            int typeDef,
            [Out]int* properties,
            int bufferLength,
@@ -261,7 +261,7 @@ namespace Microsoft.DiaSymReader
 
         [PreserveSig]
         uint EnumEvents(
-           ref int enumHandle,
+           ref void* enumHandle,
            int typeDef,
            [Out]int* events,
            int bufferLength,
@@ -285,7 +285,7 @@ namespace Microsoft.DiaSymReader
 
         [PreserveSig]
         int EnumMethodSemantics(
-            ref int enumHandle,
+            ref void* enumHandle,
             int methodDef,
             [Out]int* eventsAndProperties,
             int bufferLength,
@@ -340,7 +340,7 @@ namespace Microsoft.DiaSymReader
 
         [PreserveSig]
         int EnumModuleRefs(
-            ref int enumHandle,
+            ref void* enumHandle,
             [Out]int* moduleRefs,
             int bufferLength,
             [Out]int* count);
@@ -358,7 +358,7 @@ namespace Microsoft.DiaSymReader
 
         [PreserveSig]
         int EnumUnresolvedMethods(
-            ref int enumHandle,
+            ref void* enumHandle,
             [Out]int* methodDefs,
             int bufferLength,
             [Out]int* count);
@@ -381,21 +381,21 @@ namespace Microsoft.DiaSymReader
 
         [PreserveSig]
         int EnumSignatures(
-            ref int enumHandle,
+            ref void* enumHandle,
             [Out]int* signatureTokens,
             int bufferLength,
             [Out]int* count);
 
         [PreserveSig]
         int EnumTypeSpecs(
-            ref int enumHandle,
+            ref void* enumHandle,
             [Out]int* typeSpecs,
             int bufferLength,
             [Out]int* count);
 
         [PreserveSig]
         int EnumUserStrings(
-            ref int enumHandle,
+            ref void* enumHandle,
             [Out]int* userStrings,
             int bufferLength,
             [Out]int* count);
@@ -408,7 +408,7 @@ namespace Microsoft.DiaSymReader
 
         [PreserveSig]
         int EnumCustomAttributes(
-            ref int enumHandle,
+            ref void* enumHandle,
             int parent, 
             int attributeType,
             [Out]int* customAttributes,
