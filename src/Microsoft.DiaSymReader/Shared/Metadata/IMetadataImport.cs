@@ -10,7 +10,7 @@ namespace Microsoft.DiaSymReader
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("7DAC8207-D3AE-4c75-9B67-92801A497D44")]
-    public unsafe interface IMetadataImport
+    internal unsafe interface IMetadataImport
     {
         [PreserveSig]
         void CloseEnum(int enumHandle);
