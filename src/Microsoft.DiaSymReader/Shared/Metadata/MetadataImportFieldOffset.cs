@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 namespace Microsoft.DiaSymReader
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct MetadataImportFieldOffset
+    internal struct MetadataImportFieldOffset
     {
         public int FieldDef;
         public uint Offset;

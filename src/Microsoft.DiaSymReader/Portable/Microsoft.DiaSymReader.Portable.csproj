@@ -22,6 +22,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'" />
   <ItemGroup>
+    <InternalsVisibleTo Include="Microsoft.DiaSymReader.PortablePdb"/>
+    <InternalsVisibleTo Include="Microsoft.DiaSymReader.Converter"/>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="..\Shared\Microsoft.DiaSymReader.projitems" Label="Shared" />
