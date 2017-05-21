@@ -16,6 +16,8 @@ set-strictmode -version 2.0
 $ErrorActionPreference = "Stop"
 
 $RepoRoot = Join-Path $PSScriptRoot "..\"
+$DotNetRoot = Join-Path $RepoRoot ".dotnet"
+$DotNetExe = Join-Path $DotNetRoot "dotnet.exe"
 $ToolsRoot = Join-Path $RepoRoot ".tools"
 $BuildProj = Join-Path $PSScriptRoot "build.proj"
 $DependenciesProps = Join-Path $PSScriptRoot "Versions.props"
@@ -26,6 +28,25 @@ $TempDir = Join-Path (Join-Path $ArtifactsDir $configuration) "tmp"
 function Create-Directory([string[]] $path) {
   if (!(Test-Path -path $path)) {
     New-Item -path $path -force -itemType "Directory" | Out-Null
+  }
+}
+
+function GetDotNetCliVersion {
+  [xml]$xml = Get-Content $DependenciesProps
+  return $xml.Project.PropertyGroup.DotNetCliVersion
+}
+
+function InstallDotNetCli {
+  
+  Create-Directory $DotNetRoot
+  $dotnetCliVersion = GetDotNetCliVersion
+
+  $installScript="https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1"
+  Invoke-WebRequest $installScript -OutFile "$DotNetRoot\dotnet-install.ps1"
+  
+  & "$DotNetRoot\dotnet-install.ps1" -Version $dotnetCliVersion -InstallDir $DotNetRoot
+  if ($lastExitCode -ne 0) {
+    throw "Failed to install dotnet cli (exit code '$lastExitCode')."
   }
 }
 
@@ -77,9 +98,8 @@ if ($ci) {
   $env:TMP = $TempDir
 }
 
-if ($clearCaches) {
-  # clean nuget packages -- necessary to avoid mismatching versions of swix microbuild build plugin and VSSDK on Jenkins
-  Remove-Item (Join-Path $env:USERPROFILE ".nuget\packages") -Recurse -Force
+if ($restore) {
+  InstallDotNetCli
 }
 
 Build
