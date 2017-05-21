@@ -1,3 +1,3 @@
 @echo off
-powershell -ExecutionPolicy ByPass .\build\Scripts\Windows\Build.ps1 %*
+powershell -ExecutionPolicy ByPass %~dp0build\Build.ps1 -restore -build %*
 exit /b %ErrorLevel%
