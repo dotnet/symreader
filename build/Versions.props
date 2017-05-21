@@ -14,15 +14,16 @@
     <MicrosoftNetCompilersVersion>2.0.1</MicrosoftNetCompilersVersion>
     <SourceLinkCreateCommandLineVersion>2.1.0</SourceLinkCreateCommandLineVersion>
     
+    <!-- Tests -->
+    <MicrosoftNETTestSdkVersion>15.0.0-preview-20170125-04</MicrosoftNETTestSdkVersion>
+    <XUnitVersion>2.2.0-beta4-build3444</XUnitVersion>
+    <XUnitRunnerVisualStudioVersion>2.2.0-beta4-build1194</XUnitRunnerVisualStudioVersion>
+    
     <!--
       TODO: dotnet cli currently doesn't support building against net20, using msbuild instead.
       https://github.com/Microsoft/msbuild/issues/1333
      -->
     <VSWhereVersion>1.0.47</VSWhereVersion>
-  
-    <!-- Tests -->
-    <MicrosoftNETTestSdkVersion>15.0.0-preview-20170125-04</MicrosoftNETTestSdkVersion>
-    <XUnitVersion>2.2.0-beta4-build3444</XUnitVersion>
-    <XUnitRunnerVisualStudioVersion>2.2.0-beta4-build1194</XUnitRunnerVisualStudioVersion>
+    <XUnitRunnerConsoleVersion>2.2.0-beta4-build3444</XUnitRunnerConsoleVersion>
   </PropertyGroup>
 </Project>
