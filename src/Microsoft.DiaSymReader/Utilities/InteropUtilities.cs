@@ -13,11 +13,6 @@ namespace Microsoft.DiaSymReader
 
     internal class InteropUtilities
     {
-        internal const int S_OK = 0x0;
-        internal const int S_FALSE = 0x1;
-        internal const int E_FAIL = unchecked((int)0x80004005);
-        internal const int E_NOTIMPL = unchecked((int)0x80004001);
-
         private static readonly IntPtr s_ignoreIErrorInfo = new IntPtr(-1);
 
         internal static T[] NullToEmpty<T>(T[] items) => (items == null) ? EmptyArray<T>.Instance : items;
@@ -26,10 +21,44 @@ namespace Microsoft.DiaSymReader
         {
             // E_FAIL indicates "no info".
             // E_NOTIMPL indicates a lack of ISymUnmanagedReader support (in a particular implementation).
-            if (hr < 0 && hr != E_FAIL && hr != E_NOTIMPL)
+            if (hr < 0 && hr != HResult.E_FAIL && hr != HResult.E_NOTIMPL)
             {
                 Marshal.ThrowExceptionForHR(hr, s_ignoreIErrorInfo);
             }
+        }
+
+        internal unsafe static void CopyQualifiedTypeName(char* qualifiedName, int* qualifiedNameLength, string namespaceStr, string nameStr)
+        {
+            Debug.Assert(namespaceStr != null);
+            Debug.Assert(nameStr != null);
+
+            if (qualifiedNameLength != null)
+            {
+                *qualifiedNameLength = (namespaceStr.Length > 0 ? namespaceStr.Length + 1 : 0) + nameStr.Length;
+            }
+
+            if (qualifiedName != null)
+            {
+                char* dst = qualifiedName;
+
+                if (namespaceStr.Length > 0)
+                {
+                    StringCopy(dst, namespaceStr, namespaceStr.Length, terminator: '.');
+                    dst += namespaceStr.Length + 1;
+                }
+
+                StringCopy(dst, nameStr, nameStr.Length);
+            }
+        }
+
+        internal unsafe static void StringCopy(char* dst, string src, int length, char terminator = '\0')
+        {
+            for (int i = 0; i < length; i++)
+            {
+                dst[i] = src[i]; 
+            }
+
+            dst[length] = terminator;
         }
 
         // PERF: The purpose of all this code duplication is to avoid allocating any display class instances.

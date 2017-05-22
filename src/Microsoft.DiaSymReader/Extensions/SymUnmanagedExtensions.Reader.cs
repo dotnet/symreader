@@ -65,7 +65,7 @@ namespace Microsoft.DiaSymReader
 
             int entryPoint;
             int hr = reader.GetUserEntryPoint(out entryPoint);
-            if (hr == E_FAIL)
+            if (hr == HResult.E_FAIL)
             {
                 // Not all assemblies have entry points
                 // dlls for example...
