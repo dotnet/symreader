@@ -61,7 +61,7 @@ namespace Microsoft.DiaSymReader
                 throw new ArgumentNullException(nameof(metadataProvider));
             }
 
-            return new SymUnmanagedWriter(metadataProvider);
+            return new SymUnmanagedWriterImpl(metadataProvider);
         }
     }
 }
