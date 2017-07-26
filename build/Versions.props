@@ -6,7 +6,7 @@
 
     <!-- Toolset -->
     <RoslynToolsMicrosoftRepoToolsetVersion>1.0.0-alpha30</RoslynToolsMicrosoftRepoToolsetVersion>
-    <DotNetCliVersion>2.0.0-preview3-006770</DotNetCliVersion>
+    <DotNetCliVersion>2.0.0-preview3-006857</DotNetCliVersion>
 
     <!--
       TODO: dotnet cli currently doesn't support building against net20, using msbuild instead.
@@ -17,6 +17,5 @@
     <!-- CoreFX -->
     <SystemCollectionsImmutableVersion>1.3.1</SystemCollectionsImmutableVersion>
     <SystemReflectionMetadataVersion>1.4.2</SystemReflectionMetadataVersion>
-    <SystemValueTupleVersion>4.3.0</SystemValueTupleVersion>
   </PropertyGroup>
 </Project>
