@@ -11,7 +11,7 @@
   </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Microsoft.DiaSymReader.UnitTests" />
-  </ItemGroup>
+  </ItemGroup>  
   
   <!-- Workaround for https://github.com/Microsoft/msbuild/issues/1721. -->
   <Import Project="..\Directory.Build.targets" Condition="'$(TargetFramework)' == ''" />

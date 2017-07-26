@@ -4,14 +4,14 @@
       "certificate": "MicrosoftSHA1Win8WinBlue",
       "strongName": "MsSharedLib72",
       "values": [
-        "Microsoft.DiaSymReader/net20/Microsoft.DiaSymReader.dll"
+        "bin/Microsoft.DiaSymReader/net20/Microsoft.DiaSymReader.dll"
       ]
     },
     {
       "certificate": "WindowsPhone623",
       "strongName": "MsSharedLib72",
       "values": [
-        "Microsoft.DiaSymReader/netstandard1.1/Microsoft.DiaSymReader.dll"
+        "bin/Microsoft.DiaSymReader/netstandard1.1/Microsoft.DiaSymReader.dll"
       ]
     }
   ]

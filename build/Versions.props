@@ -5,30 +5,17 @@
     <PreReleaseVersionLabel>beta1</PreReleaseVersionLabel>
 
     <!-- Toolset -->
-    <RoslynToolsMicrosoftRepoToolsetVersion>1.0.0-alpha14</RoslynToolsMicrosoftRepoToolsetVersion>
-    <RoslynToolsMicrosoftXUnitLoggerVersion>1.0.0-alpha1</RoslynToolsMicrosoftXUnitLoggerVersion>
-    <RoslynToolsMicrosoftSignToolVersion>0.3.2-beta</RoslynToolsMicrosoftSignToolVersion>
+    <RoslynToolsMicrosoftRepoToolsetVersion>1.0.0-alpha30</RoslynToolsMicrosoftRepoToolsetVersion>
     <DotNetCliVersion>2.0.0-preview1-005977</DotNetCliVersion>
-    <MicroBuildCoreVersion>0.2.0</MicroBuildCoreVersion>
-    <MicroBuildPluginsSwixBuildVersion>1.0.101</MicroBuildPluginsSwixBuildVersion>
-    <MicrosoftNetCompilersVersion>2.0.1</MicrosoftNetCompilersVersion>
-    <SourceLinkCreateCommandLineVersion>2.1.0</SourceLinkCreateCommandLineVersion>
-    
-    <!-- Tests -->
-    <MicrosoftNETTestSdkVersion>15.0.0-preview-20170125-04</MicrosoftNETTestSdkVersion>
-    <XUnitVersion>2.2.0-beta4-build3444</XUnitVersion>
-    <XUnitRunnerVisualStudioVersion>2.2.0-beta4-build1194</XUnitRunnerVisualStudioVersion>
-    
+
     <!--
       TODO: dotnet cli currently doesn't support building against net20, using msbuild instead.
       https://github.com/Microsoft/msbuild/issues/1333
      -->
     <VSWhereVersion>1.0.47</VSWhereVersion>
-    <XUnitRunnerConsoleVersion>2.2.0-beta4-build3444</XUnitRunnerConsoleVersion>
 
     <!-- CoreFX -->
     <SystemCollectionsImmutableVersion>1.3.1</SystemCollectionsImmutableVersion>
     <SystemReflectionMetadataVersion>1.4.2</SystemReflectionMetadataVersion>
-    <SystemValueTupleVersion>4.3.0</SystemValueTupleVersion>
   </PropertyGroup>
 </Project>
