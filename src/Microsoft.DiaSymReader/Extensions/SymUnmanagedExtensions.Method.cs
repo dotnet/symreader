@@ -38,8 +38,18 @@ namespace Microsoft.DiaSymReader
                 throw new ArgumentNullException(nameof(method));
             }
 
-            int token;
-            ThrowExceptionForHR(method.GetToken(out token));
+            ThrowExceptionForHR(method.GetToken(out int token));
+            return token;
+        }
+
+        public static int GetLocalSignatureToken(this ISymUnmanagedMethod2 method)
+        {
+            if (method == null)
+            {
+                throw new ArgumentNullException(nameof(method));
+            }
+
+            ThrowExceptionForHR(method.GetLocalSignatureToken(out int token));
             return token;
         }
 
@@ -50,8 +60,7 @@ namespace Microsoft.DiaSymReader
                 throw new ArgumentNullException(nameof(method));
             }
 
-            ISymUnmanagedScope scope;
-            ThrowExceptionForHR(method.GetRootScope(out scope));
+            ThrowExceptionForHR(method.GetRootScope(out var scope));
             return scope;
         }
 
