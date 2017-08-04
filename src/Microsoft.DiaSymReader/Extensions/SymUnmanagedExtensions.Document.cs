@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 using System;
+using System.IO;
+using System.IO.Compression;
 
 namespace Microsoft.DiaSymReader
 {
@@ -75,6 +77,72 @@ namespace Microsoft.DiaSymReader
             Guid result = default(Guid);
             ThrowExceptionForHR(document.GetChecksumAlgorithmId(ref result));
             return result;
+        }
+
+        /// <summary>
+        /// Returns the embedded source for specified document.
+        /// </summary>
+        /// <param name="document">The document to read source of.</param>
+        /// <returns>
+        /// default(<see cref="ArraySegment{T}"/>) if the document doesn't have embedded source, 
+        /// otherwise byte array segment containing the source.
+        /// </returns>
+        public static ArraySegment<byte> GetEmbeddedSource(this ISymUnmanagedDocument document)
+        {
+            if (document == null)
+            {
+                throw new ArgumentNullException(nameof(document));
+            }
+
+            ThrowExceptionForHR(document.GetSourceLength(out int length));
+            if (length == 0)
+            {
+                return default(ArraySegment<byte>);
+            }
+
+            if (length < sizeof(int))
+            {
+                throw new InvalidDataException();
+            }
+
+            var blob = new byte[length];
+            ThrowExceptionForHR(document.GetSourceRange(0, 0, int.MaxValue, int.MaxValue, length, out int bytesRead, blob));
+            if (bytesRead < sizeof(int) || bytesRead > blob.Length)
+            {
+                throw new InvalidDataException();
+            }
+
+            int uncompressedLength = BitConverter.ToInt32(blob, 0);
+            if (uncompressedLength == 0)
+            {
+                return new ArraySegment<byte>(blob, sizeof(int), bytesRead - sizeof(int));
+            }
+
+            var uncompressedBytes = new byte[uncompressedLength];
+
+            var compressed = new MemoryStream(blob, sizeof(int), bytesRead - sizeof(int));
+            using (var decompressor = new DeflateStream(compressed, CompressionMode.Decompress))
+            {
+                int position = 0;
+
+                while (true)
+                {
+                    int bytesDecompressed = decompressor.Read(uncompressedBytes, position, uncompressedBytes.Length - position);
+                    if (bytesDecompressed == 0)
+                    {
+                        break;
+                    }
+
+                    position += bytesDecompressed;
+                }
+
+                if (position != uncompressedBytes.Length  || decompressor.ReadByte() != -1)
+                {
+                    throw new InvalidDataException();
+                }
+
+                return new ArraySegment<byte>(uncompressedBytes);
+            }
         }
     }
 }
