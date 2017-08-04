@@ -3,7 +3,7 @@
 namespace System.Runtime.InteropServices
 {
     [Flags]
-    public enum DllImportSearchPath
+    internal enum DllImportSearchPath
     {
         UseDllDirectoryForDependencies = 0x100,
         ApplicationDirectory = 0x200,
@@ -15,7 +15,7 @@ namespace System.Runtime.InteropServices
     }
 
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Method, AllowMultiple = false)]
-    public sealed class DefaultDllImportSearchPathsAttribute : Attribute
+    internal sealed class DefaultDllImportSearchPathsAttribute : Attribute
     {
         internal DllImportSearchPath _paths;
         public DefaultDllImportSearchPathsAttribute(DllImportSearchPath paths)
