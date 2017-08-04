@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.IO.Compression;
+using System.Runtime.InteropServices;
 
 namespace Microsoft.DiaSymReader
 {
@@ -94,7 +95,7 @@ namespace Microsoft.DiaSymReader
                 throw new ArgumentNullException(nameof(document));
             }
 
-            ThrowExceptionForHR(document.GetSourceLength(out int length));
+            Marshal.ThrowExceptionForHR(document.GetSourceLength(out int length));
             if (length == 0)
             {
                 return default(ArraySegment<byte>);
@@ -106,7 +107,7 @@ namespace Microsoft.DiaSymReader
             }
 
             var blob = new byte[length];
-            ThrowExceptionForHR(document.GetSourceRange(0, 0, int.MaxValue, int.MaxValue, length, out int bytesRead, blob));
+            Marshal.ThrowExceptionForHR(document.GetSourceRange(0, 0, int.MaxValue, int.MaxValue, length, out int bytesRead, blob));
             if (bytesRead < sizeof(int) || bytesRead > blob.Length)
             {
                 throw new InvalidDataException();
