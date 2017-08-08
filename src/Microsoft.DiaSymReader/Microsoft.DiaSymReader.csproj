@@ -10,6 +10,7 @@
     <PackageTags>DiaSymReader ISymUnmanagedReader PDB COM interop debugging</PackageTags>
   </PropertyGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="Microsoft.DiaSymReader.PortablePdb" />
     <InternalsVisibleTo Include="Microsoft.DiaSymReader.UnitTests" />
   </ItemGroup>  
   
