@@ -10,15 +10,14 @@ using System.Threading;
 
 namespace Microsoft.DiaSymReader
 {
-    // TODO: handling errors
-
     internal sealed class SymUnmanagedWriterImpl : SymUnmanagedWriter
     {
         private static object s_zeroInt32 = 0;
 
         private ISymUnmanagedWriter8 _symWriter;
-        private ComMemoryStream _pdbStream;
+        private readonly ComMemoryStream _pdbStream;
         private readonly List<ISymUnmanagedDocumentWriter> _documentWriters;
+        private bool _disposed;
 
         internal SymUnmanagedWriterImpl(ISymWriterMetadataProvider metadataProvider)
         {
@@ -28,15 +27,7 @@ namespace Microsoft.DiaSymReader
         }
 
         private ISymUnmanagedWriter8 GetSymWriter()
-        {
-            var symWriter = _symWriter;
-            if (symWriter == null)
-            {
-                throw new ObjectDisposedException(nameof(SymUnmanagedWriterImpl));
-            }
-
-            return symWriter;
-        }
+            => _symWriter ?? throw (_disposed ? new ObjectDisposedException(nameof(SymUnmanagedWriterImpl)) : new InvalidOperationException());
 
         /// <summary>
         /// Writes teh content to the given stream. The writer is disposed and can't be used for further writing.
@@ -48,52 +39,65 @@ namespace Microsoft.DiaSymReader
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            var symWriter = Interlocked.Exchange(ref _symWriter, null);
-            if (symWriter == null)
-            {
-                throw new ObjectDisposedException(nameof(SymUnmanagedWriterImpl));
-            }
+            // SymWriter flushes data to the native stream on close.
+            // Closing the writer also ensures no further modifications.
+            CloseSymWriter();
 
             try
             {
-                // SymWriter flushes data to the native stream on close:
-                symWriter.Close();
-
                 _pdbStream.CopyTo(stream);
-                _pdbStream = null;
             }
             catch (Exception ex)
             {
-                throw new PdbWritingException(ex);
+                throw new PdbWritingException(ex); // TODO
             }
         }
 
         public override void Dispose()
         {
-            Dispose(true);
+            DisposeImpl();
             GC.SuppressFinalize(this);
         }
 
         ~SymUnmanagedWriterImpl()
         {
-            Dispose(false);
+            DisposeImpl();
         }
 
-        private void Dispose(bool disposing)
+        private void DisposeImpl()
         {
+            CloseSymWriter();
+            _disposed = true;
+        }
+
+        private void CloseSymWriter()
+        {
+            var symWriter = Interlocked.Exchange(ref _symWriter, null);
+            if (symWriter == null)
+            {
+                return;
+            }
+
+            // We leave releasing SymWriter and document writer COM objects the to GC -- 
+            // we write to an in-memory stream hence no files are being locked.
+            _documentWriters.Clear();
+
             try
             {
-                // We leave releasing SymWriter and document writer COM objects the to GC -- 
-                // we write to an in-memory stream hence no files are being locked.
-                _documentWriters.Clear();
-
-                Interlocked.Exchange(ref _symWriter, null)?.Close();
-                _pdbStream = null;
+                symWriter.Close();
             }
             catch (Exception ex)
             {
                 throw new PdbWritingException(ex);
             }
+        }
+
+        public override IEnumerable<ArraySegment<byte>> GetUnderlyingData()
+        {
+            // Commit, so that all data are flushed to the underlying stream.
+            GetSymWriter().Commit();
+
+            return _pdbStream.GetChunks();
         }
 
         public override int DocumentTableCapacity
@@ -120,7 +124,7 @@ namespace Microsoft.DiaSymReader
 
             int index = _documentWriters.Count;
             ISymUnmanagedDocumentWriter documentWriter;
-            
+
             try
             {
                 documentWriter = symWriter.DefineDocument(name, ref language, ref vendor, ref type);
@@ -274,7 +278,7 @@ namespace Microsoft.DiaSymReader
             switch (value)
             {
                 case string str:
-                   return DefineLocalStringConstant(symWriter, name, str, constantSignatureToken);
+                    return DefineLocalStringConstant(symWriter, name, str, constantSignatureToken);
 
                 case DateTime dateTime:
                     // Note: Do not use DefineConstant as it doesn't set the local signature token, which is required in order to avoid callbacks to IMetadataEmit.
@@ -283,7 +287,15 @@ namespace Microsoft.DiaSymReader
                     // number of days since 1899/12/30.  However, ConstantValue::VariantFromConstant in the native VB
                     // compiler actually created a variant with type VT_DATE and value equal to the tick count.
                     // http://blogs.msdn.com/b/ericlippert/archive/2003/09/16/eric-s-complete-guide-to-vt-date.aspx
-                    symWriter.DefineConstant2(name, new VariantStructure(dateTime), constantSignatureToken);
+                    try
+                    {
+                        symWriter.DefineConstant2(name, new VariantStructure(dateTime), constantSignatureToken);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new PdbWritingException(ex);
+                    }
+
                     return true;
 
                 default:
@@ -577,6 +589,117 @@ namespace Microsoft.DiaSymReader
             {
                 throw new PdbWritingException(ex);
             }
+        }
+
+        public override void OpenTokensToSourceSpansMap()
+        {
+            var symWriter = GetSymWriter();
+
+            try
+            {
+                symWriter.OpenMapTokensToSourceSpans();
+            }
+            catch (Exception ex)
+            {
+                throw new PdbWritingException(ex);
+            }
+        }
+
+        public override void MapTokenToSourceSpan(int token, int documentIndex, int startLine, int startColumn, int endLine, int endColumn)
+        {
+            if (documentIndex < 0 || documentIndex >= _documentWriters.Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(documentIndex));
+            }
+
+            var symWriter = GetSymWriter();
+
+            try
+            {
+                symWriter.MapTokenToSourceSpan(
+                    token,
+                    _documentWriters[documentIndex],
+                    startLine,
+                    startColumn,
+                    endLine,
+                    endColumn);
+            }
+            catch (Exception ex)
+            {
+                throw new PdbWritingException(ex);
+            }
+        }
+
+        public override void CloseTokensToSourceSpansMap()
+        {
+            var symWriter = GetSymWriter();
+
+            try
+            {
+                symWriter.CloseMapTokensToSourceSpans();
+            }
+            catch (Exception ex)
+            {
+                throw new PdbWritingException(ex);
+            }
+        }
+
+        public unsafe override void GetSignature(out Guid guid, out uint stamp, out int age)
+        {
+            var symWriter = GetSymWriter();
+           
+            // See symwrite.cpp - the data byte[] doesn't depend on the content of metadata tables or IL.
+            // The writer only sets two values of the ImageDebugDirectory struct.
+            // 
+            //   IMAGE_DEBUG_DIRECTORY *pIDD
+            // 
+            //   if ( pIDD == NULL ) return E_INVALIDARG;
+            //   memset( pIDD, 0, sizeof( *pIDD ) );
+            //   pIDD->Type = IMAGE_DEBUG_TYPE_CODEVIEW;
+            //   pIDD->SizeOfData = cTheData;
+
+            var debugDir = new ImageDebugDirectory();
+            uint dataLength;
+
+            try
+            {
+                symWriter.GetDebugInfo(ref debugDir, 0, out dataLength, null);
+            }
+            catch (Exception ex)
+            {
+                throw new PdbWritingException(ex);
+            }
+
+            byte[] data = new byte[dataLength];
+            fixed (byte* pb = data)
+            {
+                try
+                {
+                    symWriter.GetDebugInfo(ref debugDir, dataLength, out dataLength, pb);
+                }
+                catch (Exception ex)
+                {
+                    throw new PdbWritingException(ex);
+                }
+            }
+
+            // Data has the following structure:
+            // struct RSDSI                     
+            // {
+            //     DWORD dwSig;                 // "RSDS"
+            //     GUID guidSig;                // GUID
+            //     DWORD age;                   // age
+            //     char szPDB[0];               // zero-terminated UTF8 file name passed to the writer
+            // };
+            const int GuidSize = 16;
+            var guidBytes = new byte[GuidSize];
+            Buffer.BlockCopy(data, 4, guidBytes, 0, guidBytes.Length);
+            guid = new Guid(guidBytes);
+
+            // Retrieve the timestamp the PDB writer generates when creating a new PDB stream.
+            // Note that ImageDebugDirectory.TimeDateStamp is not set by GetDebugInfo, 
+            // we need to go through IPdbWriter interface to get it.
+            ((IPdbWriter)symWriter).GetSignatureAge(out stamp, out age);
         }
     }
 }

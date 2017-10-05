@@ -22,8 +22,8 @@ namespace Microsoft.DiaSymReader
         {
         }
 
-        internal PdbWritingException(Exception inner) :
-            base(inner.Message, inner)
+        public PdbWritingException(Exception innerException) :
+            base(innerException.Message, innerException)
         {
         }
     }

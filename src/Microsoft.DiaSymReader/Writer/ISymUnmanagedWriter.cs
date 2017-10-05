@@ -8,6 +8,17 @@ using System.Security;
 
 namespace Microsoft.DiaSymReader
 {
+    [ComImport, InterfaceType(ComInterfaceType.InterfaceIsIUnknown), Guid("98ECEE1E-752D-11d3-8D56-00C04F680B2B"), SuppressUnmanagedCodeSecurity]
+    internal interface IPdbWriter
+    {
+        int __SetPath(/*[in] const WCHAR* szFullPathName, [in] IStream* pIStream, [in] BOOL fFullBuild*/);
+        int __OpenMod(/*[in] const WCHAR* szModuleName, [in] const WCHAR* szFileName*/);
+        int __CloseMod();
+        int __GetPath(/*[in] DWORD ccData,[out] DWORD* pccData,[out, size_is(ccData),length_is(*pccData)] WCHAR szPath[]*/);
+
+        void GetSignatureAge(out uint sig, out int age);
+    }
+
     /// <summary>
     /// The highest version of the interface available on Desktop FX 4.0+.
     /// </summary>
@@ -94,7 +105,7 @@ namespace Microsoft.DiaSymReader
         /// Maps the given metadata token to the given source line span in the specified source file. 
         /// Must be called between calls to <see cref="OpenMapTokensToSourceSpans"/> and <see cref="CloseMapTokensToSourceSpans"/>.
         /// </summary>
-        void MapTokenToSourceSpan(uint token, ISymUnmanagedDocumentWriter document, uint startLine, uint startColumn, uint endLine, uint endColumn);
+        void MapTokenToSourceSpan(int token, ISymUnmanagedDocumentWriter document, int startLine, int startColumn, int endLine, int endColumn);
 
         #endregion
     }
