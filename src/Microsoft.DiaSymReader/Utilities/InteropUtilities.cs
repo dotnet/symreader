@@ -27,38 +27,60 @@ namespace Microsoft.DiaSymReader
             }
         }
 
-        internal unsafe static void CopyQualifiedTypeName(char* qualifiedName, int* qualifiedNameLength, string namespaceStr, string nameStr)
+        internal unsafe static void CopyQualifiedTypeName(char* qualifiedName, int qualifiedNameBufferLength, int* qualifiedNameLength, string namespaceStr, string nameStr)
         {
-            Debug.Assert(namespaceStr != null);
             Debug.Assert(nameStr != null);
+
+            if (namespaceStr == null)
+            {
+                namespaceStr = string.Empty;
+            }
 
             if (qualifiedNameLength != null)
             {
-                *qualifiedNameLength = (namespaceStr.Length > 0 ? namespaceStr.Length + 1 : 0) + nameStr.Length;
+                int fullLength = (namespaceStr.Length > 0 ? namespaceStr.Length + 1 : 0) + nameStr.Length;
+                if (qualifiedName != null)
+                {
+                    // If the buffer is given return the length of the possibly truncated name not including NUL.
+                    // If we returned length greater than the buffer length the SymWriter would replace the name with CRC32 hash.
+                    *qualifiedNameLength = Math.Min(fullLength, Math.Max(0, qualifiedNameBufferLength - 1));
+                }
+                else
+                {
+                    // If the buffer is not given then reuturn the full length.
+                    *qualifiedNameLength = fullLength;
+                }
             }
 
-            if (qualifiedName != null)
+            if (qualifiedName != null && qualifiedNameBufferLength > 0)
             {
                 char* dst = qualifiedName;
+                char* dstEndPtr = dst + qualifiedNameBufferLength - 1;
 
                 if (namespaceStr.Length > 0)
                 {
-                    StringCopy(dst, namespaceStr, namespaceStr.Length, terminator: '.');
-                    dst += namespaceStr.Length + 1;
+                    for (int i = 0; i < namespaceStr.Length && dst < dstEndPtr; i++)
+                    {
+                        *dst = namespaceStr[i];
+                        dst++;
+                    }
+
+                    if (dst < dstEndPtr)
+                    {
+                        *dst = '.';
+                        dst++;
+                    }
                 }
 
-                StringCopy(dst, nameStr, nameStr.Length);
-            }
-        }
+                for (int i = 0; i < nameStr.Length && dst < dstEndPtr; i++)
+                {
+                    *dst = nameStr[i];
+                    dst++;
+                }
 
-        internal unsafe static void StringCopy(char* dst, string src, int length, char terminator = '\0')
-        {
-            for (int i = 0; i < length; i++)
-            {
-                dst[i] = src[i]; 
+                Debug.Assert(dst <= dstEndPtr);
+                *dst = '\0';
             }
-
-            dst[length] = terminator;
         }
 
         // PERF: The purpose of all this code duplication is to avoid allocating any display class instances.

@@ -50,7 +50,7 @@ namespace Microsoft.DiaSymReader
             [Out]TypeAttributes* attributes,
             [Out]int* baseType)
         {
-            if (!_metadataProvider.TryGetTypeDefinitionInfo(typeDef, out var namespaceName, out var typeName, out var attrib, out var baseTypeToken))
+            if (!_metadataProvider.TryGetTypeDefinitionInfo(typeDef, out var namespaceName, out var typeName, out var typeAttributes))
             {
                 return HResult.E_INVALIDARG;
             }
@@ -59,6 +59,7 @@ namespace Microsoft.DiaSymReader
             {
                 InteropUtilities.CopyQualifiedTypeName(
                     qualifiedName,
+                    qualifiedNameBufferLength,
                     qualifiedNameLength,
                     namespaceName,
                     typeName);
@@ -66,12 +67,13 @@ namespace Microsoft.DiaSymReader
 
             if (attributes != null)
             {
-                *attributes = attrib;
+                *attributes = typeAttributes;
             }
 
             if (baseType != null)
             {
-                *baseType = baseTypeToken;
+                // unused
+                *baseType = 0;
             }
 
             return HResult.S_OK;
@@ -84,7 +86,7 @@ namespace Microsoft.DiaSymReader
             int qualifiedNameBufferLength,
             [Out]int* qualifiedNameLength)
         {
-            if (!_metadataProvider.TryGetTypeReferenceInfo(typeRef, out var namespaceName, out var typeName, out int resolutionScopeToken))
+            if (!_metadataProvider.TryGetTypeReferenceInfo(typeRef, out var namespaceName, out var typeName))
             {
                 return HResult.E_INVALIDARG;
             }
@@ -93,6 +95,7 @@ namespace Microsoft.DiaSymReader
             {
                 InteropUtilities.CopyQualifiedTypeName(
                     qualifiedName,
+                    qualifiedNameBufferLength,
                     qualifiedNameLength,
                     namespaceName,
                     typeName);
@@ -100,7 +103,8 @@ namespace Microsoft.DiaSymReader
 
             if (resolutionScope != null)
             {
-                *resolutionScope = resolutionScopeToken;
+                // unused
+                *resolutionScope = 0;
             }
 
             return HResult.S_OK;

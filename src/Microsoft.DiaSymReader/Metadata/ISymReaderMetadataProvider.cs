@@ -13,7 +13,7 @@ namespace Microsoft.DiaSymReader
         unsafe bool TryGetStandaloneSignature(int standaloneSignatureToken, out byte* signature, out int length);
 
         // only needed for portable:
-        bool TryGetTypeDefinitionInfo(int typeDefinitionToken, out string namespaceName, out string typeName, out TypeAttributes attributes, out int baseTypeToken);
-        bool TryGetTypeReferenceInfo(int typeReferenceToken, out string namespaceName, out string typeName, out int resolutionScopeToken);
+        bool TryGetTypeDefinitionInfo(int typeDefinitionToken, out string namespaceName, out string typeName, out TypeAttributes attributes);
+        bool TryGetTypeReferenceInfo(int typeReferenceToken, out string namespaceName, out string typeName);
     }
 }
