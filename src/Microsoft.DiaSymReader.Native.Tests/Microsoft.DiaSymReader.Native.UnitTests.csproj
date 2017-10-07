@@ -14,16 +14,15 @@
     <PackageReference Include="Microsoft.DiaSymReader.Native" Version="$(MicrosoftDiaSymReaderNativeVersion)" />
   </ItemGroup>
   <ItemGroup>
-  <!-- Copy DSRN to a subdirectory of the output directory, so that we can test alternative load path -->
     <Content Include="$(NuGetPackageRoot)\Microsoft.DiaSymReader.Native\$(MicrosoftDiaSymReaderNativeVersion)\runtimes\win\native\Microsoft.DiaSymReader.Native.x86.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Visible>false</Visible>
-      <Link>DSRN\Microsoft.DiaSymReader.Native.x86.dll</Link>
+      <Link>Microsoft.DiaSymReader.Native.x86.dll</Link>
     </Content>
     <Content Include="$(NuGetPackageRoot)\Microsoft.DiaSymReader.Native\$(MicrosoftDiaSymReaderNativeVersion)\runtimes\win\native\Microsoft.DiaSymReader.Native.amd64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Visible>false</Visible>
-      <Link>DSRN\Microsoft.DiaSymReader.Native.amd64.dll</Link>
+      <Link>Microsoft.DiaSymReader.Native.amd64.dll</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
