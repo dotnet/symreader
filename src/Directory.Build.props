@@ -12,6 +12,8 @@
       Can be likely removed once Jenkins moves to VS 15.3.
     -->
     <NoWarn>$(NoWarn);1701</NoWarn>
+
+    <LangVersion>Latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
