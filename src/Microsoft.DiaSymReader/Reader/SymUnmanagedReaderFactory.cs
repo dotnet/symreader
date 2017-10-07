@@ -1,33 +1,38 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
 using System;
+using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 
 namespace Microsoft.DiaSymReader
 {
     public static class SymUnmanagedReaderFactory
     {
-        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
-        [DllImport("Microsoft.DiaSymReader.Native.x86.dll", EntryPoint = "CreateSymReader")]
-        private extern static void CreateSymReader32(ref Guid id, [MarshalAs(UnmanagedType.IUnknown)]out object symReader);
-
-        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
-        [DllImport("Microsoft.DiaSymReader.Native.amd64.dll", EntryPoint = "CreateSymReader")]
-        private extern static void CreateSymReader64(ref Guid id, [MarshalAs(UnmanagedType.IUnknown)]out object symReader);
-
         /// <summary>
         /// Creates <see cref="ISymUnmanagedReader"/> instance and initializes it with specified PDB stream and metadata import object.
         /// </summary>
         /// <param name="pdbStream">Windows PDB stream.</param>
         /// <param name="metadataImport">IMetadataImport implementation.</param>
+        /// <param name="options">Options.</param>
         /// <remarks>
-        /// The SymReader is loaded from Microsoft.DiaSymReader.Native.x86.dll or Microsoft.DiaSymReader.Native.amd64.dll 
-        /// depending on the current process architecture.
+        /// Tries to load the implementation of the PDB reader from Microsoft.DiaSymReader.Native.{platform}.dll library first.
+        /// It searches for this library in the directory Microsoft.DiaSymReader.dll is loaded from, 
+        /// the application directory, the %WinDir%\System32 directory, and user directories in the DLL search path, in this order.
+        /// If not found in the above locations and <see cref="SymUnmanagedReaderCreationOptions.UseAlternativeLoadPath"/> option is specified
+        /// the directory specified by MICROSOFT_DIASYMREADER_NATIVE_ALT_LOAD_PATH environment variable is also searched.
+        /// If the Microsoft.DiaSymReader.Native.{platform}.dll library can't be found and <see cref="SymUnmanagedReaderCreationOptions.UseComRegistry"/> 
+        /// option is specified checks if the PDB reader is available from a globally registered COM object. This COM object is provided 
+        /// by .NET Framework and has limited functionality (up to <see cref="ISymUnmanagedReader3"/>).
         /// </remarks>
         /// <exception cref="ArgumentNullException"><paramref name="pdbStream"/>is null.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="metadataImport"/>is null.</exception>
-        public static ISymUnmanagedReader5 CreateReaderWithMetadataImport(Stream pdbStream, object metadataImport)
+        /// <exception cref="DllNotFoundException">The SymReader implementation is not available or failed to load.</exception>
+        /// <exception cref="NotSupportedException">The implementation doesn't support specified <genericparamref name="TSymUnmanagedReader"/> interface.</exception>
+        public static TSymUnmanagedReader CreateReaderWithMetadataImport<TSymUnmanagedReader>(
+            Stream pdbStream, 
+            object metadataImport,
+            SymUnmanagedReaderCreationOptions options = SymUnmanagedReaderCreationOptions.Default)
+            where TSymUnmanagedReader : class, ISymUnmanagedReader3
         {
             if (pdbStream == null)
             {
@@ -39,21 +44,32 @@ namespace Microsoft.DiaSymReader
                 throw new ArgumentNullException(nameof(metadataImport));
             }
 
-            object symReader = null;
+            object symReader = SymUnmanagedFactory.CreateObject(
+                createReader: true, 
+                useAlternativeLoadPath: (options & SymUnmanagedReaderCreationOptions.UseAlternativeLoadPath) != 0,
+                useComRegistry: (options & SymUnmanagedReaderCreationOptions.UseComRegistry) != 0,
+                moduleName: out var _, 
+                loadException: out var loadException);
 
-            var guid = default(Guid);
-            if (IntPtr.Size == 4)
+            if (symReader == null)
             {
-                CreateSymReader32(ref guid, out symReader);
-            }
-            else
-            {
-                CreateSymReader64(ref guid, out symReader);
+                Debug.Assert(loadException != null);
+
+                if (loadException is DllNotFoundException)
+                {
+                    throw loadException;
+                }
+
+                throw new DllNotFoundException(loadException.Message, loadException);
             }
 
-            var reader = (ISymUnmanagedReader5)symReader;
-            reader.Initialize(pdbStream, metadataImport);
-            return reader;
+            if (!(symReader is TSymUnmanagedReader symReader3))
+            {
+                throw new NotSupportedException();
+            }
+
+            symReader3.Initialize(pdbStream, metadataImport);
+            return symReader3;
         }
 
         /// <summary>
@@ -61,20 +77,31 @@ namespace Microsoft.DiaSymReader
         /// </summary>
         /// <param name="pdbStream">Windows PDB stream.</param>
         /// <param name="metadataProvider"><see cref="ISymReaderMetadataProvider"/> implementation.</param>
+        /// <param name="options">Options.</param>
         /// <remarks>
-        /// The SymReader is loaded from Microsoft.DiaSymReader.Native.x86.dll or Microsoft.DiaSymReader.Native.amd64.dll 
-        /// depending on the current process architecture.
+        /// Tries to load the implementation of the PDB reader from Microsoft.DiaSymReader.Native.{platform}.dll library first.
+        /// It searches for this library in the directory Microsoft.DiaSymReader.dll is loaded from, 
+        /// the application directory, the %WinDir%\System32 directory, and user directories in the DLL search path, in this order.
+        /// If not found in the above locations and <see cref="SymUnmanagedReaderCreationOptions.UseAlternativeLoadPath"/> option is specified
+        /// the directory specified by MICROSOFT_DIASYMREADER_NATIVE_ALT_LOAD_PATH environment variable is also searched.
+        /// If the Microsoft.DiaSymReader.Native.{platform}.dll library can't be found and <see cref="SymUnmanagedReaderCreationOptions.UseComRegistry"/> 
+        /// option is specified checks if the PDB reader is available from a globally registered COM object. This COM object is provided 
+        /// by .NET Framework and has limited functionality (up to <see cref="ISymUnmanagedReader3"/>).
         /// </remarks>
         /// <exception cref="ArgumentNullException"><paramref name="pdbStream"/>is null.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="metadataProvider"/>is null.</exception>
-        public static ISymUnmanagedReader5 CreateReader(Stream pdbStream, ISymReaderMetadataProvider metadataProvider)
+        public static TSymUnmanagedReader CreateReader<TSymUnmanagedReader>(
+            Stream pdbStream,
+            ISymReaderMetadataProvider metadataProvider,
+            SymUnmanagedReaderCreationOptions options = SymUnmanagedReaderCreationOptions.Default)
+            where TSymUnmanagedReader : class, ISymUnmanagedReader3
         {
             if (metadataProvider == null)
             {
                 throw new ArgumentNullException(nameof(metadataProvider));
             }
 
-            return CreateReaderWithMetadataImport(pdbStream, CreateSymReaderMetadataImport(metadataProvider));
+            return CreateReaderWithMetadataImport<TSymUnmanagedReader>(pdbStream, CreateSymReaderMetadataImport(metadataProvider), options);
         }
 
         /// <summary>

@@ -14,20 +14,32 @@ namespace Microsoft.DiaSymReader
     {
         private static object s_zeroInt32 = 0;
 
-        private ISymUnmanagedWriter8 _symWriter;
+        private ISymUnmanagedWriter5 _symWriter;
         private readonly ComMemoryStream _pdbStream;
         private readonly List<ISymUnmanagedDocumentWriter> _documentWriters;
+        private readonly string _symWriterModuleName;
         private bool _disposed;
 
-        internal SymUnmanagedWriterImpl(ISymWriterMetadataProvider metadataProvider)
+        internal SymUnmanagedWriterImpl(ComMemoryStream pdbStream, ISymUnmanagedWriter5 symWriter, string symWriterModuleName)
         {
-            _pdbStream = new ComMemoryStream();
-            _symWriter = SymUnmanagedWriterFactory.CreateWriterWithMetadataEmit(_pdbStream, new SymWriterMetadataAdapter(metadataProvider));
+            Debug.Assert(pdbStream != null);
+            Debug.Assert(symWriter != null);
+            Debug.Assert(symWriterModuleName != null);
+
+            _pdbStream = pdbStream;
+            _symWriter = symWriter;
             _documentWriters = new List<ISymUnmanagedDocumentWriter>();
+            _symWriterModuleName = symWriterModuleName;
         }
 
-        private ISymUnmanagedWriter8 GetSymWriter()
+        private ISymUnmanagedWriter5 GetSymWriter()
             => _symWriter ?? throw (_disposed ? new ObjectDisposedException(nameof(SymUnmanagedWriterImpl)) : new InvalidOperationException());
+
+        private ISymUnmanagedWriter8 GetSymWriter8()
+            => GetSymWriter() is ISymUnmanagedWriter8 symWriter8 ? symWriter8 : throw PdbWritingException(new NotSupportedException());
+
+        private Exception PdbWritingException(Exception inner) 
+            => new SymUnmanagedWriterException(inner, _symWriterModuleName);
 
         /// <summary>
         /// Writes teh content to the given stream. The writer is disposed and can't be used for further writing.
@@ -49,7 +61,7 @@ namespace Microsoft.DiaSymReader
             }
             catch (Exception ex)
             {
-                throw new PdbWritingException(ex); // TODO
+                throw PdbWritingException(ex); // TODO
             }
         }
 
@@ -66,7 +78,15 @@ namespace Microsoft.DiaSymReader
 
         private void DisposeImpl()
         {
-            CloseSymWriter();
+            try
+            {
+                CloseSymWriter();
+            }
+            catch
+            {
+                // Dipose shall not throw
+            }
+
             _disposed = true;
         }
 
@@ -88,7 +108,7 @@ namespace Microsoft.DiaSymReader
             }
             catch (Exception ex)
             {
-                throw new PdbWritingException(ex);
+                throw PdbWritingException(ex);
             }
         }
 
@@ -131,7 +151,7 @@ namespace Microsoft.DiaSymReader
             }
             catch (Exception ex)
             {
-                throw new PdbWritingException(ex);
+                throw PdbWritingException(ex);
             }
 
             _documentWriters.Add(documentWriter);
@@ -144,7 +164,7 @@ namespace Microsoft.DiaSymReader
                 }
                 catch (Exception ex)
                 {
-                    throw new PdbWritingException(ex);
+                    throw PdbWritingException(ex);
                 }
             }
 
@@ -156,7 +176,7 @@ namespace Microsoft.DiaSymReader
                 }
                 catch (Exception ex)
                 {
-                    throw new PdbWritingException(ex);
+                    throw PdbWritingException(ex);
                 }
             }
 
@@ -196,7 +216,7 @@ namespace Microsoft.DiaSymReader
             }
             catch (Exception ex)
             {
-                throw new PdbWritingException(ex);
+                throw PdbWritingException(ex);
             }
         }
 
@@ -210,7 +230,7 @@ namespace Microsoft.DiaSymReader
             }
             catch (Exception ex)
             {
-                throw new PdbWritingException(ex);
+                throw PdbWritingException(ex);
             }
         }
 
@@ -224,7 +244,7 @@ namespace Microsoft.DiaSymReader
             }
             catch (Exception ex)
             {
-                throw new PdbWritingException(ex);
+                throw PdbWritingException(ex);
             }
         }
 
@@ -238,7 +258,7 @@ namespace Microsoft.DiaSymReader
             }
             catch (Exception ex)
             {
-                throw new PdbWritingException(ex);
+                throw PdbWritingException(ex);
             }
         }
 
@@ -252,7 +272,7 @@ namespace Microsoft.DiaSymReader
             }
             catch (Exception ex)
             {
-                throw new PdbWritingException(ex);
+                throw PdbWritingException(ex);
             }
         }
 
@@ -267,7 +287,7 @@ namespace Microsoft.DiaSymReader
             }
             catch (Exception ex)
             {
-                throw new PdbWritingException(ex);
+                throw PdbWritingException(ex);
             }
         }
 
@@ -293,7 +313,7 @@ namespace Microsoft.DiaSymReader
                     }
                     catch (Exception ex)
                     {
-                        throw new PdbWritingException(ex);
+                        throw PdbWritingException(ex);
                     }
 
                     return true;
@@ -308,14 +328,14 @@ namespace Microsoft.DiaSymReader
                     }
                     catch (Exception ex)
                     {
-                        throw new PdbWritingException(ex);
+                        throw PdbWritingException(ex);
                     }
 
                     return true;
             }
         }
 
-        private static unsafe void DefineLocalConstantImpl(ISymUnmanagedWriter8 symWriter, string name, object value, int constantSignatureToken)
+        private unsafe void DefineLocalConstantImpl(ISymUnmanagedWriter5 symWriter, string name, object value, int constantSignatureToken)
         {
             VariantStructure variant = new VariantStructure();
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -324,7 +344,7 @@ namespace Microsoft.DiaSymReader
             symWriter.DefineConstant2(name, variant, constantSignatureToken);
         }
 
-        private static bool DefineLocalStringConstant(ISymUnmanagedWriter8 symWriter, string name, string value, int constantSignatureToken)
+        private bool DefineLocalStringConstant(ISymUnmanagedWriter5 symWriter, string name, string value, int constantSignatureToken)
         {
             Debug.Assert(value != null);
 
@@ -373,7 +393,7 @@ namespace Microsoft.DiaSymReader
             }
             catch (Exception ex)
             {
-                throw new PdbWritingException(ex);
+                throw PdbWritingException(ex);
             }
 
             return true;
@@ -424,7 +444,7 @@ namespace Microsoft.DiaSymReader
             }
             catch (Exception ex)
             {
-                throw new PdbWritingException(ex);
+                throw PdbWritingException(ex);
             }
         }
 
@@ -461,7 +481,7 @@ namespace Microsoft.DiaSymReader
                     }
                     catch (Exception ex)
                     {
-                        throw new PdbWritingException(ex);
+                        throw PdbWritingException(ex);
                     }
                 }
 
@@ -476,7 +496,7 @@ namespace Microsoft.DiaSymReader
                 }
                 catch (Exception ex)
                 {
-                    throw new PdbWritingException(ex);
+                    throw PdbWritingException(ex);
                 }
             }
         }
@@ -505,7 +525,7 @@ namespace Microsoft.DiaSymReader
             }
             catch (Exception ex)
             {
-                throw new PdbWritingException(ex);
+                throw PdbWritingException(ex);
             }
         }
 
@@ -519,13 +539,13 @@ namespace Microsoft.DiaSymReader
             }
             catch (Exception ex)
             {
-                throw new PdbWritingException(ex);
+                throw PdbWritingException(ex);
             }
         }
 
         public override void UpdateSignature(Guid guid, uint stamp, int age)
         {
-            var symWriter = GetSymWriter();
+            var symWriter = GetSymWriter8();
 
             try
             {
@@ -533,7 +553,7 @@ namespace Microsoft.DiaSymReader
             }
             catch (Exception ex)
             {
-                throw new PdbWritingException(ex);
+                throw PdbWritingException(ex);
             }
         }
 
@@ -549,7 +569,7 @@ namespace Microsoft.DiaSymReader
                 return;
             }
 
-            var symWriter = GetSymWriter();
+            var symWriter = GetSymWriter8();
 
             try
             {
@@ -560,7 +580,7 @@ namespace Microsoft.DiaSymReader
             }
             catch (Exception ex)
             {
-                throw new PdbWritingException(ex);
+                throw PdbWritingException(ex);
             }
         }
 
@@ -576,7 +596,7 @@ namespace Microsoft.DiaSymReader
                 return;
             }
 
-            var symWriter = GetSymWriter();
+            var symWriter = GetSymWriter8();
 
             try
             {
@@ -587,7 +607,7 @@ namespace Microsoft.DiaSymReader
             }
             catch (Exception ex)
             {
-                throw new PdbWritingException(ex);
+                throw PdbWritingException(ex);
             }
         }
 
@@ -601,7 +621,7 @@ namespace Microsoft.DiaSymReader
             }
             catch (Exception ex)
             {
-                throw new PdbWritingException(ex);
+                throw PdbWritingException(ex);
             }
         }
 
@@ -626,7 +646,7 @@ namespace Microsoft.DiaSymReader
             }
             catch (Exception ex)
             {
-                throw new PdbWritingException(ex);
+                throw PdbWritingException(ex);
             }
         }
 
@@ -640,7 +660,7 @@ namespace Microsoft.DiaSymReader
             }
             catch (Exception ex)
             {
-                throw new PdbWritingException(ex);
+                throw PdbWritingException(ex);
             }
         }
 
@@ -667,7 +687,7 @@ namespace Microsoft.DiaSymReader
             }
             catch (Exception ex)
             {
-                throw new PdbWritingException(ex);
+                throw PdbWritingException(ex);
             }
 
             byte[] data = new byte[dataLength];
@@ -679,7 +699,7 @@ namespace Microsoft.DiaSymReader
                 }
                 catch (Exception ex)
                 {
-                    throw new PdbWritingException(ex);
+                    throw PdbWritingException(ex);
                 }
             }
 

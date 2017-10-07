@@ -11,6 +11,9 @@ namespace Microsoft.DiaSymReader
     /// </summary>
     public abstract class SymUnmanagedWriter : IDisposable
     {
+        /// <summary>
+        /// Diposes the writer.
+        /// </summary>
         public abstract void Dispose();
 
         /// <summary>
@@ -23,19 +26,32 @@ namespace Microsoft.DiaSymReader
         /// May be called multiple times. Always writes the same data. 
         /// </summary>
         /// <param name="stream">Stream to write PDB data to.</param>
-        /// <exception cref="PdbWritingException">Error occurred while writing data to the stream.</exception>
+        /// <exception cref="SymUnmanagedWriterException">Error occurred while writing data to the stream.</exception>
         public abstract void WriteTo(Stream stream);
 
+        /// <summary>
+        /// The capacity of document table. 
+        /// </summary>
+        /// <remarks>
+        /// Whenever a document is defined an entry is added to this table. 
+        /// If the number of documents is known upfront setting this value may reduce memory consumption.
+        /// </remarks>
         public abstract int DocumentTableCapacity { get; set; }
-        
+
+        /// <summary>
+        /// Defines a source document.
+        /// </summary>
         /// <exception cref="ObjectDisposedException">Object has been disposed.</exception>
         /// <exception cref="InvalidOperationException">Writes are not allowed to the underlying stream.</exception>
-        /// <exception cref="PdbWritingException">Error occurred while writing PDB data.</exception>
+        /// <exception cref="SymUnmanagedWriterException">Error occurred while writing PDB data.</exception>
         public abstract int DefineDocument(string name, Guid language, Guid vendor, Guid type, Guid algorithmId, byte[] checksum, byte[] source);
 
+        /// <summary>
+        /// Defines sequence points.
+        /// </summary>
         /// <exception cref="ObjectDisposedException">Object has been disposed.</exception>
         /// <exception cref="InvalidOperationException">Writes are not allowed to the underlying stream.</exception>
-        /// <exception cref="PdbWritingException">Error occurred while writing PDB data.</exception>
+        /// <exception cref="SymUnmanagedWriterException">Error occurred while writing PDB data.</exception>
         public abstract void DefineSequencePoints(int documentIndex, int count, int[] offsets, int[] startLines, int[] startColumns, int[] endLines, int[] endColumns);
 
         /// <summary>
@@ -43,26 +59,38 @@ namespace Microsoft.DiaSymReader
         /// </summary>
         /// <exception cref="ObjectDisposedException">Object has been disposed.</exception>
         /// <exception cref="InvalidOperationException">Writes are not allowed to the underlying stream.</exception>
-        /// <exception cref="PdbWritingException">Error occurred while writing PDB data.</exception>
+        /// <exception cref="SymUnmanagedWriterException">Error occurred while writing PDB data.</exception>
         public abstract void OpenMethod(int methodToken);
 
+        /// <summary>
+        /// Closes a method previously open using <see cref="OpenMethod(int)"/>.
+        /// </summary>
         /// <exception cref="ObjectDisposedException">Object has been disposed.</exception>
         /// <exception cref="InvalidOperationException">Writes are not allowed to the underlying stream.</exception>
-        /// <exception cref="PdbWritingException">Error occurred while writing PDB data.</exception>
+        /// <exception cref="SymUnmanagedWriterException">Error occurred while writing PDB data.</exception>
         public abstract void CloseMethod();
         
+        /// <summary>
+        /// Opens a local scope.
+        /// </summary>
         /// <exception cref="ObjectDisposedException">Object has been disposed.</exception>
         /// <exception cref="InvalidOperationException">Writes are not allowed to the underlying stream.</exception>
         public abstract void OpenScope(int startOffset);
 
+        /// <summary>
+        /// Closes a local scope previously open using <see cref="OpenScope(int)"/>.
+        /// </summary>
         /// <exception cref="ObjectDisposedException">Object has been disposed.</exception>
         /// <exception cref="InvalidOperationException">Writes are not allowed to the underlying stream.</exception>
-        /// <exception cref="PdbWritingException">Error occurred while writing PDB data.</exception>
+        /// <exception cref="SymUnmanagedWriterException">Error occurred while writing PDB data.</exception>
         public abstract void CloseScope(int endOffset);
 
+        /// <summary>
+        /// Defines a local variable.
+        /// </summary>
         /// <exception cref="ObjectDisposedException">Object has been disposed.</exception>
         /// <exception cref="InvalidOperationException">Writes are not allowed to the underlying stream.</exception>
-        /// <exception cref="PdbWritingException">Error occurred while writing PDB data.</exception>
+        /// <exception cref="SymUnmanagedWriterException">Error occurred while writing PDB data.</exception>
         public abstract void DefineLocalVariable(int index, string name, int attributes, int localSignatureToken);
 
         /// <summary>
@@ -74,32 +102,44 @@ namespace Microsoft.DiaSymReader
         /// <returns>False if the constant representation is too long (e.g. long string).</returns>
         /// <exception cref="ObjectDisposedException">Object has been disposed.</exception>
         /// <exception cref="InvalidOperationException">Writes are not allowed to the underlying stream.</exception>
-        /// <exception cref="PdbWritingException">Error occurred while writing PDB data.</exception>
+        /// <exception cref="SymUnmanagedWriterException">Error occurred while writing PDB data.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="name"/> is null</exception>
         public abstract bool DefineLocalConstant(string name, object value, int constantSignatureToken);
-
+        
+        /// <summary>
+        /// Adds namespace import.
+        /// </summary>
         /// <exception cref="ObjectDisposedException">Object has been disposed.</exception>
         /// <exception cref="InvalidOperationException">Writes are not allowed to the underlying stream.</exception>
-        /// <exception cref="PdbWritingException">Error occurred while writing PDB data.</exception>
+        /// <exception cref="SymUnmanagedWriterException">Error occurred while writing PDB data.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="importString"/> is null</exception>
         public abstract void UsingNamespace(string importString);
 
+        /// <summary>
+        /// Sets method async information.
+        /// </summary>
         /// <exception cref="ObjectDisposedException">Object has been disposed.</exception>
         /// <exception cref="InvalidOperationException">Writes are not allowed to the underlying stream.</exception>
-        /// <exception cref="PdbWritingException">Error occurred while writing PDB data.</exception>
+        /// <exception cref="SymUnmanagedWriterException">Error occurred while writing PDB data.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="yieldOffsets"/> or <paramref name="resumeOffsets"/> is null</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="yieldOffsets"/> or <paramref name="resumeOffsets"/> differ in length.</exception>
         public abstract void SetAsyncInfo(int moveNextMethodToken, int kickoffMethodToken, int catchHandlerOffset, int[] yieldOffsets, int[] resumeOffsets);
 
+        /// <summary>
+        /// Associates custom debug information blob with the current method.
+        /// </summary>
         /// <exception cref="ObjectDisposedException">Object has been disposed.</exception>
         /// <exception cref="InvalidOperationException">Writes are not allowed to the underlying stream.</exception>
-        /// <exception cref="PdbWritingException">Error occurred while writing PDB data.</exception>
+        /// <exception cref="SymUnmanagedWriterException">Error occurred while writing PDB data.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="metadata"/> is null</exception>
         public abstract void DefineCustomMetadata(byte[] metadata);
-        
+
+        /// <summary>
+        /// Designates specified method as an entry point.
+        /// </summary>
         /// <exception cref="ObjectDisposedException">Object has been disposed.</exception>
         /// <exception cref="InvalidOperationException">Writes are not allowed to the underlying stream.</exception>
-        /// <exception cref="PdbWritingException">Error occurred while writing PDB data.</exception>
+        /// <exception cref="SymUnmanagedWriterException">Error occurred while writing PDB data.</exception>
         public abstract void SetEntryPoint(int entryMethodToken);
 
         /// <summary>
@@ -107,43 +147,57 @@ namespace Microsoft.DiaSymReader
         /// </summary>
         /// <exception cref="ObjectDisposedException">Object has been disposed.</exception>
         /// <exception cref="InvalidOperationException">Writes are not allowed to the underlying stream.</exception>
-        /// <exception cref="PdbWritingException">Error occurred while writing PDB data.</exception>
+        /// <exception cref="SymUnmanagedWriterException">Error occurred while writing PDB data.</exception>
         public abstract void UpdateSignature(Guid guid, uint stamp, int age);
 
         /// <summary>
         /// Gets the current PDB signature.
         /// </summary>
         /// <exception cref="ObjectDisposedException">Object has been disposed.</exception>
-        /// <exception cref="PdbWritingException">Error occurred while writing PDB data.</exception>
+        /// <exception cref="SymUnmanagedWriterException">Error occurred while writing PDB data.</exception>
         public abstract void GetSignature(out Guid guid, out uint stamp, out int age);
 
+        /// <summary>
+        /// Sets source server data blob (srcsvr stream).
+        /// </summary>
         /// <exception cref="ObjectDisposedException">Object has been disposed.</exception>
         /// <exception cref="InvalidOperationException">Writes are not allowed to the underlying stream.</exception>
-        /// <exception cref="PdbWritingException">Error occurred while writing PDB data.</exception>
+        /// <exception cref="SymUnmanagedWriterException">Error occurred while writing PDB data.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="data"/> is null</exception>
         public abstract void SetSourceServerData(byte[] data);
 
-        /// <exception cref="ArgumentNullException"><paramref name="data"/> is null</exception>
+        /// <summary>
+        /// Sets source link data blob (sourcelink stream).
+        /// </summary>
         /// <exception cref="ObjectDisposedException">Object has been disposed.</exception>
         /// <exception cref="InvalidOperationException">Writes are not allowed to the underlying stream.</exception>
-        /// <exception cref="PdbWritingException">Error occurred while writing PDB data.</exception>
-        /// <exception cref="NotSupportedException">Source Link is not supported by this writer.</exception>
+        /// <exception cref="SymUnmanagedWriterException">Error occurred while writing PDB data.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="data"/> is null</exception>
         public abstract void SetSourceLinkData(byte[] data);
 
+        /// <summary>
+        /// Opens a map of tokens to source spans.
+        /// </summary>
         /// <exception cref="ObjectDisposedException">Object has been disposed.</exception>
         /// <exception cref="InvalidOperationException">Writes are not allowed to the underlying stream.</exception>
-        /// <exception cref="PdbWritingException">Error occurred while writing PDB data.</exception>
+        /// <exception cref="SymUnmanagedWriterException">Error occurred while writing PDB data.</exception>
         public abstract void OpenTokensToSourceSpansMap();
 
+        /// <summary>
+        /// Maps specified token to a source span.
+        /// </summary>
         /// <exception cref="ObjectDisposedException">Object has been disposed.</exception>
         /// <exception cref="InvalidOperationException">Writes are not allowed to the underlying stream.</exception>
-        /// <exception cref="PdbWritingException">Error occurred while writing PDB data.</exception>
+        /// <exception cref="SymUnmanagedWriterException">Error occurred while writing PDB data.</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="documentIndex"/> doesn't correspond to any defined document.</exception>
         public abstract void MapTokenToSourceSpan(int token, int documentIndex, int startLine, int startColumn, int endLine, int endColumn);
 
+        /// <summary>
+        /// Closes map of tokens to source spans previously opened using <see cref="OpenTokensToSourceSpansMap"/>.
+        /// </summary>
         /// <exception cref="ObjectDisposedException">Object has been disposed.</exception>
         /// <exception cref="InvalidOperationException">Writes are not allowed to the underlying stream.</exception>
-        /// <exception cref="PdbWritingException">Error occurred while writing PDB data.</exception>
+        /// <exception cref="SymUnmanagedWriterException">Error occurred while writing PDB data.</exception>
         public abstract void CloseTokensToSourceSpansMap();
     }
 }
