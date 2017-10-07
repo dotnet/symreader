@@ -36,7 +36,9 @@ namespace Microsoft.DiaSymReader
             [Out]TypeAttributes* attributes,
             [Out]int* baseType)
         {
-            if (!_metadataProvider.TryGetTypeDefinitionInfo(typeDef, out var namespaceName, out var typeName, out var attrib, out var baseTypeToken))
+            Debug.Assert(baseType == null);
+
+            if (!_metadataProvider.TryGetTypeDefinitionInfo(typeDef, out var namespaceName, out var typeName, out var attrib))
             {
                 return HResult.E_INVALIDARG;
             }
@@ -45,6 +47,7 @@ namespace Microsoft.DiaSymReader
             {
                 InteropUtilities.CopyQualifiedTypeName(
                     qualifiedName,
+                    qualifiedNameBufferLength,
                     qualifiedNameLength,
                     namespaceName,
                     typeName);
@@ -53,11 +56,6 @@ namespace Microsoft.DiaSymReader
             if (attributes != null)
             {
                 *attributes = attrib;
-            }
-
-            if (baseType != null)
-            {
-                *baseType = baseTypeToken;
             }
 
             return HResult.S_OK;
@@ -108,15 +106,23 @@ namespace Microsoft.DiaSymReader
                 // -1 to account for a NUL terminator.
                 int adjustedLength = Math.Min(nameStr.Length, nameBufferLength - 1);
 
-                // return the length of the name not including NUL
                 if (nameLength != null)
                 {
+                    // return the length of the possibly truncated name not including NUL
                     *nameLength = adjustedLength;
                 }
 
-                if (name != null)
+                if (name != null && nameBufferLength > 0)
                 {
-                    InteropUtilities.StringCopy(name, nameStr, adjustedLength);
+                    char* dst = name;
+
+                    for (int i = 0; i < adjustedLength; i++)
+                    {
+                        *dst = nameStr[i];
+                        dst++;
+                    }
+
+                    *dst = '\0';
                 }
             }
 
