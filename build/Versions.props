@@ -8,13 +8,7 @@
 
     <!-- Toolset -->
     <RoslynToolsMicrosoftRepoToolsetVersion>1.0.0-alpha42</RoslynToolsMicrosoftRepoToolsetVersion>
-    <DotNetCliVersion>2.0.0-preview3-006923</DotNetCliVersion>
-
-    <!--
-      TODO: dotnet cli currently doesn't support building against net20, using msbuild instead.
-      https://github.com/Microsoft/msbuild/issues/1333
-     -->
-    <VSWhereVersion>1.0.47</VSWhereVersion>
+    <DotNetCliVersion>2.0.2</DotNetCliVersion>
 
     <!-- CoreFX -->
     <SystemCollectionsImmutableVersion>1.3.1</SystemCollectionsImmutableVersion>

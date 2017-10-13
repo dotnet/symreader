@@ -6,14 +6,13 @@
   <Import Project="$(RepoToolsetDir)Settings.props" />
 
   <PropertyGroup>
-    <!--
-      Assuming assembly reference ... matches identity ... you may need to supply runtime policy 
-      Workaround for not being able to target netcoreapp 2.0. 
-      Can be likely removed once Jenkins moves to VS 15.3.
-    -->
-    <NoWarn>$(NoWarn);1701</NoWarn>
-
     <LangVersion>Latest</LangVersion>
+    
+    <!--
+      TODO: dotnet cli currently doesn't support building against net20 out of the box.
+      https://github.com/Microsoft/msbuild/issues/1333
+     -->
+    <FrameworkPathOverride Condition="'$(TargetFramework)' == 'net20'">$(MSBuildProgramFiles32)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Client</FrameworkPathOverride>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
