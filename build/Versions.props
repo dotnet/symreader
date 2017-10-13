@@ -4,8 +4,10 @@
     <VersionBase>1.2.0</VersionBase>
     <PreReleaseVersionLabel>beta1</PreReleaseVersionLabel>
 
+    <UsingToolPdbConverter>true</UsingToolPdbConverter>
+
     <!-- Toolset -->
-    <RoslynToolsMicrosoftRepoToolsetVersion>1.0.0-alpha41</RoslynToolsMicrosoftRepoToolsetVersion>
+    <RoslynToolsMicrosoftRepoToolsetVersion>1.0.0-alpha42</RoslynToolsMicrosoftRepoToolsetVersion>
     <DotNetCliVersion>2.0.0-preview3-006923</DotNetCliVersion>
 
     <!--
