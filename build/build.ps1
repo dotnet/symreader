@@ -50,11 +50,9 @@ if ($help -or (($properties -ne $null) -and ($properties.Contains("/help") -or $
   exit 0
 }
 
-$InVSEnvironment = !($env:VS150COMNTOOLS -eq $null) -and (Test-Path $env:VS150COMNTOOLS)
 $RepoRoot = Join-Path $PSScriptRoot "..\"
 $DotNetRoot = Join-Path $RepoRoot ".dotnet"
 $DotNetExe = Join-Path $DotNetRoot "dotnet.exe"
-$ToolsRoot = Join-Path $RepoRoot ".tools"
 $BuildProj = Join-Path $PSScriptRoot "build.proj"
 $DependenciesProps = Join-Path $PSScriptRoot "Versions.props"
 $ArtifactsDir = Join-Path $RepoRoot "artifacts"
@@ -86,40 +84,7 @@ function InstallDotNetCli {
   }
 }
 
-function GetVSWhereVersion {
-  [xml]$xml = Get-Content $DependenciesProps
-  return $xml.Project.PropertyGroup.VSWhereVersion
-}
-
-function LocateVisualStudio {
-  if ($InVSEnvironment) {
-    return Join-Path $env:VS150COMNTOOLS "..\.."
-  }
-
-  $vswhereVersion = GetVSWhereVersion
-  $vsWhereDir = Join-Path $ToolsRoot "vswhere\$vswhereVersion"
-  $vsWhereExe = Join-Path $vsWhereDir "vswhere.exe"
-  
-  if (!(Test-Path $vsWhereExe)) {
-    Create-Directory $vsWhereDir   
-    Write-Host "Downloading vswhere"
-    Invoke-WebRequest "http://github.com/Microsoft/vswhere/releases/download/$vswhereVersion/vswhere.exe" -OutFile $vswhereExe
-  }
-  
-  $vsInstallDir = & $vsWhereExe -latest -property installationPath -requires Microsoft.Component.MSBuild -requires Microsoft.VisualStudio.Component.VSSDK -requires Microsoft.Net.Component.4.6.TargetingPack -requires Microsoft.VisualStudio.Component.Roslyn.Compiler -requires Microsoft.VisualStudio.Component.VSSDK
-  
-  if (!(Test-Path $vsInstallDir)) {
-    throw "Failed to locate Visual Studio (exit code '$lastExitCode')."
-  }
-
-  return $vsInstallDir
-}
-
 function Build {
-  $vsInstallDir = LocateVisualStudio
-  $msbuildExe = Join-Path $vsInstallDir "MSBuild\15.0\Bin\msbuild.exe"
-
-
   if ($ci -or $log) {
     Create-Directory($logDir)
     $logCmd = "/bl:" + (Join-Path $LogDir "Build.binlog")
@@ -127,18 +92,12 @@ function Build {
     $logCmd = ""
   }
 
-  if ($ci) {
-    Write-Host "Using $msbuildExe"
-  }
-
-  $nodeReuse = !$ci
-
-  & $msbuildExe $BuildProj /m /nologo /clp:Summary /nodeReuse:$nodeReuse /v:$verbosity $logCmd /p:Configuration=$configuration /p:SolutionPath=$solution /p:Restore=$restore /p:Build=$build /p:Rebuild=$rebuild /p:Test=$test /p:Sign=$sign /p:Pack=$pack /p:CIBuild=$ci $properties
+  & $DotNetExe msbuild $BuildProj /m /nologo /clp:Summary /warnaserror /v:$verbosity $logCmd /p:Configuration=$configuration /p:SolutionPath=$solution /p:Restore=$restore /p:Build=$build /p:Rebuild=$rebuild /p:Test=$test /p:Sign=$sign /p:Pack=$pack /p:CIBuild=$ci $properties
 }
 
 function Stop-Processes() {
   Write-Host "Killing running build processes..."
-  Get-Process -Name "msbuild" -ErrorAction SilentlyContinue | Stop-Process
+  Get-Process -Name "dotnet" -ErrorAction SilentlyContinue | Stop-Process
   Get-Process -Name "vbcscompiler" -ErrorAction SilentlyContinue | Stop-Process
 }
 

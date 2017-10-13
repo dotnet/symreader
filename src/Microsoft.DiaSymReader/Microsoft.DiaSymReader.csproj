@@ -12,8 +12,5 @@
   <ItemGroup>
     <InternalsVisibleTo Include="Microsoft.DiaSymReader.PortablePdb" />
     <InternalsVisibleTo Include="Microsoft.DiaSymReader.UnitTests" />
-  </ItemGroup>  
-  
-  <!-- Workaround for https://github.com/Microsoft/msbuild/issues/1721. -->
-  <Import Project="..\Directory.Build.targets" Condition="'$(TargetFramework)' == ''" />
+  </ItemGroup>
 </Project>
