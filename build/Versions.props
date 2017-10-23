@@ -1,8 +1,8 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <!-- This repo version -->
-    <VersionBase>1.2.0</VersionBase>
-    <PreReleaseVersionLabel></PreReleaseVersionLabel>
+    <VersionBase>1.3.0</VersionBase>
+    <PreReleaseVersionLabel>beta</PreReleaseVersionLabel>
 
     <UsingToolPdbConverter>true</UsingToolPdbConverter>
 
