@@ -18,7 +18,7 @@ namespace Microsoft.DiaSymReader.UnitTests
         {
             var stream = new ComMemoryStream();
             var chunks = stream.GetChunks().ToArray();
-            Assert.Equal(0, chunks.Length);
+            Assert.Empty(chunks);
         }
 
         [Fact]
