@@ -38,7 +38,7 @@ namespace Microsoft.DiaSymReader
         private ISymUnmanagedWriter8 GetSymWriter8()
             => GetSymWriter() is ISymUnmanagedWriter8 symWriter8 ? symWriter8 : throw PdbWritingException(new NotSupportedException());
 
-        private Exception PdbWritingException(Exception inner) 
+        private Exception PdbWritingException(Exception inner)
             => new SymUnmanagedWriterException(inner, _symWriterModuleName);
 
         /// <summary>
@@ -98,10 +98,6 @@ namespace Microsoft.DiaSymReader
                 return;
             }
 
-            // We leave releasing SymWriter and document writer COM objects the to GC -- 
-            // we write to an in-memory stream hence no files are being locked.
-            _documentWriters.Clear();
-
             try
             {
                 symWriter.Close();
@@ -109,6 +105,14 @@ namespace Microsoft.DiaSymReader
             catch (Exception ex)
             {
                 throw PdbWritingException(ex);
+            }
+            finally
+            {
+                // We leave releasing SymWriter and document writer COM objects the to GC -- 
+                // we write to an in-memory stream hence no files are being locked.
+                // We need to keep these alive until the symWriter is closed because the
+                // symWriter seems to have a un-ref-counted reference to them.  
+                _documentWriters.Clear();
             }
         }
 
@@ -667,7 +671,7 @@ namespace Microsoft.DiaSymReader
         public unsafe override void GetSignature(out Guid guid, out uint stamp, out int age)
         {
             var symWriter = GetSymWriter();
-           
+
             // See symwrite.cpp - the data byte[] doesn't depend on the content of metadata tables or IL.
             // The writer only sets two values of the ImageDebugDirectory struct.
             // 
