@@ -7,7 +7,7 @@
     <UsingToolPdbConverter>true</UsingToolPdbConverter>
 
     <!-- Toolset -->
-    <RoslynToolsMicrosoftRepoToolsetVersion>1.0.0-alpha47</RoslynToolsMicrosoftRepoToolsetVersion>
+    <RoslynToolsMicrosoftRepoToolsetVersion>1.0.0-alpha50</RoslynToolsMicrosoftRepoToolsetVersion>
     <DotNetCliVersion>2.0.2</DotNetCliVersion>
 
     <!-- CoreFX -->
