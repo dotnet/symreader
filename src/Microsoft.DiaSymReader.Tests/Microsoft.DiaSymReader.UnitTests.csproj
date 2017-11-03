@@ -5,7 +5,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!-- 
       We would need to download 32bit dotnet cli, which would add extra time to PR runs 
-      Testing 64bit only on Desktop suffixiently covers our interop code paths.  
+      Testing 64bit only on Desktop sufficiently covers our interop code paths.  
     -->
     <TestArchitectures Condition="'$(TargetFramework)' == 'net46'">x64;x86</TestArchitectures>
 
