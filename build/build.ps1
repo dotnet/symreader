@@ -88,6 +88,14 @@ function InstallToolset {
   }
 }
 
+function InstallVersionOverrides {  
+  if ($env:PB_PackageVersionPropsUrl -ne $null) {
+    Create-Directory $ToolsetDir
+    Write-Host "Downloading $env:PB_PackageVersionPropsUrl ..."
+    Invoke-WebRequest $env:PB_PackageVersionPropsUrl -OutFile "$ToolsetDir\PackageVersionOverrides.props"
+  }
+}
+
 function Build {
   if ($ci -or $log) {
     Create-Directory($logDir)
@@ -116,6 +124,7 @@ try {
   $ToolsetDir = Join-Path $ArtifactsDir "toolset"
   $LogDir = Join-Path (Join-Path $ArtifactsDir $configuration) "log"
   $TempDir = Join-Path (Join-Path $ArtifactsDir $configuration) "tmp"
+ 
   [xml]$VersionsXml = Get-Content(Join-Path $PSScriptRoot "Versions.props")
 
   if ($solution -eq "") {
@@ -138,6 +147,7 @@ try {
   }
 
   if ($restore) {
+    InstallVersionOverrides
     InstallDotNetCli
     InstallToolset
   }
