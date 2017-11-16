@@ -124,7 +124,6 @@ try {
   $ToolsetDir = Join-Path $ArtifactsDir "toolset"
   $LogDir = Join-Path (Join-Path $ArtifactsDir $configuration) "log"
   $TempDir = Join-Path (Join-Path $ArtifactsDir $configuration) "tmp"
- 
   [xml]$VersionsXml = Get-Content(Join-Path $PSScriptRoot "Versions.props")
 
   if ($solution -eq "") {
