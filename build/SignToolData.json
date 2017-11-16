@@ -13,6 +13,13 @@
       "values": [
         "bin/Microsoft.DiaSymReader/netstandard1.1/Microsoft.DiaSymReader.dll"
       ]
+    },
+    {
+      "certificate": null,
+      "strongName": null,
+      "values": [
+        "packages/*.nupkg"
+      ]
     }
   ]
 }
