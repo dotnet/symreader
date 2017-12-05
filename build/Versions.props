@@ -13,7 +13,7 @@
     <SystemReflectionMetadataVersion>1.4.2</SystemReflectionMetadataVersion>
 
     <!-- Libs -->
-    <MicrosoftDiaSymReaderNativeVersion>1.7.0-beta-25631</MicrosoftDiaSymReaderNativeVersion>
+    <MicrosoftDiaSymReaderNativeVersion>1.7.0</MicrosoftDiaSymReaderNativeVersion>
   </PropertyGroup>
 
   <PropertyGroup>
