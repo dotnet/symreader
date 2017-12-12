@@ -88,14 +88,6 @@ function InstallToolset {
   }
 }
 
-function InstallVersionOverrides {  
-  if ($env:PB_PackageVersionPropsUrl -ne $null) {
-    Create-Directory $ToolsetDir
-    Write-Host "Downloading $env:PB_PackageVersionPropsUrl ..."
-    Invoke-WebRequest $env:PB_PackageVersionPropsUrl -OutFile "$ToolsetDir\PackageVersionOverrides.props"
-  }
-}
-
 function Build {
   if ($ci -or $log) {
     Create-Directory($logDir)
@@ -137,7 +129,7 @@ try {
   }
 
   $ToolsetVersion = GetVersion("RoslynToolsRepoToolsetVersion")
-  $ToolsetBuildProj = Join-Path $NuGetPackageRoot "RoslynTools.RepoToolset\$ToolsetVersion\tools\Build.proj"
+  $ToolsetBuildProj = Join-Path $NuGetPackageRoot "roslyntools.repotoolset\$ToolsetVersion\tools\Build.proj"
 
   if ($ci) {
     Create-Directory $TempDir
@@ -146,7 +138,6 @@ try {
   }
 
   if ($restore) {
-    InstallVersionOverrides
     InstallDotNetCli
     InstallToolset
   }
