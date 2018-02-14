@@ -7,10 +7,6 @@
     <VersionBase>1.3.0</VersionBase>
     <PreReleaseVersionLabel>beta</PreReleaseVersionLabel>
 
-    <!-- Toolset -->
-    <RoslynToolsRepoToolsetVersion>1.0.0-beta-62522-01</RoslynToolsRepoToolsetVersion>
-    <DotNetCliVersion>2.0.2</DotNetCliVersion>
-
     <!-- CoreFX -->
     <SystemCollectionsImmutableVersion>1.3.1</SystemCollectionsImmutableVersion>
     <SystemReflectionMetadataVersion>1.4.2</SystemReflectionMetadataVersion>
