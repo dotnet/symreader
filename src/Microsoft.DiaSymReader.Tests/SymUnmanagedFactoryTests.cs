@@ -51,5 +51,11 @@ namespace Microsoft.DiaSymReader.Native.UnitTests
             Assert.NotNull(SymUnmanagedWriterFactory.CreateWriter(DummySymWriterMetadataProvider.Instance, 
                 SymUnmanagedWriterCreationOptions.UseAlternativeLoadPath | SymUnmanagedWriterCreationOptions.UseComRegistry | SymUnmanagedWriterCreationOptions.Deterministic));
         }
+
+        [Fact]
+        public void GetEnvironmentVariable()
+        {
+            Assert.NotNull(SymUnmanagedFactory.GetEnvironmentVariable("MICROSOFT_DIASYMREADER_NATIVE_ALT_LOAD_PATH"));
+        }
     }
 }

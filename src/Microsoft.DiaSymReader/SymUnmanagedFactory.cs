@@ -64,7 +64,7 @@ namespace Microsoft.DiaSymReader
                 foreach (var method in typeof(Environment).GetTypeInfo().GetDeclaredMethods("GetEnvironmentVariable"))
                 {
                     var parameters = method.GetParameters();
-                    if (parameters.Length == 1 && parameters[0].GetType() == typeof(string))
+                    if (parameters.Length == 1 && parameters[0].ParameterType == typeof(string))
                     {
                         return (Func<string, string>)method.CreateDelegate(typeof(Func<string, string>));
                     }
@@ -78,7 +78,8 @@ namespace Microsoft.DiaSymReader
         });
 #endif
 
-        private static string GetEnvironmentVariable(string name)
+        // internal for testing
+        internal static string GetEnvironmentVariable(string name)
         {
             try
             {
@@ -117,7 +118,11 @@ namespace Microsoft.DiaSymReader
                     Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
                 }
 
+#if NET20 || NETSTANDARD1_1
                 var creator = (NativeFactory)Marshal.GetDelegateForFunctionPointer(createAddress, typeof(NativeFactory));
+#else
+                var creator = Marshal.GetDelegateForFunctionPointer<NativeFactory>(createAddress);
+#endif
                 creator(ref clsid, out instance);
             }
             finally
