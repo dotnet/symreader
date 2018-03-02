@@ -19,7 +19,7 @@ namespace Microsoft.DiaSymReader.UnitTests
             SetLoadPath();
         }
 
-        [ConditionalFact(typeof(DesktopOnly))]
+        [ConditionalFact(typeof(DesktopOnly), Skip = "https://github.com/dotnet/symreader/issues/96")]
         public void Create()
         {
             // TODO: Ideally we would run each of these tests in a separate process so they don't interfere with each other.
