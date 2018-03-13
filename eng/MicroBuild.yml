@@ -4,7 +4,14 @@ resources:
 queue:
   name: VSEng-MicroBuildVS2017
   demands: Cmd
-
+variables:
+  BuildConfiguration: Release
+  BuildPlatform: any cpu
+  DropRoot: \\cpvsbuild\drops
+  PB_PublishType: drop-microbuild-symbols-symweb-vsts-myget
+  PB_SignType: real
+  PB_SkipTests: false
+  TeamName: Roslyn
 steps:
 - task: ms-vseng.MicroBuildTasks.30666190-6959-11e5-9f96-f56098202fef.MicroBuildSigningPlugin@1
   inputs:
