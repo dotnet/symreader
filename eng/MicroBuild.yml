@@ -37,7 +37,7 @@ steps:
 - task: NuGetPublisher@0
   inputs:
     searchPattern: 'artifacts\$(BuildConfiguration)\packages\*.nupkg'
-    connectedServiceName: $(NuGetPublishFeedName)
+    connectedServiceName: '$(NuGetPublishFeedName)'
     nuGetVersion: 4.0.0.2283
   condition: and(succeeded(), contains(variables['PB_PublishType'], 'myget'))
 
