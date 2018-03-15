@@ -7,25 +7,30 @@ queue:
 variables:
   BuildConfiguration: Release
   TeamName: Roslyn
+  PB_PublishBlobFeedUrl: https://dotnetfeed.blob.core.windows.net/dotnet-tools-internal/temp/index.json
+
 steps:
 - task: ms-vseng.MicroBuildTasks.30666190-6959-11e5-9f96-f56098202fef.MicroBuildSigningPlugin@1
+  displayName: Install Signing Plugin
   inputs:
     signType: real
   condition: and(succeeded(), eq(variables['PB_SignType'], 'real'))
 
-- task: CmdLine@1
+- task: AzureKeyVault@1
+  displayName: Query Key Vault
   inputs:
-    filename: set
-    arguments: BUILD
+    azureSubscription: 'DotNet-VSTS'
+    KeyVaultName: EngKeyVault
+    SecretsFilter: 'dotnetfeed-storage-access-key-1'
+  condition: and(succeeded(), contains(variables['PB_PublishType'], 'blob'))
 
-- task: BatchScript@1
-  inputs:
-    filename: 'eng\common\CIBuild.cmd'
-    arguments: '-configuration $(BuildConfiguration)'
-    modifyEnvironment: false
-    failOnStandardError: true
+- script: eng\common\CIBuild.cmd 
+            -configuration $(BuildConfiguration)
+            /p:PB_PublishBlobFeedKey=$(dotnetfeed-storage-access-key-1)
+  displayName: Build and Publish to Feed
 
 - task: PublishTestResults@1
+  displayName: Publish Test Results
   inputs:
     testRunner: XUnit
     testResultsFiles: 'artifacts/$(BuildConfiguration)/TestResults/*.xml'
@@ -34,31 +39,35 @@ steps:
   condition: and(succeeded(), ne(variables['PB_SkipTests'], 'true'))
 
 - task: NuGetPublisher@0
+  displayName: Publish NuGet Packages to MyGet
   inputs:
     searchPattern: 'artifacts\$(BuildConfiguration)\packages\*.nupkg'
     connectedServiceName: 'SymReader NuGet feed'
     nuGetVersion: 4.0.0.2283
-  condition: and(succeeded(), contains(variables['PB_PublishType'], 'myget'))
+  condition: and(succeeded(), not contains(variables['PB_PublishType'], 'blob'))
 
 - task: PublishSymbols@1
+  displayName: Prepare Symbols
   inputs:
     SymbolsPath: '$(DropRoot)\$(TeamName)\$(Build.DefinitionName)\$(Build.BuildNumber)\Symbols'
     SearchPattern: '**/*.+(dll|exe|pdb)'
     SymbolsFolder: '$(Build.SourcesDirectory)\artifacts\$(BuildConfiguration)\SymStore'
     SkipIndexing: true
   enabled: false
-  condition: and(succeeded(), contains(variables['PB_PublishType'], 'symbols'))
+  condition: and(succeeded(), not contains(variables['PB_PublishType'], 'blob'))
 
 - task: ms-vscs-artifact.build-tasks.artifactSymbolTask-1.artifactSymbolTask@0
+  displayName: Publish Symbols
   inputs:
     symbolServiceURI: 'https://microsoft.artifacts.visualstudio.com/DefaultCollection'
     requestName: '$(system.teamProject)/$(Build.DefinitionName)/$(Build.BuildNumber)/$(Build.BuildId)'
     sourcePath: '$(DropRoot)\$(TeamName)\$(Build.DefinitionName)\$(Build.BuildNumber)\Symbols'
     usePat: false
   enabled: false
-  condition: and(succeeded(), contains(variables['PB_PublishType'], 'symbols'))
+  condition: and(succeeded(), not contains(variables['PB_PublishType'], 'blob'))
 
 - task: CopyPublishBuildArtifacts@1
+  displayName: Publish Artifacts
   inputs:
     CopyRoot: '$(Build.SourcesDirectory)'
     Contents: |
@@ -69,16 +78,17 @@ steps:
     ArtifactName: '$(Build.BuildNumber)'
     ArtifactType: FilePath
     TargetPath: '$(DropRoot)\$(TeamName)\$(Build.DefinitionName)'
-  condition: and(succeeded(), contains(variables['PB_PublishType'], 'drop'))
+  condition: and(succeeded(), not contains(variables['PB_PublishType'], 'blob'))
 
 - task: ms-vseng.MicroBuildTasks.521a94ea-9e68-468a-8167-6dcf361ea776.MicroBuildCleanup@1
+  displayName: Cleanup
   condition: succeededOrFailed()
 
 - task: PublishBuildArtifacts@1
+  displayName: Publish MicroBuild Artifacts
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)\MicroBuild\Output'
     ArtifactName: '$(Build.BuildNumber)'
     publishLocation: FilePath
     TargetPath: '$(DropRoot)\$(TeamName)\$(Build.DefinitionName)'
-  condition: and(succeeded(), contains(variables['PB_PublishType'], 'microbuild'))
-
+  condition: and(succeeded(), not contains(variables['PB_PublishType'], 'blob'))
