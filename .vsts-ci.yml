@@ -18,8 +18,8 @@ steps:
 
 - script: eng\common\CIBuild.cmd 
             -configuration $(BuildConfiguration)
-            /p:PB_PublishBlobFeedKey=$(dotnetfeed-storage-access-key-1)
-  displayName: Build and Publish to Feed
+            /p:PB_PublishBlobFeedKey=$(PB_PublishBlobFeedKey)
+  displayName: Build
 
 - task: PublishTestResults@1
   displayName: Publish Test Results
