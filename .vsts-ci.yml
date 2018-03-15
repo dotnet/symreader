@@ -16,14 +16,6 @@ steps:
     signType: real
   condition: and(succeeded(), eq(variables['PB_SignType'], 'real'))
 
-- task: AzureKeyVault@1
-  displayName: Query Key Vault
-  inputs:
-    azureSubscription: 'DotNet-VSTS'
-    KeyVaultName: EngKeyVault
-    SecretsFilter: 'dotnetfeed-storage-access-key-1'
-  condition: and(succeeded(), contains(variables['PB_PublishType'], 'blob'))
-
 - script: eng\common\CIBuild.cmd 
             -configuration $(BuildConfiguration)
             /p:PB_PublishBlobFeedKey=$(dotnetfeed-storage-access-key-1)
