@@ -36,7 +36,7 @@ steps:
     searchPattern: 'artifacts\$(BuildConfiguration)\packages\*.nupkg'
     connectedServiceName: 'SymReader NuGet feed'
     nuGetVersion: 4.0.0.2283
-  condition: and(succeeded(), not contains(variables['PB_PublishType'], 'blob'))
+  condition: and(succeeded(), not(contains(variables['PB_PublishType'], 'blob')))
 
 - task: PublishSymbols@1
   displayName: Prepare Symbols
@@ -46,7 +46,7 @@ steps:
     SymbolsFolder: '$(Build.SourcesDirectory)\artifacts\$(BuildConfiguration)\SymStore'
     SkipIndexing: true
   enabled: false
-  condition: and(succeeded(), not contains(variables['PB_PublishType'], 'blob'))
+  condition: and(succeeded(), not(contains(variables['PB_PublishType'], 'blob')))
 
 - task: ms-vscs-artifact.build-tasks.artifactSymbolTask-1.artifactSymbolTask@0
   displayName: Publish Symbols
@@ -56,7 +56,7 @@ steps:
     sourcePath: '$(DropRoot)\$(TeamName)\$(Build.DefinitionName)\$(Build.BuildNumber)\Symbols'
     usePat: false
   enabled: false
-  condition: and(succeeded(), not contains(variables['PB_PublishType'], 'blob'))
+  condition: and(succeeded(), not(contains(variables['PB_PublishType'], 'blob')))
 
 - task: CopyPublishBuildArtifacts@1
   displayName: Publish Artifacts
@@ -70,7 +70,7 @@ steps:
     ArtifactName: '$(Build.BuildNumber)'
     ArtifactType: FilePath
     TargetPath: '$(DropRoot)\$(TeamName)\$(Build.DefinitionName)'
-  condition: and(succeeded(), not contains(variables['PB_PublishType'], 'blob'))
+  condition: and(succeeded(), not(contains(variables['PB_PublishType'], 'blob')))
 
 - task: ms-vseng.MicroBuildTasks.521a94ea-9e68-468a-8167-6dcf361ea776.MicroBuildCleanup@1
   displayName: Cleanup
@@ -83,4 +83,4 @@ steps:
     ArtifactName: '$(Build.BuildNumber)'
     publishLocation: FilePath
     TargetPath: '$(DropRoot)\$(TeamName)\$(Build.DefinitionName)'
-  condition: and(succeeded(), not contains(variables['PB_PublishType'], 'blob'))
+  condition: and(succeeded(), not(contains(variables['PB_PublishType'], 'blob')))
