@@ -117,7 +117,7 @@ function Build {
     $logCmd = ""
   }
 
-  & $BuildDriver $BuildArgs $ToolsetBuildProj /m /nologo /clp:Summary /warnaserror /v:$verbosity $logCmd /p:Configuration=$configuration /p:SolutionPath=$solution /p:Restore=$restore /p:DeployDeps=$deployDeps /p:Build=$build /p:Rebuild=$rebuild /p:Deploy=$deploy /p:Test=$test /p:IntegrationTest=$integrationTest /p:Sign=$sign /p:Pack=$pack /p:CIBuild=$ci /p:NuGetPackageRoot=$NuGetPackageRoot $properties
+  & $BuildDriver $BuildArgs $ToolsetBuildProj /m /nologo /clp:Summary /warnaserror /v:$verbosity $logCmd /p:Configuration=$configuration /p:Projects=$solution /p:Restore=$restore /p:DeployDeps=$deployDeps /p:Build=$build /p:Rebuild=$rebuild /p:Deploy=$deploy /p:Test=$test /p:IntegrationTest=$integrationTest /p:Sign=$sign /p:Pack=$pack /p:CIBuild=$ci /p:NuGetPackageRoot=$NuGetPackageRoot $properties
 }
 
 function Stop-Processes() {
@@ -141,9 +141,9 @@ try {
   $LogDir = Join-Path (Join-Path $ArtifactsDir $configuration) "log"
   $TempDir = Join-Path (Join-Path $ArtifactsDir $configuration) "tmp"
   $GlobalJson = Get-Content(Join-Path $RepoRoot "global.json") | ConvertFrom-Json
-
+  
   if ($solution -eq "") {
-    $solution = @(gci(Join-Path $RepoRoot "*.sln"))[0]
+    $solution = Join-Path $RepoRoot "*.sln"
   }
 
   if ($env:NUGET_PACKAGES -ne $null) {
