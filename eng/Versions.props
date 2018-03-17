@@ -4,7 +4,7 @@
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
 
     <!-- This repo version -->
-    <VersionBase>1.3.0</VersionBase>
+    <VersionPrefix>1.3.0</VersionPrefix>
     <PreReleaseVersionLabel>beta</PreReleaseVersionLabel>
 
     <!-- CoreFX -->
