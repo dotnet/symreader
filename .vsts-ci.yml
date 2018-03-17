@@ -16,7 +16,7 @@ steps:
     signType: real
   condition: and(succeeded(), eq(variables['PB_SignType'], 'real'))
 
-- script: eng\common\CIBuild.cmd 
+- script: eng\CIBuild.cmd 
             -configuration $(BuildConfiguration)
             /p:PB_PublishBlobFeedKey=$(PB_PublishBlobFeedKey)
   displayName: Build
