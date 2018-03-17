@@ -26,7 +26,7 @@ solution=''
 test=false
 verbosity='minimal'
 properties=''
-reporoot="$scriptroot/.."
+reporoot="$scriptroot/../.."
 artifactsdir="$reporoot/artifacts"
 artifactsconfigurationdir="$artifactsdir/$configuration"
 logdir="$artifactsconfigurationdir/log"
@@ -56,22 +56,22 @@ while (($# > 0)); do
     --help)
       echo "Common settings:"
       echo "  --configuration <value>  Build configuration Debug, Release"
-      echo "  --verbosity <value>    Msbuild verbosity (q[uiet], m[inimal], n[ormal], d[etailed], and diag[nostic])"
-      echo "  --help           Print help and exit"
+      echo "  --verbosity <value>      Msbuild verbosity (q[uiet], m[inimal], n[ormal], d[etailed], and diag[nostic])"
+      echo "  --help                   Print help and exit"
       echo ""
       echo "Actions:"
-      echo "  --restore        Restore dependencies"
-      echo "  --build          Build solution"
-      echo "  --rebuild        Rebuild solution"
-      echo "  --test           Run all unit tests in the solution"
-      echo "  --sign           Sign build outputs"
-      echo "  --pack           Package build outputs into NuGet packages and Willow components"
+      echo "  --restore                Restore dependencies"
+      echo "  --build                  Build solution"
+      echo "  --rebuild                Rebuild solution"
+      echo "  --test                   Run all unit tests in the solution"
+      echo "  --sign                   Sign build outputs"
+      echo "  --pack                   Package build outputs into NuGet packages and Willow components"
       echo ""
       echo "Advanced settings:"
-      echo "  --solution <value>     Path to solution to build"
-      echo "  --ci           Set when running on CI server"
-      echo "  --log          Enable logging (by default on CI)"
-      echo "  --prepareMachine     Prepare machine for CI run"
+      echo "  --solution <value>       Path to solution to build"
+      echo "  --ci                     Set when running on CI server"
+      echo "  --log                    Enable logging (by default on CI)"
+      echo "  --prepareMachine         Prepare machine for CI run"
       echo ""
       echo "Command line arguments not listed above are passed through to MSBuild."
       exit 0
@@ -84,8 +84,8 @@ while (($# > 0)); do
       pack=true
       shift 1
       ;;
-    --prepareMachine)
-      prepareMachine=true
+    --preparemachine)
+      preparemachine=true
       shift 1
       ;;
     --rebuild)
