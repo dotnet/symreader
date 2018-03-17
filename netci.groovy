@@ -71,7 +71,7 @@ static addBuildSteps(def job, def projectName, def os, def configName, def isPR)
 
       if (os == 'Windows_NT') {
         Utilities.setMachineAffinity(myJob, os, 'Windows.10.Amd64.ClientRS3.DevEx.Open')  
-      } ekse {
+      } else {
         Utilities.setMachineAffinity(myJob, os, 'latest-or-auto')
       }
 
