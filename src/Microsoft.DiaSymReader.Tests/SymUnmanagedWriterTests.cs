@@ -14,7 +14,7 @@ namespace Microsoft.DiaSymReader.UnitTests
     {
         static SymUnmanagedWriterTests() => SymUnmanagedFactoryTests.SetLoadPath();
 
-        [Fact]
+        [ConditionalFact(typeof(WindowsOnly))]
         public void Deterministic()
         {
             var lang = new Guid("00000000-0000-0000-0000-000000000001");
