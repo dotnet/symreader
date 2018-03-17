@@ -46,13 +46,12 @@ static addBuildSteps(def job, def projectName, def os, def configName, def isPR)
 
 [true, false].each { isPR ->
   ['Ubuntu16.04', 'Windows_NT'].each { os ->
-    ['debug', 'release'].each { configName ->
+    ['Debug', 'Release'].each { configName ->
       def projectName = GithubProject
 
       def branchName = GithubBranchName
 
       def filesToArchive = "**/artifacts/${configName}/**"
-      def filesToExclude = "**/artifacts/${configName}/obj/**"
 
       def jobName = getJobName(os, configName)
       def fullJobName = Utilities.getFullJobName(projectName, jobName, isPR)
@@ -66,7 +65,7 @@ static addBuildSteps(def job, def projectName, def os, def configName, def isPR)
         Utilities.addGithubPushTrigger(myJob)
       }
       
-      addArchival(myJob, filesToArchive, filesToExclude)
+      addArchival(myJob, filesToArchive, "")
       addXUnitDotNETResults(myJob, configName)
 
       if (os == 'Windows_NT') {
