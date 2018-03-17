@@ -14,7 +14,6 @@ Param(
   [switch] $pack,
   [switch] $ci,
   [switch] $prepareMachine,
-  [switch] $log,
   [switch] $help,
   [Parameter(ValueFromRemainingArguments=$true)][String[]]$properties
 )
@@ -45,7 +44,6 @@ function Print-Usage() {
     Write-Host "Advanced settings:"
     Write-Host "  -solution <value>       Path to solution to build"
     Write-Host "  -ci                     Set when running on CI server"
-    Write-Host "  -log                    Enable logging (by default on CI)"
     Write-Host "  -prepareMachine         Prepare machine for CI run"
     Write-Host ""
     Write-Host "Command line arguments not listed above are passed thru to msbuild."
@@ -110,13 +108,9 @@ function InstallToolset {
 }
 
 function Build {
-  if ($ci -or $log) {
-    Create-Directory($logDir)
-    $logCmd = "/bl:" + (Join-Path $LogDir "Build.binlog")
-  } else {
-    $logCmd = ""
-  }
-
+  Create-Directory($logDir)
+  $logCmd = "/bl:" + (Join-Path $LogDir "Build.binlog")
+  
   & $BuildDriver $BuildArgs $ToolsetBuildProj /m /nologo /clp:Summary /warnaserror /v:$verbosity $logCmd /p:Configuration=$configuration /p:Projects=$solution /p:Restore=$restore /p:DeployDeps=$deployDeps /p:Build=$build /p:Rebuild=$rebuild /p:Deploy=$deploy /p:Test=$test /p:IntegrationTest=$integrationTest /p:Sign=$sign /p:Pack=$pack /p:CIBuild=$ci /p:NuGetPackageRoot=$NuGetPackageRoot $properties
 }
 
