@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 using Microsoft.DiaSymReader.Tools;
+using Roslyn.Test.Utilities;
 using Xunit;
 
 namespace Microsoft.DiaSymReader.Native.UnitTests
@@ -11,7 +12,7 @@ namespace Microsoft.DiaSymReader.Native.UnitTests
     {
         public interface ISymUnmanagedReaderX : ISymUnmanagedReader5 { }
 
-        [Fact]
+        [ConditionalFact(typeof(WindowsOnly))]
         public void Create()
         {
             // TODO: Ideally we would run each of these tests in a separate process so they don't interfere with each other.
