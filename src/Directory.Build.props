@@ -5,12 +5,6 @@
   <PropertyGroup>
     <LangVersion>Latest</LangVersion>
 
-    <!--
-      TODO: dotnet cli currently doesn't support building against net20 out of the box.
-      https://github.com/Microsoft/msbuild/issues/1333
-     -->
-    <FrameworkPathOverride Condition="'$(TargetFramework)' == 'net20'">$(MSBuildProgramFiles32)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Client</FrameworkPathOverride>
-
     <!-- 
       TODO: Can't use embedded PDBs with LUT:
       https://github.com/dotnet/testimpact/issues/1877 
