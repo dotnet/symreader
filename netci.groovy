@@ -69,7 +69,11 @@ static addBuildSteps(def job, def projectName, def os, def configName, def isPR)
       addArchival(myJob, filesToArchive, filesToExclude)
       addXUnitDotNETResults(myJob, configName)
 
-      Utilities.setMachineAffinity(myJob, os, 'latest-or-auto')
+      if (os == 'Windows_NT') {
+        Utilities.setMachineAffinity(myJob, os, 'Windows.10.Amd64.ClientRS3.DevEx.Open')  
+      } ekse {
+        Utilities.setMachineAffinity(myJob, os, 'latest-or-auto')
+      }
 
       addBuildSteps(myJob, projectName, os, configName, isPR)
     }
