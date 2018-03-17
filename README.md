@@ -12,7 +12,7 @@ Pre-release builds are available on MyGet gallery: https://dotnet.myget.org/Gall
 
 |          |Windows Debug|Windows Release|
 |:--------:|:-----------:|:-------------:|
-|**master**|[![Build Status](https://ci.dot.net/job/dotnet_symreader/job/master/job/windows_debug/badge/icon)](https://ci.dot.net/job/dotnet_symreader/job/master/job/windows_debug/)|[![Build Status](https://ci.dot.net/job/dotnet_symreader/job/master/job/windows_release/badge/icon)](https://ci.dot.net/job/dotnet_symreader/job/master/job/windows_release/)|
+|**master**|[![Build Status](https://ci.dot.net/job/dotnet_symreader/job/release/1.3.0/job/windows_debug/badge/icon)](https://ci.dot.net/job/dotnet_symreader/job/release/1.3.0/job/windows_debug/)|[![Build Status](https://ci.dot.net/job/dotnet_symreader/job/release/1.3.0/job/windows_release/badge/icon)](https://ci.dot.net/job/dotnet_symreader/job/release/1.3.0/job/windows_release/)|
 
 [//]: # (End current test results)
 
