@@ -70,7 +70,7 @@ static addBuildSteps(def job, def projectName, def os, def configName, def isPR)
       addXUnitDotNETResults(myJob, configName)
 
       if (os == 'Windows_NT') {
-        Utilities.setMachineAffinity(myJob, os, 'Windows.10.Amd64.ClientRS3.DevEx.Open')  
+        Utilities.setMachineAffinity(myJob, os, 'latest-dev15-3')  
       } else {
         Utilities.setMachineAffinity(myJob, os, 'latest-or-auto')
       }
