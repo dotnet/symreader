@@ -8,8 +8,8 @@
     <PreReleaseVersionLabel>beta</PreReleaseVersionLabel>
 
     <!-- CoreFX -->
-    <SystemCollectionsImmutableVersion>1.5.0-preview3-26319-04</SystemCollectionsImmutableVersion>
-    <SystemReflectionMetadataVersion>1.6.0-preview3-26319-04</SystemReflectionMetadataVersion>
+    <SystemCollectionsImmutableVersion>1.5.0-preview3-26322-06</SystemCollectionsImmutableVersion>
+    <SystemReflectionMetadataVersion>1.6.0-preview3-26322-06</SystemReflectionMetadataVersion>
     <SystemValueTupleVersion>4.3.0</SystemValueTupleVersion>
 
     <!-- Libs -->
