@@ -234,9 +234,7 @@ function InstallToolset {
   fi
 }
 
-function Build {
-  InstallDotNetCli
-
+function PrepareMachine {
   if [[ "$prepareMachine" == true ]]; then
     mkdir -p "$nugetpackageroot"
     dotnet nuget locals all --clear
@@ -247,9 +245,9 @@ function Build {
       ExitWithExitCode $lastexitcode
     fi
   fi
+}
 
-  InstallToolset
-
+function Build {
   if [[ "$officialbuild" == true ]]; then
     MakeGlobalSdkAvailableLocal
   fi
@@ -286,7 +284,7 @@ function ExitWithExitCode {
 
 function StopProcesses {
   echo "Killing running build processes..."
-  pkill -9 "msbuild"
+  pkill -9 "dotnet"
   pkill -9 "vbcscompiler"
 }
 
@@ -317,6 +315,10 @@ function Main {
   toolsetversion=$readjsonvalue
 
   toolsetbuildproj="$nugetpackageroot/roslyntools.repotoolset/$toolsetversion/tools/Build.proj"
+
+  PrepareMachine
+  InstallDotNetCli
+  InstallToolset
 
   Build
   ExitWithExitCode $?
