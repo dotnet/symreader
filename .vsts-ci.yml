@@ -27,7 +27,7 @@ steps:
     testResultsFiles: 'artifacts/$(BuildConfiguration)/TestResults/*.xml'
     mergeTestResults: true
     testRunTitle: 'Unit Tests'
-  condition: and(succeeded(), ne(variables['PB_SkipTests'], 'true'))
+  condition: and(succeededOrFailed(), ne(variables['PB_SkipTests'], 'true'))
 
 - task: NuGetPublisher@0
   displayName: Publish NuGet Packages to MyGet
@@ -69,7 +69,7 @@ steps:
     ArtifactName: '$(Build.BuildNumber)'
     ArtifactType: FilePath
     TargetPath: '$(DropRoot)\$(TeamName)\$(Build.DefinitionName)'
-  condition: and(succeeded(), not(contains(variables['PB_PublishType'], 'blob')))
+  condition: and(succeededOrFailed(), not(contains(variables['PB_PublishType'], 'blob')))
 
 - task: ms-vseng.MicroBuildTasks.521a94ea-9e68-468a-8167-6dcf361ea776.MicroBuildCleanup@1
   displayName: Cleanup
@@ -82,4 +82,4 @@ steps:
     ArtifactName: '$(Build.BuildNumber)'
     publishLocation: FilePath
     TargetPath: '$(DropRoot)\$(TeamName)\$(Build.DefinitionName)'
-  condition: not(contains(variables['PB_PublishType'], 'blob'))
+  condition: and(succeededOrFailed(), not(contains(variables['PB_PublishType'], 'blob')))
