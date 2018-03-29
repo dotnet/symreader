@@ -13,6 +13,7 @@ steps:
   displayName: Install Signing Plugin
   inputs:
     signType: real
+    esrpSigning: true
   condition: and(succeeded(), eq(variables['PB_SignType'], 'real'))
 
 - script: eng\common\CIBuild.cmd 
