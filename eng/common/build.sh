@@ -221,7 +221,7 @@ function InitializeToolset {
 function PrepareMachine {
   if [[ "$prepare_machine" == true ]]; then
     mkdir -p "$nuget_package_root"
-    dotnet nuget locals all --clear
+    "$build_driver" nuget locals all --clear
     local lastexitcode=$?
 
     if [[ $lastexitcode != 0 ]]; then
@@ -300,8 +300,8 @@ function Main {
 
   toolset_build_proj="$nuget_package_root/roslyntools.repotoolset/$toolset_version/tools/Build.proj"
 
-  PrepareMachine
   InitializeDotNetCli
+  PrepareMachine
   InitializeToolset
 
   Build
