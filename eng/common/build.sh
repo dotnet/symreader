@@ -208,7 +208,7 @@ function InitializeToolset {
     local toolset_proj="$temp_dir/_restore.csproj"
     echo '<Project Sdk="RoslynTools.RepoToolset"><Target Name="NoOp"/></Project>' > $toolset_proj
 
-    "$build_driver" msbuild $toolset_proj /t:NoOp /m /nologo /clp:Summary /warnaserror "/p:nuget_package_root=$nuget_package_root/" /v:$verbosity
+    "$build_driver" msbuild $toolset_proj /t:NoOp /m /nologo /clp:Summary /warnaserror /p:NuGetPackageRoot="$nuget_package_root/" /v:$verbosity
     local lastexitcode=$?
 
     if [[ $lastexitcode != 0 ]]; then
@@ -237,9 +237,9 @@ function Build {
   fi
 
   "$build_driver" msbuild $toolset_build_proj /m /nologo /clp:Summary /warnaserror \
-    /v:$verbosity /bl:$log /p:Configuration=$configuration /p:Projects=$solution /p:repo_root="$repo_root" \
+    /v:$verbosity /bl:$log /p:Configuration=$configuration /p:Projects=$solution /p:RepoRoot="$repo_root" \
     /p:Restore=$restore /p:Build=$build /p:Rebuild=$rebuild /p:Deploy=$deploy /p:Test=$test /p:Sign=$sign /p:Pack=$pack /p:CIBuild=$ci \
-    /p:RestorePackagesPath="$nuget_package_root/" /p:nuget_package_root="$nuget_package_root/" \
+    /p:RestorePackagesPath="$nuget_package_root/" /p:NuGetPackageRoot="$nuget_package_root/" \
     $properties
   local lastexitcode=$?
 
