@@ -86,8 +86,8 @@ function InitializeDotNetCli {
     }
   }
 
-  $BuildDriver = Join-Path $dotnetRoot "dotnet.exe"    
-  $BuildArgs = "msbuild"
+  $global:BuildDriver = Join-Path $dotnetRoot "dotnet.exe"    
+  $global:BuildArgs = "msbuild"
 }
 
 function InstallDotNetCli([string] $dotnetRoot) {
@@ -116,8 +116,8 @@ function InitializeVisualStudioBuild {
     $env:VSSDKInstall = Join-Path $vsInstallDir "VSSDK\"
   }
 
-  $BuildDriver = Join-Path $vsInstallDir "MSBuild\15.0\Bin\msbuild.exe"
-  $BuildArgs = "/nodeReuse:$(!$ci)"
+  $global:BuildDriver = Join-Path $vsInstallDir "MSBuild\15.0\Bin\msbuild.exe"
+  $global:BuildArgs = "/nodeReuse:$(!$ci)"
 }
 
 function LocateVisualStudio {
@@ -201,7 +201,7 @@ try {
 
   $ToolsetVersion = $GlobalJson.'msbuild-sdks'.'RoslynTools.RepoToolset'
   $ToolsetBuildProj = Join-Path $NuGetPackageRoot "roslyntools.repotoolset\$ToolsetVersion\tools\Build.proj"
-  
+    
   # Presence of vswhere.version indicates the repo needs to build using VS msbuild
   if ((Get-Member -InputObject $GlobalJson -Name "vswhere") -ne $null) {    
     InitializeVisualStudioBuild
