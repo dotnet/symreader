@@ -197,8 +197,8 @@ try {
   $Log = Join-Path $LogDir "Build.binlog"
   $ToolsetRestoreLog = Join-Path $LogDir "ToolsetRestore.binlog"
   $TempDir = Join-Path (Join-Path $ArtifactsDir $configuration) "tmp"
-  $GlobalJson = Get-Content(Join-Path $RepoRoot "global.json") | ConvertFrom-Json
-  
+  $GlobalJson = Get-Content -Raw -Path (Join-Path $RepoRoot "global.json") | ConvertFrom-Json
+
   if ($solution -eq "") {
     $solution = Join-Path $RepoRoot "*.sln"
   }
@@ -218,7 +218,7 @@ try {
     $env:TEMP = $TempDir
     $env:TMP = $TempDir
   }
-    
+
   # Presence of vswhere.version indicates the repo needs to build using VS msbuild
   if ((Get-Member -InputObject $GlobalJson -Name "vswhere") -ne $null) {    
     InitializeVisualStudioBuild
