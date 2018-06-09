@@ -4,12 +4,6 @@
 
   <PropertyGroup>
     <LangVersion>Latest</LangVersion>
-
-    <!-- 
-      TODO: Can't use embedded PDBs with LUT:
-      https://github.com/dotnet/testimpact/issues/1877 
-    -->
-    <DebugType Condition="'$(BuildingForLiveUnitTesting)' != 'true'">embedded</DebugType>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">

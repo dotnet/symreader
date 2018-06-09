@@ -16,6 +16,7 @@
     <MicrosoftDiaSymReaderNativeVersion>1.7.0</MicrosoftDiaSymReaderNativeVersion>
 
     <UsingToolNetFrameworkReferenceAssemblies>true</UsingToolNetFrameworkReferenceAssemblies>
+    <UsingToolSymbolUploader>true</UsingToolSymbolUploader>
   </PropertyGroup>
 
   <PropertyGroup>
