@@ -48,6 +48,7 @@ steps:
      artifacts\$(BuildConfiguration)\bin
      artifacts\$(BuildConfiguration)\log
      artifacts\$(BuildConfiguration)\TestResults
+     artifacts\$(BuildConfiguration)\SymStore
      artifacts\$(BuildConfiguration)\packages
     ArtifactName: '$(Build.BuildNumber)'
     ArtifactType: FilePath
