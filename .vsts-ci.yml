@@ -19,6 +19,8 @@ steps:
 - script: eng\common\CIBuild.cmd 
             -configuration $(BuildConfiguration)
             /p:PB_PublishBlobFeedKey=$(PB_PublishBlobFeedKey)
+            /p:DotNetSymbolServerTokenMsdl=$(microsoft-symbol-server-pat)
+            /p:DotNetSymbolServerTokenSymWeb=$(symweb-symbol-server-pat)
   displayName: Build
 
 - task: PublishTestResults@1
