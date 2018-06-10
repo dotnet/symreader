@@ -7,16 +7,17 @@
     <VersionPrefix>1.3.0</VersionPrefix>
     <PreReleaseVersionLabel>beta</PreReleaseVersionLabel>
 
-    <!-- CoreFX -->
+    <!-- Opt-in repo features -->
+    <UsingToolSymbolUploader>true</UsingToolSymbolUploader>
+    <UsingToolNetFrameworkReferenceAssemblies>true</UsingToolNetFrameworkReferenceAssemblies>
+
+    <!-- Dependencies -->
     <SystemCollectionsImmutableVersion>1.5.0-preview2-26401-03</SystemCollectionsImmutableVersion>
     <SystemReflectionMetadataVersion>1.6.0-preview2-26401-03</SystemReflectionMetadataVersion>
     <SystemValueTupleVersion>4.3.0</SystemValueTupleVersion>
 
-    <!-- Libs -->
     <MicrosoftDiaSymReaderNativeVersion>1.7.0</MicrosoftDiaSymReaderNativeVersion>
-
-    <UsingToolNetFrameworkReferenceAssemblies>true</UsingToolNetFrameworkReferenceAssemblies>
-    <UsingToolSymbolUploader>true</UsingToolSymbolUploader>
+    <MicrosoftSourceLinkVersion>1.0.0-beta-63001-01</MicrosoftSourceLinkVersion>
   </PropertyGroup>
 
   <PropertyGroup>
