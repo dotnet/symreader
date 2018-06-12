@@ -7,8 +7,6 @@ using STATSTG = System.Runtime.InteropServices.ComTypes.STATSTG;
 
 namespace Microsoft.DiaSymReader
 {
-    // TODO: Copied from Roslyn. Share.
-
     /// <summary>
     /// This is a re-definition of COM's IStream interface. The important change is that
     /// the Read and Write methods take an <see cref="IntPtr"/> instead of a byte[] to avoid the

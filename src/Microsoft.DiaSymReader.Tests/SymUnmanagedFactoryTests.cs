@@ -7,16 +7,19 @@ using Microsoft.DiaSymReader.Tools;
 using Roslyn.Test.Utilities;
 using Xunit;
 
-namespace Microsoft.DiaSymReader.Native.UnitTests
+namespace Microsoft.DiaSymReader.UnitTests
 {
     public class SymUnmanagedFactoryTests
     {
+        internal static void SetLoadPath()
+            => Environment.SetEnvironmentVariable("MICROSOFT_DIASYMREADER_NATIVE_ALT_LOAD_PATH", Path.Combine(Path.GetDirectoryName(typeof(SymUnmanagedFactoryTests).GetTypeInfo().Assembly.Location), "DSRN"));
+
         static SymUnmanagedFactoryTests()
         {
-            Environment.SetEnvironmentVariable("MICROSOFT_DIASYMREADER_NATIVE_ALT_LOAD_PATH", Path.Combine(Path.GetDirectoryName(typeof(SymUnmanagedFactoryTests).GetTypeInfo().Assembly.Location), "DSRN"));
+            SetLoadPath();
         }
 
-        [ConditionalFact(typeof(DesktopOnly))]
+        [ConditionalFact(typeof(DesktopOnly), Skip = "https://github.com/dotnet/symreader/issues/96")]
         public void Create()
         {
             // TODO: Ideally we would run each of these tests in a separate process so they don't interfere with each other.
@@ -50,6 +53,12 @@ namespace Microsoft.DiaSymReader.Native.UnitTests
 
             Assert.NotNull(SymUnmanagedWriterFactory.CreateWriter(DummySymWriterMetadataProvider.Instance, 
                 SymUnmanagedWriterCreationOptions.UseAlternativeLoadPath | SymUnmanagedWriterCreationOptions.UseComRegistry | SymUnmanagedWriterCreationOptions.Deterministic));
+        }
+
+        [Fact]
+        public void GetEnvironmentVariable()
+        {
+            Assert.NotNull(SymUnmanagedFactory.GetEnvironmentVariable("MICROSOFT_DIASYMREADER_NATIVE_ALT_LOAD_PATH"));
         }
     }
 }
