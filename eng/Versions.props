@@ -19,7 +19,6 @@
     <SystemValueTupleVersion>4.3.0</SystemValueTupleVersion>
 
     <MicrosoftDiaSymReaderNativeVersion>1.7.0</MicrosoftDiaSymReaderNativeVersion>
-    <MicrosoftDotNetSignToolVersion>1.0.0-prerelease-63201-04</MicrosoftDotNetSignToolVersion>
   </PropertyGroup>
 
   <PropertyGroup>
