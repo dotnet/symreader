@@ -3,6 +3,6 @@
     "version": "2.1.400-preview-009088"
   },
   "msbuild-sdks": {
-    "Microsoft.DotNet.Arcade.Sdk": "1.0.0-prerelease-63201-06"
+    "Microsoft.DotNet.Arcade.Sdk": "1.0.0-prerelease-63202-02"
   }
 }
