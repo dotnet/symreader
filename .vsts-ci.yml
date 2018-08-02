@@ -20,7 +20,7 @@ steps:
             -configuration $(BuildConfiguration)
             /p:PB_PublishBlobFeedKey=$(PB_PublishBlobFeedKey)
             /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
-            /p:DotNetSignType=$(SignType)            
+            /p:DotNetSignType=$(SignType)
             /p:DotNetSymbolServerTokenMsdl=$(microsoft-symbol-server-pat)
             /p:DotNetSymbolServerTokenSymWeb=$(symweb-symbol-server-pat)
   displayName: Build
