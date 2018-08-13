@@ -42,7 +42,7 @@ namespace Microsoft.DiaSymReader
             => new SymUnmanagedWriterException(inner, _symWriterModuleName);
 
         /// <summary>
-        /// Writes teh content to the given stream. The writer is disposed and can't be used for further writing.
+        /// Writes the content to the given stream. The writer is disposed and can't be used for further writing.
         /// </summary>
         public override void WriteTo(Stream stream)
         {
@@ -84,7 +84,7 @@ namespace Microsoft.DiaSymReader
             }
             catch
             {
-                // Dipose shall not throw
+                // Dispose shall not throw
             }
 
             _disposed = true;

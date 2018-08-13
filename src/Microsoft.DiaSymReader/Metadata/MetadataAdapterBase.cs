@@ -82,7 +82,7 @@ namespace Microsoft.DiaSymReader
         int IMetadataImport.EnumMethodSemantics(ref void* enumHandle, int methodDef, int* eventsAndProperties, int bufferLength, int* count) => throw new NotImplementedException();
         int IMetadataImport.GetMethodSemantics(int methodDef, int eventOrProperty, int* semantics) => throw new NotImplementedException();
         int IMetadataImport.GetClassLayout(int typeDef, int* packSize, MetadataImportFieldOffset* fieldOffsets, int bufferLength, int* count, int* typeSize) => throw new NotImplementedException();
-        int IMetadataImport.GetFieldMarshal(int fieldDef, byte** nativeTypeSignature, int* nativeTypeSignatureLengvth) => throw new NotImplementedException();
+        int IMetadataImport.GetFieldMarshal(int fieldDef, byte** nativeTypeSignature, int* nativeTypeSignatureLength) => throw new NotImplementedException();
         int IMetadataImport.GetRVA(int methodDef, int* relativeVirtualAddress, int* implAttributes) => throw new NotImplementedException();
         int IMetadataImport.GetPermissionSetProps(int declSecurity, uint* action, byte** permissionBlob, int* permissionBlobLength) => throw new NotImplementedException();
         int IMetadataImport.GetModuleRefProps(int moduleRef, char* name, int nameBufferLength, int* nameLength) => throw new NotImplementedException();

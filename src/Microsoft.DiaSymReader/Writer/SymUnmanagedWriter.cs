@@ -12,7 +12,7 @@ namespace Microsoft.DiaSymReader
     public abstract class SymUnmanagedWriter : IDisposable
     {
         /// <summary>
-        /// Diposes the writer.
+        /// Disposes the writer.
         /// </summary>
         public abstract void Dispose();
 
