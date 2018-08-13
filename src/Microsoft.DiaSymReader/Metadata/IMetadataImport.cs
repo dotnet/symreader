@@ -310,7 +310,7 @@ namespace Microsoft.DiaSymReader
         int GetFieldMarshal(
             int fieldDef,
             [Out]byte** nativeTypeSignature, // returns pointer to signature blob
-            [Out]int* nativeTypeSignatureLengvth);
+            [Out]int* nativeTypeSignatureLength);
 
         [PreserveSig]
         int GetRVA(
