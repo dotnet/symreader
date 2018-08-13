@@ -166,7 +166,7 @@ namespace Microsoft.DiaSymReader
         #region ISymUnmanagedReader4 methods
 
         /// <summary>
-        /// Checkes whether the id stored in the PDB matches the PDB ID stored in the PE/COFF Debug Directory.
+        /// Checks whether the id stored in the PDB matches the PDB ID stored in the PE/COFF Debug Directory.
         /// </summary>
         [PreserveSig]
         new int MatchesModule(Guid guid, uint stamp, int age, [MarshalAs(UnmanagedType.Bool)]out bool result);
