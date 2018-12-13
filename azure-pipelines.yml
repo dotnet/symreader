@@ -70,7 +70,8 @@ jobs:
           $(_BuildArgs)
         displayName: Build and Publish
 
-    - job: Ubuntu 14.04
+    - job: Ubuntu_14_04
+      displayName: 'Ubuntu 14.04'
       container: LinuxContainer
       pool:
         ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
