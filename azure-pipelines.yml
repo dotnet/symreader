@@ -16,7 +16,7 @@ jobs:
     enableTelemetry: true
     helixRepo: dotnet/symreader
     jobs:
-    - job: Windows_NT
+    - job: Windows
       pool:
         # For public or PR jobs, use the hosted pool.  For internal jobs use the internal pool.
         # Will eventually change this to two BYOC pools.
@@ -45,29 +45,32 @@ jobs:
           value: ''
       strategy:
         matrix:
-          Build_Debug:
+          Debug:
             _BuildConfig: Debug
             _SignType: test
-            _DotNetPublishToBlobFeed : false
-          Build_Release:
+            _DotNetPublishToBlobFeed: false
+            _BuildArgs: ''
+          Release:
             _BuildConfig: Release
             # PRs or external builds are not signed.
             ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
               _SignType: test
-              _DotNetPublishToBlobFeed : false
+              _DotNetPublishToBlobFeed: false
+              _BuildArgs: ''
             ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
               _SignType: real
-              _DotNetPublishToBlobFeed : true
+              _DotNetPublishToBlobFeed: true
+              _BuildArgs: $(_OfficialBuildArgs)
       steps:
       - checkout: self
         clean: true
       - script: eng\common\cibuild.cmd
           -configuration $(_BuildConfig) 
           -prepareMachine
-          $(_OfficialBuildArgs)
-        displayName: Windows Build / Publish
+          $(_BuildArgs)
+        displayName: Build and Publish
 
-    - job: Ubuntu_14_04
+    - job: Ubuntu 14.04
       container: LinuxContainer
       pool:
         ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
@@ -76,11 +79,11 @@ jobs:
           name: dnceng-linux-internal-temp
       strategy:
         matrix:
-          Build_Debug:
+          Debug:
             _BuildConfig: Debug
             _SignType: none
             _DotNetPublishToBlobFeed : false
-          Build_Release:
+          Release:
             _BuildConfig: Release
             _SignType: none
             _DotNetPublishToBlobFeed : false
@@ -90,4 +93,4 @@ jobs:
       - script: eng/common/cibuild.sh
           --configuration $(_BuildConfig)
           --prepareMachine
-        displayName: Ubuntu 14.04 Build
+        displayName: Build
