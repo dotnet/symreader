@@ -91,7 +91,8 @@ jobs:
           name: NetCorePublic-Int-Pool
           queue: BuildPool.Ubuntu.1604.Amd64.Open
         ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-          name: dnceng-linux-internal-temp
+          name: NetCoreInternal-Int-Pool
+          queue: BuildPool.Ubuntu.1604.Amd64
       strategy:
         matrix:
           Debug:
