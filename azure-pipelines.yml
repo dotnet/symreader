@@ -6,7 +6,7 @@ pr:
 
 jobs:
 - job: Ubuntu1604_Debug
-  displayName: prtest/Ubuntu16.04/Debug
+  displayName: Ubuntu 16.04 Debug
   pool:
     vmImage: ubuntu-16.04
   steps:
@@ -28,7 +28,7 @@ jobs:
     condition: always()
 
 - job: Ubuntu1604_Release
-  displayName: prtest/Ubuntu16.04/Release
+  displayName: Ubuntu 16.04 Release
   pool:
     vmImage: ubuntu-16.04
   steps:
@@ -50,7 +50,7 @@ jobs:
     condition: always()
 
 - job: Windows_NT_Debug
-  displayName: prtest/Windows/NT/Debug
+  displayName: Windows NT Debug
   pool:
     vmImage: vs2017-win2016
   steps:
@@ -72,7 +72,7 @@ jobs:
     condition: always()
 
 - job: Windows_NT_Release
-  displayName: prtest/Windows/NT/Release
+  displayName: Windows NT Release
   pool:
     vmImage: vs2017-win2016
   steps:
