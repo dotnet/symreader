@@ -1,0 +1,94 @@
+trigger:
+- release/1.3.0
+
+pr:
+- release/1.3.0
+
+jobs:
+- job: Ubuntu1604_Debug
+  displayName: prtest/Ubuntu16.04/Debug
+  pool:
+    vmImage: ubuntu-16.04
+  steps:
+  - checkout: self
+    clean: true
+  - script: ./eng/common/cibuild.sh --configuration Debug --prepareMachine
+  - task: CopyFiles@2
+    inputs:
+      contents: '**/artifacts/Debug/**'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: Ubuntu1604_Debug
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: xUnit
+      testResultsFiles: '**/artifacts/Debug/TestResults/*.xml'
+    condition: always()
+
+- job: Ubuntu1604_Release
+  displayName: prtest/Ubuntu16.04/Release
+  pool:
+    vmImage: ubuntu-16.04
+  steps:
+  - checkout: self
+    clean: true
+  - script: ./eng/common/cibuild.sh --configuration Release --prepareMachine
+  - task: CopyFiles@2
+    inputs:
+      contents: '**/artifacts/Release/**'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: Ubuntu1604_Release
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: xUnit
+      testResultsFiles: '**/artifacts/Release/TestResults/*.xml'
+    condition: always()
+
+- job: Windows_NT_Debug
+  displayName: prtest/Windows/NT/Debug
+  pool:
+    vmImage: vs2017-win2016
+  steps:
+  - checkout: self
+    clean: true
+  - script: .\eng\common\CIBuild.cmd -configuration Debug -prepareMachine
+  - task: CopyFiles@2
+    inputs:
+      contents: '**/artifacts/Debug/**'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: Windows_NT_Debug
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: xUnit
+      testResultsFiles: '**/artifacts/Debug/TestResults/*.xml'
+    condition: always()
+
+- job: Windows_NT_Release
+  displayName: prtest/Windows/NT/Release
+  pool:
+    vmImage: vs2017-win2016
+  steps:
+  - checkout: self
+    clean: true
+  - script: .\eng\common\CIBuild.cmd -configuration Release -prepareMachine
+  - task: CopyFiles@2
+    inputs:
+      contents: '**/artifacts/Release/**'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: Windows_NT_Release
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: xUnit
+      testResultsFiles: '**/artifacts/Release/TestResults/*.xml'
+    condition: always()
