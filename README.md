@@ -9,5 +9,3 @@ It is recommended that new applications and libraries read Portable PDBs directl
 Pre-release builds are available from Azure DevOps public feed: `https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet5/nuget/v3/index.json` ([browse](https://dev.azure.com/dnceng/public/_packaging?_a=feed&feed=dotnet5)).
 
 [![Build Status](https://dnceng.visualstudio.com/public/_apis/build/status/dotnet/symreader/SymReader%20PR?branchName=master)](https://dnceng.visualstudio.com/public/_build/latest?definitionId=291&branchName=master)
-
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
