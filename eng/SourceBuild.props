@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <GitHubRepositoryName>symreader</GitHubRepositoryName>
+    <SourceBuildManagedOnly>true</SourceBuildManagedOnly>
+  </PropertyGroup>
+</Project>
