@@ -3,6 +3,7 @@
     <TargetFramework>netstandard1.3</TargetFramework>
     <IsShipping>false</IsShipping>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
