@@ -4,6 +4,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
     <IsShipping>false</IsShipping>
+    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Resources\**\*.cs" />
