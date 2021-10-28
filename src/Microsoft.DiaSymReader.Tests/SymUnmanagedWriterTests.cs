@@ -71,7 +71,7 @@ namespace Microsoft.DiaSymReader.UnitTests
             var symReader = SymUnmanagedReaderFactory.CreateReader<ISymUnmanagedReader5>(pdbStream, metadataProvider, SymUnmanagedReaderCreationOptions.UseAlternativeLoadPath);
 
             var infoReader = (ISymUnmanagedCompilerInfoReader)symReader;
-            infoReader.GetCompilerInfo(out var version, out var name);
+            Assert.True(infoReader.TryGetCompilerInfo(out var version, out var name));
             Assert.Equal(new Version(1, 2, 3, 4), version);
             Assert.Equal("Compiler", name);
 

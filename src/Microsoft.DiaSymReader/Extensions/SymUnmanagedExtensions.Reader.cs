@@ -176,7 +176,7 @@ namespace Microsoft.DiaSymReader
         /// <summary>
         /// Returns compiler version number and name.
         /// </summary>
-        public static void GetCompilerInfo(this ISymUnmanagedCompilerInfoReader reader, out Version version, out string name)
+        public static bool TryGetCompilerInfo(this ISymUnmanagedCompilerInfoReader reader, out Version version, out string name)
         {
             if (reader == null)
             {
@@ -184,6 +184,12 @@ namespace Microsoft.DiaSymReader
             }
 
             ThrowExceptionForHR(reader.GetCompilerInfo(out var _, out var _, out var _, out var _, bufferLength: 0, out var bufferLength, name: null));
+            if (bufferLength == 0)
+            {
+                version = null;
+                name = null;
+                return false;
+            }
 
             var nameBuffer = new char[bufferLength];
             ThrowExceptionForHR(reader.GetCompilerInfo(out var major, out var minor, out var build, out var revision, bufferLength, out var actualLength, nameBuffer));
@@ -191,6 +197,7 @@ namespace Microsoft.DiaSymReader
 
             name = BufferToString(nameBuffer);
             version = new Version(major, minor, build, revision);
+            return true;
         }
     }
 }
