@@ -11,7 +11,8 @@ namespace Microsoft.DiaSymReader
 {
     internal static class SymUnmanagedFactory
     {
-        private const string AlternateLoadPathEnvironmentVariableName = "MICROSOFT_DIASYMREADER_NATIVE_ALT_LOAD_PATH";
+        private const string AlternativeLoadPathEnvironmentVariableName = "MICROSOFT_DIASYMREADER_NATIVE_ALT_LOAD_PATH";
+        private const string AlternativeLoadPathOnlyEnvironmentVariableName = "MICROSOFT_DIASYMREADER_NATIVE_USE_ALT_LOAD_PATH_ONLY";
 
         private const string LegacyDiaSymReaderModuleName = "diasymreader.dll";
         private const string DiaSymReaderModuleName32 = "Microsoft.DiaSymReader.Native.x86.dll";
@@ -99,7 +100,7 @@ namespace Microsoft.DiaSymReader
 
         private static object TryLoadFromAlternativePath(Guid clsid, string factoryName)
         {
-            var dir = GetEnvironmentVariable(AlternateLoadPathEnvironmentVariableName);
+            var dir = GetEnvironmentVariable(AlternativeLoadPathEnvironmentVariableName);
             if (string.IsNullOrEmpty(dir))
             {
                 return null;
@@ -154,7 +155,7 @@ namespace Microsoft.DiaSymReader
 
         internal static object CreateObject(bool createReader, bool useAlternativeLoadPath, bool useComRegistry, out string moduleName, out Exception loadException)
         {
-            object instance = null;
+            object instance;
             loadException = null;
             moduleName = null;
 
@@ -162,9 +163,14 @@ namespace Microsoft.DiaSymReader
             
             try
             {
+                DllNotFoundException loadExceptionCandidate = null;
                 try
                 {
-                    if (IntPtr.Size == 4)
+                    if (useAlternativeLoadPath && GetEnvironmentVariable(AlternativeLoadPathOnlyEnvironmentVariableName) == "1")
+                    {
+                        instance = null;
+                    } 
+                    else if (IntPtr.Size == 4)
                     {
                         if (createReader)
                         {
@@ -189,11 +195,14 @@ namespace Microsoft.DiaSymReader
                 }
                 catch (DllNotFoundException e) when (useAlternativeLoadPath)
                 {
-                    instance = TryLoadFromAlternativePath(clsid, createReader ? CreateSymReaderFactoryName : CreateSymWriterFactoryName);
-                    if (instance == null)
-                    {
-                        loadException = e;
-                    }
+                    instance = null;
+                    loadExceptionCandidate = e;
+                }
+
+                instance ??= TryLoadFromAlternativePath(clsid, createReader ? CreateSymReaderFactoryName : CreateSymWriterFactoryName);
+                if (instance == null)
+                {
+                    loadException = loadExceptionCandidate;
                 }
             }
             catch (Exception e)
