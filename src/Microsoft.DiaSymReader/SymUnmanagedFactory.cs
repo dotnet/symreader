@@ -73,32 +73,12 @@ namespace Microsoft.DiaSymReader
 
         private delegate void NativeFactory(ref Guid id, [MarshalAs(UnmanagedType.IUnknown)] out object instance);
 
-        private static readonly Lazy<Func<string, string>> s_lazyGetEnvironmentVariable = new Lazy<Func<string, string>>(() =>
-        {
-            try
-            {
-                foreach (var method in typeof(Environment).GetTypeInfo().GetDeclaredMethods("GetEnvironmentVariable"))
-                {
-                    var parameters = method.GetParameters();
-                    if (parameters.Length == 1 && parameters[0].ParameterType == typeof(string))
-                    {
-                        return (Func<string, string>)method.CreateDelegate(typeof(Func<string, string>));
-                    }
-                }
-            }
-            catch
-            {
-            }
-
-            return null;
-        });
-
         // internal for testing
         internal static string GetEnvironmentVariable(string name)
         {
             try
             {
-                return s_lazyGetEnvironmentVariable.Value?.Invoke(name);
+                return Environment.GetEnvironmentVariable(name);
             }
             catch
             {
