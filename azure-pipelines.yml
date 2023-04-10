@@ -10,9 +10,8 @@ pr:
     - docs/*
 
 # Run official build every day at midnight, if code has changed since the last run.
-schedules:
-- cron: "0 0 * * *"
-  displayName: Daily Official Build
+trigger:
+  batch: true
   branches:
     include:
     - main
