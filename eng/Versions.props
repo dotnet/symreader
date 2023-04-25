@@ -6,8 +6,10 @@
     <!-- Opt-in/out repo features -->
     <UsingToolPdbConverter>false</UsingToolPdbConverter>
     <UsingToolNuGetRepack>true</UsingToolNuGetRepack>
+    <FlagNetStandard1XDependencies>true</FlagNetStandard1XDependencies>
     <!-- Pinned -->
-    <SystemCollectionsImmutableVersion>7.0.0</SystemCollectionsImmutableVersion>
     <MicrosoftDiaSymReaderNativeVersion>17.0.0-beta1.21524.1</MicrosoftDiaSymReaderNativeVersion>
+    <NETStandardLibraryVersion>2.0.3</NETStandardLibraryVersion>
+    <SystemCollectionsImmutableVersion>7.0.0</SystemCollectionsImmutableVersion>
   </PropertyGroup>
 </Project>
