@@ -17,6 +17,7 @@ trigger:
     - main
 
 variables:
+  - template: /eng/common/templates/variables/pool-providers.yml
   - name: _TeamName
     value: Roslyn
 
@@ -40,7 +41,7 @@ stages:
           ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
             vmImage: 'windows-latest'
           ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-            name: NetCore1ESPool-Internal
+            name: $(DncEngInternalBuildPool)
             demands: ImageOverride -equals 1es-windows-2022
         variables:
         # Only enable publishing in official builds
