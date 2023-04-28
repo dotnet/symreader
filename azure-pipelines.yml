@@ -52,7 +52,6 @@ stages:
           - name: _OfficialBuildArgs
             value: /p:DotNetSignType=$(_SignType)
                   /p:TeamName=$(_TeamName)
-                  /p:DotNetPublishUsingPipelines=$(_PublishUsingPipelines)
                   /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
         # else
         - ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
