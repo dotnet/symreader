@@ -5,8 +5,8 @@
     <!-- This repo version -->
     <VersionPrefix>2.1.0</VersionPrefix>
     <PreReleaseVersionLabel>beta</PreReleaseVersionLabel>
-    <!-- Opt-in repo features -->
-    <UsingToolSymbolUploader>true</UsingToolSymbolUploader>
+    <!-- Opt-in/out repo features -->
+    <UsingToolPdbConverter>false</UsingToolPdbConverter>
     <UsingToolNetFrameworkReferenceAssemblies>true</UsingToolNetFrameworkReferenceAssemblies>
     <UsingToolNuGetRepack>true</UsingToolNuGetRepack>
     <!-- Pinned -->
