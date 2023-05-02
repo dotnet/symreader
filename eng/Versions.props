@@ -3,9 +3,8 @@
 <Project>
   <PropertyGroup>
     <!-- This repo version -->
-    <VersionPrefix>2.0.0</VersionPrefix>
+    <VersionPrefix>2.1.0</VersionPrefix>
     <PreReleaseVersionLabel>beta</PreReleaseVersionLabel>
-    <SemanticVersioningV1>true</SemanticVersioningV1>
     <!-- Opt-in/out repo features -->
     <UsingToolPdbConverter>false</UsingToolPdbConverter>
     <UsingToolNetFrameworkReferenceAssemblies>true</UsingToolNetFrameworkReferenceAssemblies>
