@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the License.txt file in the project root for more information. -->
 <Project>
   <PropertyGroup>
     <!-- This repo version -->
@@ -7,12 +5,11 @@
     <PreReleaseVersionLabel>beta</PreReleaseVersionLabel>
     <!-- Opt-in/out repo features -->
     <UsingToolPdbConverter>false</UsingToolPdbConverter>
-    <UsingToolNetFrameworkReferenceAssemblies>true</UsingToolNetFrameworkReferenceAssemblies>
     <UsingToolNuGetRepack>true</UsingToolNuGetRepack>
+    <FlagNetStandard1XDependencies>true</FlagNetStandard1XDependencies>
     <!-- Pinned -->
-    <SystemCollectionsImmutableVersion>5.0.0</SystemCollectionsImmutableVersion>
-    <SystemReflectionMetadataVersion>5.0.0</SystemReflectionMetadataVersion>
-    <SystemValueTupleVersion>4.5.0</SystemValueTupleVersion>
     <MicrosoftDiaSymReaderNativeVersion>17.0.0-beta1.21524.1</MicrosoftDiaSymReaderNativeVersion>
+    <NETStandardLibraryVersion>2.0.3</NETStandardLibraryVersion>
+    <SystemCollectionsImmutableVersion>7.0.0</SystemCollectionsImmutableVersion>
   </PropertyGroup>
 </Project>
