@@ -21,7 +21,7 @@ using System.Runtime.InteropServices.Marshalling;
 
 namespace Microsoft.DiaSymReader
 {
-    internal static class SymUnmanagedFactory
+    internal static partial class SymUnmanagedFactory
     {
         private const string AlternativeLoadPathEnvironmentVariableName = "MICROSOFT_DIASYMREADER_NATIVE_ALT_LOAD_PATH";
         private const string AlternativeLoadPathOnlyEnvironmentVariableName = "MICROSOFT_DIASYMREADER_NATIVE_USE_ALT_LOAD_PATH_ONLY";
@@ -75,16 +75,29 @@ namespace Microsoft.DiaSymReader
         [DllImport(DiaSymReaderModuleNameArm64, EntryPoint = CreateSymWriterFactoryName)]
         private static unsafe extern void CreateSymWriterArm64([MarshalAs(UnmanagedType.LPStruct)] Guid id, IntPtr* symWriter);
 
+
+#if NETSTANDARD2_0
         [DllImport("kernel32")]
         private static extern IntPtr LoadLibrary(string path);
+#else
+        [LibraryImport("kernel32", StringMarshalling = StringMarshalling.Utf16)]
+        private static partial IntPtr LoadLibrary(string path);
+#endif
 
         [DllImport("kernel32")]
         private static extern bool FreeLibrary(IntPtr hModule);
 
+#if NETSTANDARD2_0
         [DllImport("kernel32")]
         private static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
+#else
+        [LibraryImport("kernel32", StringMarshalling = StringMarshalling.Utf16)]
+        private static partial IntPtr GetProcAddress(IntPtr hModule, string procedureName);
+#endif
 
+#if NETSTANDARD2_0
         private delegate void NativeFactory(ref Guid id, [MarshalAs(UnmanagedType.IUnknown)] out object instance);
+#endif
 
         // internal for testing
         internal static string GetEnvironmentVariable(string name)
@@ -99,7 +112,7 @@ namespace Microsoft.DiaSymReader
             }
         }
 
-        private static object TryLoadFromAlternativePath(Guid clsid, string factoryName)
+        private static unsafe object TryLoadFromAlternativePath(Guid clsid, bool createReader)
         {
             var dir = GetEnvironmentVariable(AlternativeLoadPathEnvironmentVariableName);
             if (string.IsNullOrEmpty(dir))
@@ -116,14 +129,24 @@ namespace Microsoft.DiaSymReader
             object instance = null;
             try
             {
+                string factoryName = createReader ? CreateSymReaderFactoryName : CreateSymWriterFactoryName;
                 var createAddress = GetProcAddress(moduleHandle, factoryName);
                 if (createAddress == IntPtr.Zero)
                 {
                     Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
                 }
 
+#if NETSTANDARD2_0
                 var creator = Marshal.GetDelegateForFunctionPointer<NativeFactory>(createAddress);
                 creator(ref clsid, out instance);
+#else
+                var creator = (delegate*unmanaged<Guid*, IntPtr*, void>)createAddress;
+                IntPtr rawInstance = default;
+                creator(&clsid, &rawInstance);
+                instance = createReader
+                    ? ComInterfaceMarshaller<ISymUnmanagedReader>.ConvertToManaged(rawInstance.ToPointer())
+                    : ComInterfaceMarshaller<ISymUnmanagedWriter5>.ConvertToManaged(rawInstance.ToPointer());
+#endif
             }
             finally
             {
@@ -221,7 +244,7 @@ namespace Microsoft.DiaSymReader
                     loadExceptionCandidate = e;
                 }
 
-                instance ??= TryLoadFromAlternativePath(clsid, createReader ? CreateSymReaderFactoryName : CreateSymWriterFactoryName);
+                instance ??= TryLoadFromAlternativePath(clsid, createReader);
                 if (instance == null)
                 {
                     loadException = loadExceptionCandidate;
