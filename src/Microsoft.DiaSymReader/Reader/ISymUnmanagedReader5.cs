@@ -4,16 +4,20 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
+
+#if NETSTANDARD2_0
+using IStream = System.Runtime.InteropServices.ComTypes.IStream;
+#endif
 
 namespace Microsoft.DiaSymReader
 {
-    [ComImport]
     [Guid("6576c987-7e8d-4298-a6e1-6f9783165f07")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [ComVisible(false)]
-    public interface ISymUnmanagedReader5 : ISymUnmanagedReader4
+    [GeneratedWhenPossibleComInterface]
+    public unsafe partial interface ISymUnmanagedReader5 : ISymUnmanagedReader4
     {
+#if NETSTANDARD2_0
         #region ISymUnmanagedReader methods
 
         [PreserveSig]
@@ -210,6 +214,7 @@ namespace Microsoft.DiaSymReader
         new unsafe int GetSourceServerData(out byte* data, out int size);
 
         #endregion
+#endif
 
         #region ISymUnmanagedReader5 methods
 

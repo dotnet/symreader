@@ -7,12 +7,13 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.DiaSymReader
 {
-    [ComImport]
     [Guid("5da320c8-9c2c-4e5a-b823-027e0677b359")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [ComVisible(false)]
-    public interface ISymUnmanagedMethod2 : ISymUnmanagedMethod
+    [GeneratedWhenPossibleComInterface]
+    public partial interface ISymUnmanagedMethod2 : ISymUnmanagedMethod
     {
+#if NETSTANDARD2_0
         #region ISymUnmanagedMethod methods
 
         [PreserveSig]
@@ -89,6 +90,7 @@ namespace Microsoft.DiaSymReader
             [In, Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] int[] endColumns);
 
         #endregion
+#endif
 
         #region ISymUnmanagedMethod2 methods
 

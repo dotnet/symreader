@@ -2,10 +2,22 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+#if NET9_0_OR_GREATER
+global using GeneratedWhenPossibleComInterfaceAttribute = System.Runtime.InteropServices.Marshalling.GeneratedComInterfaceAttribute;
+#else
+global using GeneratedWhenPossibleComInterfaceAttribute = System.Runtime.InteropServices.ComImportAttribute;
+#endif
+
 using System;
 using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
+#if NET9_0_OR_GREATER
+using System.Runtime.InteropServices.Marshalling;
+#endif
+
+#if NET9_0_OR_GREATER
+[assembly: System.Runtime.CompilerServices.DisableRuntimeMarshalling]
+#endif
 
 namespace Microsoft.DiaSymReader
 {
@@ -41,27 +53,27 @@ namespace Microsoft.DiaSymReader
 
         [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
         [DllImport(DiaSymReaderModuleName32, EntryPoint = CreateSymReaderFactoryName)]
-        private static extern void CreateSymReader32(ref Guid id, [MarshalAs(UnmanagedType.IUnknown)] out object symReader);
+        private static unsafe extern void CreateSymReader32([MarshalAs(UnmanagedType.LPStruct)] Guid id, IntPtr* symReader);
 
         [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
         [DllImport(DiaSymReaderModuleNameAmd64, EntryPoint = CreateSymReaderFactoryName)]
-        private static extern void CreateSymReaderAmd64(ref Guid id, [MarshalAs(UnmanagedType.IUnknown)] out object symReader);
+        private static unsafe extern void CreateSymReaderAmd64([MarshalAs(UnmanagedType.LPStruct)] Guid id, IntPtr* symReader);
 
         [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
         [DllImport(DiaSymReaderModuleNameArm64, EntryPoint = CreateSymReaderFactoryName)]
-        private static extern void CreateSymReaderArm64(ref Guid id, [MarshalAs(UnmanagedType.IUnknown)] out object symReader);
+        private static unsafe extern void CreateSymReaderArm64([MarshalAs(UnmanagedType.LPStruct)] Guid id, IntPtr* symReader);
 
         [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
         [DllImport(DiaSymReaderModuleName32, EntryPoint = CreateSymWriterFactoryName)]
-        private static extern void CreateSymWriter32(ref Guid id, [MarshalAs(UnmanagedType.IUnknown)] out object symWriter);
+        private static unsafe extern void CreateSymWriter32([MarshalAs(UnmanagedType.LPStruct)] Guid id, IntPtr* symWriter);
 
         [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
         [DllImport(DiaSymReaderModuleNameAmd64, EntryPoint = CreateSymWriterFactoryName)]
-        private static extern void CreateSymWriterAmd64(ref Guid id, [MarshalAs(UnmanagedType.IUnknown)] out object symWriter);
+        private static unsafe extern void CreateSymWriterAmd64([MarshalAs(UnmanagedType.LPStruct)] Guid id, IntPtr* symWriter);
 
         [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
         [DllImport(DiaSymReaderModuleNameArm64, EntryPoint = CreateSymWriterFactoryName)]
-        private static extern void CreateSymWriterArm64(ref Guid id, [MarshalAs(UnmanagedType.IUnknown)] out object symWriter);
+        private static unsafe extern void CreateSymWriterArm64([MarshalAs(UnmanagedType.LPStruct)] Guid id, IntPtr* symWriter);
 
         [DllImport("kernel32")]
         private static extern IntPtr LoadLibrary(string path);
@@ -128,15 +140,22 @@ namespace Microsoft.DiaSymReader
         {
             if (lazyType == null)
             {
-                lazyType = Marshal.GetTypeFromCLSID(clsid);
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    lazyType = Marshal.GetTypeFromCLSID(clsid);
+                }
+                else
+                {
+                    throw new NotSupportedException("COM lookup is not supported");
+                }
             }
 
             return lazyType;
         }
 
-        internal static object CreateObject(bool createReader, bool useAlternativeLoadPath, bool useComRegistry, out string moduleName, out Exception loadException)
+        internal static unsafe object CreateObject(bool createReader, bool useAlternativeLoadPath, bool useComRegistry, out string moduleName, out Exception loadException)
         {
-            object instance;
+            object instance = null;
             loadException = null;
             moduleName = null;
 
@@ -148,34 +167,51 @@ namespace Microsoft.DiaSymReader
 
                 try
                 {
-                    if (useAlternativeLoadPath && GetEnvironmentVariable(AlternativeLoadPathOnlyEnvironmentVariableName) == "1")
+                    if (!(useAlternativeLoadPath && GetEnvironmentVariable(AlternativeLoadPathOnlyEnvironmentVariableName) == "1"))
                     {
-                        instance = null;
-                    }
-                    else
-                    {
+                        IntPtr rawInstance = default;
                         switch (RuntimeInformation.ProcessArchitecture, createReader)
                         {
                             case (Architecture.X86, true):
-                                CreateSymReader32(ref clsid, out instance);
+                                CreateSymReader32(clsid, &rawInstance);
                                 break;
                             case (Architecture.X86, false):
-                                CreateSymWriter32(ref clsid, out instance);
+                                CreateSymWriter32(clsid, &rawInstance);
                                 break;
                             case (Architecture.X64, true):
-                                CreateSymReaderAmd64(ref clsid, out instance);
+                                CreateSymReaderAmd64(clsid, &rawInstance);
                                 break;
                             case (Architecture.X64, false):
-                                CreateSymWriterAmd64(ref clsid, out instance);
+                                CreateSymWriterAmd64(clsid, &rawInstance);
                                 break;
                             case (Architecture.Arm64, true):
-                                CreateSymReaderArm64(ref clsid, out instance);
+                                CreateSymReaderArm64(clsid, &rawInstance);
                                 break;
                             case (Architecture.Arm64, false):
-                                CreateSymWriterArm64(ref clsid, out instance);
+                                CreateSymWriterArm64(clsid, &rawInstance);
                                 break;
                             default:
                                 throw new NotSupportedException();
+                        }
+
+                        if (rawInstance != default)
+                        {
+                            if (createReader)
+                            {
+#if NET9_0_OR_GREATER
+                                instance = ComInterfaceMarshaller<ISymUnmanagedReader>.ConvertToManaged(rawInstance.ToPointer());
+#else
+                                instance = (ISymUnmanagedReader)Marshal.GetObjectForIUnknown(rawInstance);
+#endif
+                            }
+                            else
+                            {
+#if NET9_0_OR_GREATER
+                                instance = ComInterfaceMarshaller<ISymUnmanagedWriter5>.ConvertToManaged(rawInstance.ToPointer());
+#else
+                                instance = (ISymUnmanagedWriter5)Marshal.GetObjectForIUnknown(rawInstance);
+#endif
+                            }
                         }
                     }
                 }

@@ -4,16 +4,20 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
+
+#if NETSTANDARD2_0
+using IStream = System.Runtime.InteropServices.ComTypes.IStream;
+#endif
 
 namespace Microsoft.DiaSymReader
 {
-    [ComImport]
     [Guid("6151CAD9-E1EE-437A-A808-F64838C0D046")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [ComVisible(false)]
-    public interface ISymUnmanagedReader3 : ISymUnmanagedReader2
+    [GeneratedWhenPossibleComInterface]
+    public partial interface ISymUnmanagedReader3 : ISymUnmanagedReader2
     {
+#if NETSTANDARD2_0
         #region ISymUnmanagedReader methods
 
         [PreserveSig]
@@ -136,11 +140,12 @@ namespace Microsoft.DiaSymReader
             [In, Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] ISymUnmanagedMethod[] methods);
 
         #endregion
+#endif
 
         #region ISymUnmanagedReader3 methods
 
         /// <summary>
-        /// Gets a custom debug information based upon its name and an EnC 1-based version number. 
+        /// Gets a custom debug information based upon its name and an EnC 1-based version number.
         /// </summary>
         [PreserveSig]
         int GetSymAttributeByVersion(
@@ -152,7 +157,7 @@ namespace Microsoft.DiaSymReader
             [In, Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] byte[] customDebugInformation);
 
         /// <summary>
-        /// Gets a custom debug information based upon its name and an EnC 1-based version number. 
+        /// Gets a custom debug information based upon its name and an EnC 1-based version number.
         /// </summary>
         [PreserveSig]
         int GetSymAttributeByVersionPreRemap(
@@ -163,6 +168,6 @@ namespace Microsoft.DiaSymReader
             out int count,
             [In, Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] byte[] customDebugInformation);
 
-        #endregion  
+        #endregion
     }
 }

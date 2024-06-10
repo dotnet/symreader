@@ -7,12 +7,13 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.DiaSymReader
 {
-    [ComImport]
     [Guid("ACCEE350-89AF-4ccb-8B40-1C2C4C6F9434")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [ComVisible(false)]
-    public interface ISymUnmanagedBinder2 : ISymUnmanagedBinder
+    [GeneratedWhenPossibleComInterface]
+    public partial interface ISymUnmanagedBinder2 : ISymUnmanagedBinder
     {
+#if NETSTANDARD2_0
         #region ISymUnmanagedBinder methods
 
         /// <summary>
@@ -47,6 +48,7 @@ namespace Microsoft.DiaSymReader
             [MarshalAs(UnmanagedType.Interface)]out ISymUnmanagedReader reader);
 
         #endregion
+#endif
 
         /// <summary>
         /// Given a metadata interface and a file name, returns the 
