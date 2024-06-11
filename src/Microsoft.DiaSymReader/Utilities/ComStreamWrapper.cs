@@ -69,12 +69,12 @@ namespace Microsoft.DiaSymReader
         }
 
         /// <summary>
-        /// The actual number of bytes read can be fewer than the number of bytes requested 
+        /// The actual number of bytes read can be fewer than the number of bytes requested
         /// if an error occurs or if the end of the stream is reached during the read operation.
         /// </summary>
         public unsafe void Read(byte* pv, int cb, int* pcbRead)
         {
-            var buffer = new byte[cb]; 
+            var buffer = new byte[cb];
             int bytesRead = TryReadAll(_stream, buffer, 0, cb);
 
             for (int i = 0; i < bytesRead; ++i)
@@ -196,7 +196,11 @@ namespace Microsoft.DiaSymReader
         {
             public static IntPtr ConvertToUnmanaged(System.Runtime.InteropServices.ComTypes.IStream stream)
             {
-                if (stream is IUnsafeComStream unsafeComStream)
+                if (stream is null)
+                {
+                    return IntPtr.Zero;
+                }
+                else if (stream is IUnsafeComStream unsafeComStream)
                 {
                     return (IntPtr)ComInterfaceMarshaller<IUnsafeComStream>.ConvertToUnmanaged(unsafeComStream);
                 }
@@ -209,7 +213,7 @@ namespace Microsoft.DiaSymReader
 
             public static void Free(IntPtr unmanaged)
             {
-                if (unmanaged != default)
+                if (unmanaged != IntPtr.Zero)
                 {
                     Marshal.Release(unmanaged);
                 }
