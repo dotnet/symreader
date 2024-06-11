@@ -77,22 +77,22 @@ namespace Microsoft.DiaSymReader
 
 
 #if NETSTANDARD2_0
-        [DllImport("kernel32")]
-        private static extern IntPtr LoadLibrary(string path);
+        [DllImport("kernel32", CharSet = CharSet.Unicode, ExactSpelling = true)]
+        private static extern IntPtr LoadLibraryW(string path);
 #else
         [LibraryImport("kernel32", StringMarshalling = StringMarshalling.Utf16)]
-        private static partial IntPtr LoadLibrary(string path);
+        private static partial IntPtr LoadLibraryW(string path);
 #endif
 
-        [DllImport("kernel32")]
+        [DllImport("kernel32", ExactSpelling = true)]
         private static extern bool FreeLibrary(IntPtr hModule);
 
 #if NETSTANDARD2_0
-        [DllImport("kernel32")]
-        private static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
+        [DllImport("kernel32", ExactSpelling = true)]
+        private static extern IntPtr GetProcAddress(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string procedureName);
 #else
-        [LibraryImport("kernel32", StringMarshalling = StringMarshalling.Utf16)]
-        private static partial IntPtr GetProcAddress(IntPtr hModule, string procedureName);
+        [LibraryImport("kernel32")]
+        private static partial IntPtr GetProcAddress(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string procedureName);
 #endif
 
 #if NETSTANDARD2_0
@@ -120,7 +120,7 @@ namespace Microsoft.DiaSymReader
                 return null;
             }
 
-            var moduleHandle = LoadLibrary(Path.Combine(dir, DiaSymReaderModuleName));
+            var moduleHandle = LoadLibraryW(Path.Combine(dir, DiaSymReaderModuleName));
             if (moduleHandle == IntPtr.Zero)
             {
                 Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
