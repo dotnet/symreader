@@ -17,6 +17,8 @@ namespace Microsoft.DiaSymReader
     [GeneratedWhenPossibleComInterface]
     public unsafe partial interface ISymUnmanagedReader5 : ISymUnmanagedReader4
     {
+        // .NET 8+ COM source generators respect COM interface inheritance
+        // so re-declaration of inherited method is not needed.
 #if NETSTANDARD2_0
         #region ISymUnmanagedReader methods
 
@@ -144,7 +146,7 @@ namespace Microsoft.DiaSymReader
         #region ISymUnmanagedReader3 methods
 
         /// <summary>
-        /// Gets a custom debug information based upon its name and an EnC 1-based version number. 
+        /// Gets a custom debug information based upon its name and an EnC 1-based version number.
         /// </summary>
         [PreserveSig]
         new int GetSymAttributeByVersion(
@@ -156,7 +158,7 @@ namespace Microsoft.DiaSymReader
             [In, Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] byte[] customDebugInformation);
 
         /// <summary>
-        /// Gets a custom debug information based upon its name and an EnC 1-based version number. 
+        /// Gets a custom debug information based upon its name and an EnC 1-based version number.
         /// </summary>
         [PreserveSig]
         new int GetSymAttributeByVersionPreRemap(
@@ -181,9 +183,9 @@ namespace Microsoft.DiaSymReader
         /// Returns a pointer to Portable Debug Metadata. Only available for Portable PDBs.
         /// </summary>
         /// <param name="metadata">
-        /// A pointer to memory where Portable Debug Metadata start. The memory is owned by the SymReader and 
-        /// valid until <see cref="ISymUnmanagedDispose.Destroy"/> is invoked. 
-        /// 
+        /// A pointer to memory where Portable Debug Metadata start. The memory is owned by the SymReader and
+        /// valid until <see cref="ISymUnmanagedDispose.Destroy"/> is invoked.
+        ///
         /// Null if the PDB is not portable.
         /// </param>
         /// <param name="size">Size of the metadata block.</param>
@@ -191,7 +193,7 @@ namespace Microsoft.DiaSymReader
         /// S_OK if the PDB is portable, S_FALSE if it isn't.
         /// </returns>
         /// <remarks>
-        /// If the store was updated via <see cref="UpdateSymbolStore(string, IStream)"/> 
+        /// If the store was updated via <see cref="UpdateSymbolStore(string, IStream)"/>
         /// returns the metadata of the latest update.
         /// </remarks>
         [PreserveSig]
@@ -201,9 +203,9 @@ namespace Microsoft.DiaSymReader
         /// Returns a pointer to Source Server data stored in the PDB.
         /// </summary>
         /// <param name="data">
-        /// A pointer to memory where Source Server data start. The memory is owned by the SymReader and 
-        /// valid until <see cref="ISymUnmanagedDispose.Destroy"/> is invoked. 
-        /// 
+        /// A pointer to memory where Source Server data start. The memory is owned by the SymReader and
+        /// valid until <see cref="ISymUnmanagedDispose.Destroy"/> is invoked.
+        ///
         /// Null if the PDB doesn't contain Source Server data.
         /// </param>
         /// <param name="size">Size of the data in bytes.</param>
@@ -225,9 +227,9 @@ namespace Microsoft.DiaSymReader
         /// EnC 1-based version number. Version 1 corresponds to the baseline.
         /// </param>
         /// <param name="metadata">
-        /// A pointer to memory where Portable Debug Metadata start. The memory is owned by the SymReader and 
-        /// valid until <see cref="ISymUnmanagedDispose.Destroy"/> is invoked. 
-        /// 
+        /// A pointer to memory where Portable Debug Metadata start. The memory is owned by the SymReader and
+        /// valid until <see cref="ISymUnmanagedDispose.Destroy"/> is invoked.
+        ///
         /// Null if the PDB is not portable.
         /// </param>
         /// <param name="size">Size of the metadata block.</param>

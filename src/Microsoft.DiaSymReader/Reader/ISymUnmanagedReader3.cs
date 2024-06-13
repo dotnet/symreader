@@ -17,6 +17,8 @@ namespace Microsoft.DiaSymReader
     [GeneratedWhenPossibleComInterface]
     public partial interface ISymUnmanagedReader3 : ISymUnmanagedReader2
     {
+        // .NET 8+ COM source generators respect COM interface inheritance
+        // so re-declaration of inherited method is not needed.
 #if NETSTANDARD2_0
         #region ISymUnmanagedReader methods
 

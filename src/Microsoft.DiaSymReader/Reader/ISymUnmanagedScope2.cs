@@ -12,8 +12,10 @@ namespace Microsoft.DiaSymReader
     [GeneratedWhenPossibleComInterface]
     public partial interface ISymUnmanagedScope2 : ISymUnmanagedScope
     {
+        // .NET 8+ COM source generators respect COM interface inheritance
+        // so re-declaration of inherited method is not needed.
 #if NETSTANDARD2_0
-        #region ISymUnmanagedScope methods 
+        #region ISymUnmanagedScope methods
 
         [PreserveSig]
         new int GetMethod([MarshalAs(UnmanagedType.Interface)] out ISymUnmanagedMethod method);

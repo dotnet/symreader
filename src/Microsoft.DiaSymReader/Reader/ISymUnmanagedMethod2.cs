@@ -13,6 +13,8 @@ namespace Microsoft.DiaSymReader
     [GeneratedWhenPossibleComInterface]
     public partial interface ISymUnmanagedMethod2 : ISymUnmanagedMethod
     {
+        // .NET 8+ COM source generators respect COM interface inheritance
+        // so re-declaration of inherited method is not needed.
 #if NETSTANDARD2_0
         #region ISymUnmanagedMethod methods
 
@@ -100,7 +102,7 @@ namespace Microsoft.DiaSymReader
         /// <param name="localSignatureToken">Local signature token (StandAloneSig), or 0 if the method doesn't have any local variables.</param>
         /// <returns>
         /// S_OK if the method has a local signature,
-        /// S_FALSE if the method doesn't have a local signature, 
+        /// S_FALSE if the method doesn't have a local signature,
         /// E_* if an error occurs while reading the signature.
         /// </returns>
         [PreserveSig]

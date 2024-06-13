@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the License.txt file in the project root for more information.
 
-#pragma warning disable 436 // SuppressUnmanagedCodeSecurityAttribute defined in source and mscorlib 
+#pragma warning disable 436 // SuppressUnmanagedCodeSecurityAttribute defined in source and mscorlib
 
 using System;
 using System.Runtime.InteropServices;
@@ -101,7 +101,7 @@ namespace Microsoft.DiaSymReader
         #region ISymUnmanagedWriter5
 
         /// <summary>
-        /// Open a special custom data section to emit token to source span mapping information into. 
+        /// Open a special custom data section to emit token to source span mapping information into.
         /// Opening this section while a method is already open or vice versa is an error.
         /// </summary>
         void OpenMapTokensToSourceSpans();
@@ -113,7 +113,7 @@ namespace Microsoft.DiaSymReader
         void CloseMapTokensToSourceSpans();
 
         /// <summary>
-        /// Maps the given metadata token to the given source line span in the specified source file. 
+        /// Maps the given metadata token to the given source line span in the specified source file.
         /// Must be called between calls to <see cref="OpenMapTokensToSourceSpans"/> and <see cref="CloseMapTokensToSourceSpans"/>.
         /// </summary>
         void MapTokenToSourceSpan(int token, ISymUnmanagedDocumentWriter document, int startLine, int startColumn, int endLine, int endColumn);
@@ -132,6 +132,8 @@ namespace Microsoft.DiaSymReader
 #endif
     internal unsafe partial interface ISymUnmanagedWriter8 : ISymUnmanagedWriter5
     {
+        // .NET 8+ COM source generators respect COM interface inheritance
+        // so re-declaration of inherited method is not needed.
 #if NETSTANDARD2_0
         //  ISymUnmanagedWriter, ISymUnmanagedWriter2, ISymUnmanagedWriter3, ISymUnmanagedWriter4, ISymUnmanagedWriter5
         void _VtblGap1_33();
@@ -173,7 +175,7 @@ namespace Microsoft.DiaSymReader
         private readonly long _longValue;
 
         /// <summary>
-        /// This field determines the size of the struct 
+        /// This field determines the size of the struct
         /// (16 bytes on 32-bit platforms, 24 bytes on 64-bit platforms).
         /// </summary>
         [FieldOffset(8)]
