@@ -5,4 +5,5 @@
     <GitHubRepositoryName>symreader</GitHubRepositoryName>
     <SourceBuildManagedOnly>true</SourceBuildManagedOnly>
   </PropertyGroup>
+
 </Project>
