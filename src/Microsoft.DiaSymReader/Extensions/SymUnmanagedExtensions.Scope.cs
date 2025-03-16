@@ -78,7 +78,7 @@ namespace Microsoft.DiaSymReader
                     throw new ArgumentNullException(nameof(scope));
                 }
 
-                return EmptyArray<ISymUnmanagedConstant>.Instance;
+                return Array.Empty<ISymUnmanagedConstant>();
             }
 
             return scope2.GetConstants();
