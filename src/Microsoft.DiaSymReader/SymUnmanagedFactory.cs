@@ -43,7 +43,11 @@ namespace Microsoft.DiaSymReader
         // CorSymReader_SxS from corsym.idl
         private const string SymReaderClsid = "0A3976C5-4529-4ef8-B0B0-42EED37082CD";
 
+#if NET
+        private const string IUnknownIid = "00000000-0000-0000-C000-000000000046";
+#else
         private static Type s_lazySymReaderComType, s_lazySymWriterComType;
+#endif
 
         internal static string DiaSymReaderModuleName
             => RuntimeInformation.ProcessArchitecture switch
@@ -102,6 +106,11 @@ namespace Microsoft.DiaSymReader
         private delegate void NativeFactory(ref Guid id, [MarshalAs(UnmanagedType.IUnknown)] out object instance);
 #endif
 
+#if NET
+        [LibraryImport("Ole32")]
+        private static unsafe partial int CoCreateInstance(in Guid rclsid, void* pUnkOuter, int dwClsContext, in Guid riid, out void* ppObj);
+#endif
+
         // internal for testing
         internal static string GetEnvironmentVariable(string name)
         {
@@ -143,7 +152,7 @@ namespace Microsoft.DiaSymReader
                 var creator = Marshal.GetDelegateForFunctionPointer<NativeFactory>(createAddress);
                 creator(ref clsid, out instance);
 #else
-                var creator = (delegate*unmanaged<Guid*, IntPtr*, void>)createAddress;
+                var creator = (delegate* unmanaged<Guid*, IntPtr*, void>)createAddress;
                 IntPtr rawInstance = default;
                 creator(&clsid, &rawInstance);
                 instance = createReader
@@ -162,22 +171,27 @@ namespace Microsoft.DiaSymReader
             return instance;
         }
 
-        private static Type GetComTypeType(ref Type lazyType, Guid clsid)
+#if NET
+        private static unsafe object ActivateClass(Guid clsid)
         {
-            if (lazyType == null)
+            int hr = CoCreateInstance(in clsid, null, 1, new Guid(IUnknownIid), out void* rawInstance);
+            if (hr < 0)
             {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    lazyType = Marshal.GetTypeFromCLSID(clsid);
-                }
-                else
-                {
-                    throw new NotSupportedException("COM lookup is not supported");
-                }
+                Marshal.ThrowExceptionForHR(hr);
             }
-
-            return lazyType;
+            return ComInterfaceMarshaller<object>.ConvertToManaged(rawInstance);
         }
+#else
+        private static object ActivateClass(ref Type lazyType, Guid clsid)
+        {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                throw new PlatformNotSupportedException("COM lookup is not supported");
+            }
+            lazyType ??= Marshal.GetTypeFromCLSID(clsid);
+            return Activator.CreateInstance(lazyType);
+        }
+#endif
 
         internal static unsafe object CreateObject(bool createReader, bool useAlternativeLoadPath, bool useComRegistry, out string moduleName, out Exception loadException)
         {
@@ -268,11 +282,11 @@ namespace Microsoft.DiaSymReader
                 // Try to find a registered CLR implementation
                 try
                 {
-                    var comType = createReader ?
-                        GetComTypeType(ref s_lazySymReaderComType, clsid) :
-                        GetComTypeType(ref s_lazySymWriterComType, clsid);
-
-                    instance = Activator.CreateInstance(comType);
+#if NET
+                    instance = ActivateClass(clsid);
+#else
+                    instance = ActivateClass(ref createReader ? ref s_lazySymReaderComType : ref s_lazySymWriterComType, clsid);
+#endif
                     moduleName = LegacyDiaSymReaderModuleName;
                 }
                 catch (Exception e)
@@ -284,6 +298,5 @@ namespace Microsoft.DiaSymReader
 
             return instance;
         }
-
     }
 }
