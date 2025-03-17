@@ -12,7 +12,7 @@ namespace Microsoft.DiaSymReader
     {
         private static readonly IntPtr s_ignoreIErrorInfo = new IntPtr(-1);
 
-        internal static T[] NullToEmpty<T>(T[] items) => (items == null) ? Array.Empty<T>() : items;
+        internal static T[] NullToEmpty<T>(T[] items) => items == null ? [] : items;
 
         internal static void ThrowExceptionForHR(int hr)
         {
