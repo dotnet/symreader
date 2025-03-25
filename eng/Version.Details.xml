@@ -9,14 +9,14 @@
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
-    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="10.0.0-beta.25174.1">
+    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="10.0.0-beta.25175.2">
       <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>cf68aacc3f678dd705b8aa986f1adc38cd82fc6e</Sha>
+      <Sha>584374998d21b1d550452753c7b5f41725c07a11</Sha>
     </Dependency>
     <!-- Intermediate is necessary for source build. -->
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.arcade" Version="10.0.0-beta.25174.1">
+    <Dependency Name="Microsoft.SourceBuild.Intermediate.arcade" Version="10.0.0-beta.25175.2">
       <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>cf68aacc3f678dd705b8aa986f1adc38cd82fc6e</Sha>
+      <Sha>584374998d21b1d550452753c7b5f41725c07a11</Sha>
       <SourceBuild RepoName="arcade" ManagedOnly="true" />
     </Dependency>
   </ToolsetDependencies>
