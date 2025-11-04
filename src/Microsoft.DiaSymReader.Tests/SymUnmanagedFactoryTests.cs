@@ -72,7 +72,7 @@ namespace Microsoft.DiaSymReader.UnitTests
         /// This test is intended to verify that the marshalling doesn't fall over when we have to do the marshalling conversion from
         /// <see cref="System.Runtime.InteropServices.ComTypes.IStream"/> to <see cref="IUnsafeComStream"/>.
         /// </summary>
-        [Fact] 
+        [ConditionalFact(typeof(WindowsOnly))]
         public unsafe void ComWrappersCanMarshalIStream()
         {
             var pdbStream = new MemoryStream(TestResources.SourceLink.WindowsPdb);
