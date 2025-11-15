@@ -1,23 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
+  <Source Uri="https://github.com/dotnet/dotnet" Mapping="symreader" Sha="93970af2dae989c795efb703be9a25ff95079f25" BarId="290774" />
   <ProductDependencies>
-    <!-- Intermediate is necessary for source build. -->
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.source-build-reference-packages" Version="10.0.608004">
-      <Uri>https://github.com/dotnet/source-build-reference-packages</Uri>
-      <Sha>f18184030957ae8b02c6cb971ff2a58a06d2e7b1</Sha>
-      <SourceBuild RepoName="source-build-reference-packages" ManagedOnly="true" />
-    </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
-    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="10.0.0-beta.25120.6">
-      <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>ecdb2f499cb5f5c99b58fba1a14fdf977c56e1ac</Sha>
-    </Dependency>
-    <!-- Intermediate is necessary for source build. -->
-    <Dependency Name="Microsoft.SourceBuild.Intermediate.arcade" Version="10.0.0-beta.25120.6">
-      <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>ecdb2f499cb5f5c99b58fba1a14fdf977c56e1ac</Sha>
-      <SourceBuild RepoName="arcade" ManagedOnly="true" />
+    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="10.0.0-beta.25563.104">
+      <Uri>https://github.com/dotnet/dotnet</Uri>
+      <Sha>93970af2dae989c795efb703be9a25ff95079f25</Sha>
     </Dependency>
   </ToolsetDependencies>
 </Dependencies>

@@ -1,6 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;$(NetCurrent)</TargetFrameworks>
+    <TargetFrameworks>$(NetCurrent);netstandard2.0</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IsPackable>true</IsPackable>
@@ -9,8 +10,10 @@
     <PackageTags>DiaSymReader ISymUnmanagedReader PDB COM interop debugging</PackageTags>
     <IsAotCompatible Condition="'$(TargetFramework)' == '$(NetCurrent)'">true</IsAotCompatible>
   </PropertyGroup>
+
   <ItemGroup>
     <InternalsVisibleTo Include="Microsoft.DiaSymReader.PortablePdb" />
     <InternalsVisibleTo Include="Microsoft.DiaSymReader.UnitTests" />
   </ItemGroup>
+
 </Project>
