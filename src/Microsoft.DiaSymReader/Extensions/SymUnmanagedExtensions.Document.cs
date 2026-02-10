@@ -6,10 +6,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
 
-#if !NETSTANDARD2_0
-using System.Buffers.Binary;
-#endif
-
 namespace Microsoft.DiaSymReader
 {
     using static InteropUtilities;
@@ -119,22 +115,7 @@ namespace Microsoft.DiaSymReader
                 throw new InvalidDataException();
             }
 
-            int uncompressedLength;
-            #if NETSTANDARD2_0
-                // Portable PDB data is always little-endian
-                uncompressedLength = BitConverter.ToInt32(blob, 0);
-                if (!BitConverter.IsLittleEndian)
-                {
-                    uncompressedLength =
-                        (int)(
-                            ((uint)uncompressedLength >> 24) |
-                            (((uint)uncompressedLength >> 8) & 0x0000FF00) |
-                            (((uint)uncompressedLength << 8) & 0x00FF0000) |
-                            ((uint)uncompressedLength << 24));
-                }
-            #else
-                uncompressedLength = BinaryPrimitives.ReadInt32LittleEndian(blob.AsSpan().Slice(0));
-            #endif
+            int uncompressedLength = blob[0] + (blob[1] << 8) + (blob[2] << 16) + (blob[3] << 24);
             if (uncompressedLength == 0)
             {
                 return new ArraySegment<byte>(blob, sizeof(int), bytesRead - sizeof(int));
