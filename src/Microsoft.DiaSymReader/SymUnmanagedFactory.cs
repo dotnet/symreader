@@ -108,7 +108,7 @@ namespace Microsoft.DiaSymReader
 
 #if NET
         [LibraryImport("Ole32")]
-        private static unsafe partial int CoCreateInstance(in Guid rclsid, void* pUnkOuter, int dwClsContext, in Guid riid, out void* ppObj);
+        private static unsafe partial int CoCreateInstance(in Guid rclsid, void* pUnkOuter, int dwClsContext, in Guid riid, [MarshalUsing(typeof(ComInterfaceMarshaller<object>))] out object ppObj);
 #endif
 
         // internal for testing
@@ -174,12 +174,12 @@ namespace Microsoft.DiaSymReader
 #if NET
         private static unsafe object ActivateClass(Guid clsid)
         {
-            int hr = CoCreateInstance(in clsid, null, 1, new Guid(IUnknownIid), out void* rawInstance);
+            int hr = CoCreateInstance(in clsid, null, 1, new Guid(IUnknownIid), out object instance);
             if (hr < 0)
             {
                 Marshal.ThrowExceptionForHR(hr);
             }
-            return ComInterfaceMarshaller<object>.ConvertToManaged(rawInstance);
+            return instance;
         }
 #else
         private static object ActivateClass(ref Type lazyType, Guid clsid)
