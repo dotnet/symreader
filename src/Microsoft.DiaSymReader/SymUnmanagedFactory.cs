@@ -175,10 +175,7 @@ namespace Microsoft.DiaSymReader
         private static unsafe object ActivateClass(Guid clsid)
         {
             int hr = CoCreateInstance(in clsid, null, 1, new Guid(IUnknownIid), out object instance);
-            if (hr < 0)
-            {
-                Marshal.ThrowExceptionForHR(hr);
-            }
+            Marshal.ThrowExceptionForHR(hr);
             return instance;
         }
 #else
