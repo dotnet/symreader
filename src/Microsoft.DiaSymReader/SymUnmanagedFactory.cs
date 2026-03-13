@@ -184,10 +184,6 @@ namespace Microsoft.DiaSymReader
 #else
         private static object ActivateClass(ref Type lazyType, Guid clsid)
         {
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                throw new PlatformNotSupportedException("COM lookup is not supported");
-            }
             lazyType ??= Marshal.GetTypeFromCLSID(clsid);
             return Activator.CreateInstance(lazyType);
         }
