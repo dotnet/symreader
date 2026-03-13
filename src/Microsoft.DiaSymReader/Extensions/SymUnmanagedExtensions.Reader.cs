@@ -16,7 +16,7 @@ namespace Microsoft.DiaSymReader
         // MSCUSTOMDEBUGINFO in Dev10.
         private const string CdiAttributeName = "MD2";
 
-        public static void UpdateSymbolStore(this ISymUnmanagedReader reader, Stream stream, string fileName = null)
+        public static void UpdateSymbolStore(this ISymUnmanagedReader reader, Stream stream, string? fileName = null)
         {
             if (reader == null)
             {
@@ -26,7 +26,7 @@ namespace Microsoft.DiaSymReader
             ThrowExceptionForHR(reader.UpdateSymbolStore(fileName, SymUnmanagedStreamFactory.CreateStream(stream)));
         }
 
-        public static void Initialize(this ISymUnmanagedReader3 reader, Stream stream, object metadataImporter, string fileName = null, string searchPath = null)
+        public static void Initialize(this ISymUnmanagedReader3 reader, Stream stream, object metadataImporter, string? fileName = null, string? searchPath = null)
         {
             if (reader == null)
             {
@@ -39,7 +39,7 @@ namespace Microsoft.DiaSymReader
         /// <summary>
         /// Get the blob of binary custom debug info for a given method.
         /// </summary>
-        public static byte[] GetCustomDebugInfo(this ISymUnmanagedReader3 reader, int methodToken, int methodVersion)
+        public static byte[]? GetCustomDebugInfo(this ISymUnmanagedReader3 reader, int methodToken, int methodVersion)
         {
             if (reader == null)
             {
@@ -113,7 +113,7 @@ namespace Microsoft.DiaSymReader
                 (ISymUnmanagedReader2 a, ISymUnmanagedDocument b, int c, out int d, ISymUnmanagedMethod[] e) => a.GetMethodsInDocument(b, c, out d, e)));
         }
 
-        public static ISymUnmanagedMethod GetMethod(this ISymUnmanagedReader reader, int methodToken)
+        public static ISymUnmanagedMethod? GetMethod(this ISymUnmanagedReader reader, int methodToken)
         {
             if (reader == null)
             {
@@ -137,7 +137,7 @@ namespace Microsoft.DiaSymReader
             return method;
         }
 
-        public static ISymUnmanagedMethod GetMethodByVersion(this ISymUnmanagedReader reader, int methodToken, int methodVersion)
+        public static ISymUnmanagedMethod? GetMethodByVersion(this ISymUnmanagedReader reader, int methodToken, int methodVersion)
         {
             if (reader == null)
             {
@@ -176,7 +176,7 @@ namespace Microsoft.DiaSymReader
         /// <summary>
         /// Returns compiler version number and name.
         /// </summary>
-        public static bool TryGetCompilerInfo(this ISymUnmanagedCompilerInfoReader reader, out Version version, out string name)
+        public static bool TryGetCompilerInfo(this ISymUnmanagedCompilerInfoReader reader, out Version? version, out string? name)
         {
             if (reader == null)
             {

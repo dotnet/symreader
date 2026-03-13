@@ -18,7 +18,7 @@ namespace Microsoft.DiaSymReader
             ResumeMethod = resumeMethod;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is SymUnmanagedAsyncStepInfo && Equals((SymUnmanagedAsyncStepInfo)obj);
         }

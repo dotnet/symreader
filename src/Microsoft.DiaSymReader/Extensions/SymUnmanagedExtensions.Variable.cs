@@ -42,7 +42,7 @@ namespace Microsoft.DiaSymReader
             }
 
             return BufferToString(GetItems(local,
-                (ISymUnmanagedVariable a, int b, out int c, char[] d) => a.GetName(b, out c, d)));
+                (ISymUnmanagedVariable a, int b, out int c, char[] d) => a.GetName(b, out c, d))!);
         }
     }
 }

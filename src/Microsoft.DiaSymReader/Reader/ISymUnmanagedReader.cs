@@ -79,15 +79,15 @@ namespace Microsoft.DiaSymReader
         [PreserveSig]
         int Initialize(
             [MarshalAs(UnmanagedType.Interface)] object metadataImporter,
-            [MarshalAs(UnmanagedType.LPWStr)] string fileName,
-            [MarshalAs(UnmanagedType.LPWStr)] string searchPath,
+            [MarshalAs(UnmanagedType.LPWStr)] string? fileName,
+            [MarshalAs(UnmanagedType.LPWStr)] string? searchPath,
 #if NET9_0_OR_GREATER
             [MarshalUsing(typeof(ComStreamWrapper.Marshaller))]
 #endif
             System.Runtime.InteropServices.ComTypes.IStream stream);
 
         [PreserveSig]
-        int UpdateSymbolStore([MarshalAs(UnmanagedType.LPWStr)] string fileName,
+        int UpdateSymbolStore([MarshalAs(UnmanagedType.LPWStr)] string? fileName,
 #if NET9_0_OR_GREATER
             [MarshalUsing(typeof(ComStreamWrapper.Marshaller))]
 #endif

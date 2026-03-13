@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -46,7 +46,7 @@ namespace Microsoft.DiaSymReader
 #if NET
         private const string IUnknownIid = "00000000-0000-0000-C000-000000000046";
 #else
-        private static Type s_lazySymReaderComType, s_lazySymWriterComType;
+        private static Type? s_lazySymReaderComType, s_lazySymWriterComType;
 #endif
 
         internal static string DiaSymReaderModuleName
@@ -112,7 +112,7 @@ namespace Microsoft.DiaSymReader
 #endif
 
         // internal for testing
-        internal static string GetEnvironmentVariable(string name)
+        internal static string? GetEnvironmentVariable(string name)
         {
             try
             {
@@ -124,7 +124,7 @@ namespace Microsoft.DiaSymReader
             }
         }
 
-        private static unsafe object TryLoadFromAlternativePath(Guid clsid, bool createReader)
+        private static unsafe object? TryLoadFromAlternativePath(Guid clsid, bool createReader)
         {
             var dir = GetEnvironmentVariable(AlternativeLoadPathEnvironmentVariableName);
             if (string.IsNullOrEmpty(dir))
@@ -138,7 +138,7 @@ namespace Microsoft.DiaSymReader
                 Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
             }
 
-            object instance = null;
+            object? instance = null;
             try
             {
                 string factoryName = createReader ? CreateSymReaderFactoryName : CreateSymWriterFactoryName;
@@ -179,7 +179,7 @@ namespace Microsoft.DiaSymReader
             return instance;
         }
 #else
-        private static object ActivateClass(ref Type lazyType, Guid clsid)
+        private static object ActivateClass(ref Type? lazyType, Guid clsid)
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -190,9 +190,9 @@ namespace Microsoft.DiaSymReader
         }
 #endif
 
-        internal static unsafe object CreateObject(bool createReader, bool useAlternativeLoadPath, bool useComRegistry, out string moduleName, out Exception loadException)
+        internal static unsafe object? CreateObject(bool createReader, bool useAlternativeLoadPath, bool useComRegistry, out string? moduleName, out Exception? loadException)
         {
-            object instance = null;
+            object? instance = null;
             loadException = null;
             moduleName = null;
 
@@ -200,7 +200,7 @@ namespace Microsoft.DiaSymReader
 
             try
             {
-                DllNotFoundException loadExceptionCandidate = null;
+                DllNotFoundException? loadExceptionCandidate = null;
 
                 try
                 {

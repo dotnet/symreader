@@ -24,6 +24,6 @@ namespace Microsoft.DiaSymReader
             out ushort revision,
             int bufferLength,
             out int count,
-            [In, Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] char[] name);
+            [In, Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] char[]? name);
     }
 }
