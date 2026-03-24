@@ -104,7 +104,7 @@ namespace Microsoft.DiaSymReader
             }
         }
 
-        public static ISymUnmanagedAsyncMethod AsAsyncMethod(this ISymUnmanagedMethod method)
+        public static ISymUnmanagedAsyncMethod? AsAsyncMethod(this ISymUnmanagedMethod method)
         {
             var asyncMethod = method as ISymUnmanagedAsyncMethod;
             if (asyncMethod == null)

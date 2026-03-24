@@ -28,7 +28,7 @@ namespace Microsoft.DiaSymReader
         internal ComStreamWrapper(Stream stream)
         {
             Debug.Assert(stream != null);
-            Debug.Assert(stream.CanSeek);
+            Debug.Assert(stream!.CanSeek);
 
             _stream = stream;
         }
@@ -211,7 +211,7 @@ namespace Microsoft.DiaSymReader
 
             public static System.Runtime.InteropServices.ComTypes.IStream ConvertToManaged(IntPtr native)
             {
-                IUnsafeComStream marshalledStream = ComInterfaceMarshaller<IUnsafeComStream>.ConvertToManaged((void*)native);
+                IUnsafeComStream? marshalledStream = ComInterfaceMarshaller<IUnsafeComStream>.ConvertToManaged((void*)native);
                 if (marshalledStream is null)
                 {
                     throw new NotSupportedException("IStream cannot be marshalled to managed");
