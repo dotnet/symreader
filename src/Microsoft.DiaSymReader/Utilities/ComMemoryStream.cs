@@ -10,9 +10,6 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
 #endif
 
-#if NETSTANDARD2_0
-using STATSTG = System.Runtime.InteropServices.ComTypes.STATSTG;
-#endif
 
 namespace Microsoft.DiaSymReader
 {
