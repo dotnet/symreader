@@ -20,7 +20,7 @@ namespace Microsoft.DiaSymReader
             }
 
             return BufferToString(GetItems(document,
-                (ISymUnmanagedDocument a, int b, out int c, char[] d) => a.GetUrl(b, out c, d)));
+                (ISymUnmanagedDocument a, int b, out int c, char[] d) => a.GetUrl(b, out c, d))!);
         }
 
         public static byte[] GetChecksum(this ISymUnmanagedDocument document)

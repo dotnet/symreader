@@ -18,7 +18,7 @@ namespace Microsoft.DiaSymReader
             }
 
             return BufferToString(GetItems(constant,
-                (ISymUnmanagedConstant a, int b, out int c, char[] d) => a.GetName(b, out c, d)));
+                (ISymUnmanagedConstant a, int b, out int c, char[] d) => a.GetName(b, out c, d))!);
         }
 
         public static object GetValue(this ISymUnmanagedConstant constant)

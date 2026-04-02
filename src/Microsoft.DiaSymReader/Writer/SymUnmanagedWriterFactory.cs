@@ -55,7 +55,7 @@ namespace Microsoft.DiaSymReader
                     throw loadException;
                 }
 
-                throw new DllNotFoundException(loadException.Message, loadException);
+                throw new DllNotFoundException(loadException!.Message, loadException);
             }
 
             if (!(symWriter is ISymUnmanagedWriter5 symWriter5))
@@ -91,7 +91,7 @@ namespace Microsoft.DiaSymReader
                 throw new SymUnmanagedWriterException(e, implModuleName);
             }
 
-            return new SymUnmanagedWriterImpl(pdbStream, symWriter5, implModuleName);
+            return new SymUnmanagedWriterImpl(pdbStream, symWriter5, implModuleName!);
         }
     }
 }

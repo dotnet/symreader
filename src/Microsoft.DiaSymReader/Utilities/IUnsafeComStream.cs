@@ -45,7 +45,7 @@ namespace Microsoft.DiaSymReader
     [NativeMarshalling(typeof(STATSTGMarshaller))]
     public struct STATSTG
     {
-        public string pwcsName;
+        public string? pwcsName;
         public int type;
         public long cbSize;
         public FILETIME mtime;
@@ -79,7 +79,7 @@ namespace Microsoft.DiaSymReader
 
         public static STATSTG ConvertToManaged(Native n)
         {
-            string name = null;
+            string? name = null;
             if (n.pwcsName != null)
             {
                 name = Utf16StringMarshaller.ConvertToManaged(n.pwcsName);

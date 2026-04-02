@@ -12,7 +12,7 @@ namespace Microsoft.DiaSymReader
     {
         private static readonly IntPtr s_ignoreIErrorInfo = new IntPtr(-1);
 
-        internal static T[] NullToEmpty<T>(T[] items) => items == null ? [] : items;
+        internal static T[] NullToEmpty<T>(T[]? items) => items == null ? [] : items;
 
         internal static void ThrowExceptionForHR(int hr)
         {
@@ -24,14 +24,9 @@ namespace Microsoft.DiaSymReader
             }
         }
 
-        internal unsafe static void CopyQualifiedTypeName(char* qualifiedName, int qualifiedNameBufferLength, int* qualifiedNameLength, string namespaceStr, string nameStr)
+        internal unsafe static void CopyQualifiedTypeName(char* qualifiedName, int qualifiedNameBufferLength, int* qualifiedNameLength, string? namespaceStr, string nameStr)
         {
-            Debug.Assert(nameStr != null);
-
-            if (namespaceStr == null)
-            {
-                namespaceStr = string.Empty;
-            }
+            namespaceStr ??= string.Empty;
 
             if (qualifiedNameLength != null)
             {
@@ -102,7 +97,7 @@ namespace Microsoft.DiaSymReader
             }
         }
 
-        internal static TItem[] GetItems<TEntity, TItem>(TEntity entity, CountGetter<TEntity> countGetter, ItemsGetter<TEntity, TItem> itemsGetter)
+        internal static TItem[]? GetItems<TEntity, TItem>(TEntity entity, CountGetter<TEntity> countGetter, ItemsGetter<TEntity, TItem> itemsGetter)
         {
             int count;
             ThrowExceptionForHR(countGetter(entity, out count));
@@ -117,10 +112,10 @@ namespace Microsoft.DiaSymReader
             return result;
         }
 
-        internal static TItem[] GetItems<TEntity, TItem>(TEntity entity, ItemsGetter<TEntity, TItem> getter)
+        internal static TItem[]? GetItems<TEntity, TItem>(TEntity entity, ItemsGetter<TEntity, TItem> getter)
         {
             int count;
-            ThrowExceptionForHR(getter(entity, 0, out count, null));
+            ThrowExceptionForHR(getter(entity, 0, out count, null!));
             if (count == 0)
             {
                 return null;
@@ -132,10 +127,10 @@ namespace Microsoft.DiaSymReader
             return result;
         }
 
-        internal static TItem[] GetItems<TEntity, TArg1, TItem>(TEntity entity, TArg1 arg1, ItemsGetter<TEntity, TArg1, TItem> getter)
+        internal static TItem[]? GetItems<TEntity, TArg1, TItem>(TEntity entity, TArg1 arg1, ItemsGetter<TEntity, TArg1, TItem> getter)
         {
             int count;
-            ThrowExceptionForHR(getter(entity, arg1, 0, out count, null));
+            ThrowExceptionForHR(getter(entity, arg1, 0, out count, null!));
             if (count == 0)
             {
                 return null;
@@ -147,10 +142,10 @@ namespace Microsoft.DiaSymReader
             return result;
         }
 
-        internal static TItem[] GetItems<TEntity, TArg1, TArg2, TItem>(TEntity entity, TArg1 arg1, TArg2 arg2, ItemsGetter<TEntity, TArg1, TArg2, TItem> getter)
+        internal static TItem[]? GetItems<TEntity, TArg1, TArg2, TItem>(TEntity entity, TArg1 arg1, TArg2 arg2, ItemsGetter<TEntity, TArg1, TArg2, TItem> getter)
         {
             int count;
-            ThrowExceptionForHR(getter(entity, arg1, arg2, 0, out count, null));
+            ThrowExceptionForHR(getter(entity, arg1, arg2, 0, out count, null!));
             if (count == 0)
             {
                 return null;

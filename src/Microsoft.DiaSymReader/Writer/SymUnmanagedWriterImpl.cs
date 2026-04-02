@@ -20,7 +20,7 @@ namespace Microsoft.DiaSymReader
     {
         private static object s_zeroInt32 = 0;
 
-        private ISymUnmanagedWriter5 _symWriter;
+        private ISymUnmanagedWriter5? _symWriter;
         private readonly ComMemoryStream _pdbStream;
         private readonly List<ISymUnmanagedDocumentWriter> _documentWriters;
         private readonly string _symWriterModuleName;
@@ -32,10 +32,10 @@ namespace Microsoft.DiaSymReader
             Debug.Assert(symWriter != null);
             Debug.Assert(symWriterModuleName != null);
 
-            _pdbStream = pdbStream;
-            _symWriter = symWriter;
+            _pdbStream = pdbStream!;
+            _symWriter = symWriter!;
             _documentWriters = new List<ISymUnmanagedDocumentWriter>();
-            _symWriterModuleName = symWriterModuleName;
+            _symWriterModuleName = symWriterModuleName!;
         }
 
         private ISymUnmanagedWriter5 GetSymWriter()
@@ -365,8 +365,6 @@ namespace Microsoft.DiaSymReader
 
         private bool DefineLocalStringConstant(ISymUnmanagedWriter5 symWriter, string name, string value, int constantSignatureToken)
         {
-            Debug.Assert(value != null);
-
             int encodedLength;
 
             // ISymUnmanagedWriter2 doesn't handle unicode strings with unmatched unicode surrogates.

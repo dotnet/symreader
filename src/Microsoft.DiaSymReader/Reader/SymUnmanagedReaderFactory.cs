@@ -49,7 +49,7 @@ namespace Microsoft.DiaSymReader
                 throw new ArgumentNullException(nameof(metadataImport));
             }
 
-            object symReader = SymUnmanagedFactory.CreateObject(
+            object? symReader = SymUnmanagedFactory.CreateObject(
                 createReader: true, 
                 useAlternativeLoadPath: (options & SymUnmanagedReaderCreationOptions.UseAlternativeLoadPath) != 0,
                 useComRegistry: (options & SymUnmanagedReaderCreationOptions.UseComRegistry) != 0,
@@ -65,7 +65,7 @@ namespace Microsoft.DiaSymReader
                     throw loadException;
                 }
 
-                throw new DllNotFoundException(loadException.Message, loadException);
+                throw new DllNotFoundException(loadException!.Message, loadException);
             }
 
             if (!(symReader is TSymUnmanagedReader symReader3))
