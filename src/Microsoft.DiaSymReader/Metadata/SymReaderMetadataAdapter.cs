@@ -24,7 +24,7 @@ namespace Microsoft.DiaSymReader
         public SymReaderMetadataAdapter(ISymReaderMetadataProvider metadataProvider)
         {
             Debug.Assert(metadataProvider != null);
-            _metadataProvider = metadataProvider;
+            _metadataProvider = metadataProvider!;
         }
 
         public override int GetSigFromToken(

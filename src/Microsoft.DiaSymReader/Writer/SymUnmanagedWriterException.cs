@@ -14,7 +14,7 @@ namespace Microsoft.DiaSymReader
         /// <summary>
         /// The name of the module that implements the underlying PDB writer (e.g. diasymreader.dll), or null if not available.
         /// </summary>
-        public string ImplementationModuleName { get; }
+        public string? ImplementationModuleName { get; }
 
         public SymUnmanagedWriterException()
         {
@@ -29,13 +29,13 @@ namespace Microsoft.DiaSymReader
         {
         }
 
-        public SymUnmanagedWriterException(string message, Exception innerException, string implementationModuleName)
+        public SymUnmanagedWriterException(string message, Exception innerException, string? implementationModuleName)
             : base(message, innerException)
         {
             ImplementationModuleName = implementationModuleName;
         }
 
-        internal SymUnmanagedWriterException(Exception innerException, string implementationModuleName)
+        internal SymUnmanagedWriterException(Exception innerException, string? implementationModuleName)
             : this(innerException.Message, innerException, implementationModuleName)
         {
         }

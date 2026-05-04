@@ -18,7 +18,7 @@ namespace Microsoft.DiaSymReader
             }
 
             return BufferToString(GetItems(@namespace,
-                (ISymUnmanagedNamespace a, int b, out int c, char[] d) => a.GetName(b, out c, d)));
+                (ISymUnmanagedNamespace a, int b, out int c, char[] d) => a.GetName(b, out c, d))!);
         }
     }
 }
