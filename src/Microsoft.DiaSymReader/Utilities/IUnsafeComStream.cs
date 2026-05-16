@@ -51,8 +51,8 @@ namespace Microsoft.DiaSymReader
         public FILETIME ctime;
         public FILETIME atime;
         public int grfMode;
-        public Guid clsid;
         public int grfLocksSupported;
+        public Guid clsid;
         public int grfStateBits;
         public int reserved;
     }
