@@ -42,6 +42,7 @@ namespace Microsoft.DiaSymReader
     /// (see https://github.com/dotnet/runtime/blob/87523393fdb14746ceb529ab308f11047819fd01/src/coreclr/inc/memorystreams.h#L115) doesn't 
     /// zero-initialize the structure, so normal marshaling would corrupt the heap trying to process unitialized memory for (e.g. <see cref="STATSTG.pwcsName"/>).
     /// </summary>
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
     internal struct NativeSTATSTG
     {
         public IntPtr pwcsName;
