@@ -2,4 +2,9 @@
 
   <Import Project="Sdk.targets" Sdk="Microsoft.DotNet.Arcade.Sdk" />
 
+  <PropertyGroup>
+    <!-- Arcade installs the x86 runtime from global.json tools.runtimes (Windows only). -->
+    <TestArchitectures Condition="'$(OS)' == 'Windows_NT'">x64;x86</TestArchitectures>
+  </PropertyGroup>
+
 </Project>

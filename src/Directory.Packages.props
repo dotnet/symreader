@@ -10,9 +10,6 @@
   <ItemGroup>
     <!-- Runtime dependencies -->
     <PackageVersion Include="System.Collections.Immutable" Version="8.0.0" />
-
-    <!-- DiaSymReader dependency -->
-    <PackageVersion Include="Microsoft.DiaSymReader.Native" Version="17.0.0-beta1.21524.1" />
   </ItemGroup>
 
   <!-- External dependencies -->

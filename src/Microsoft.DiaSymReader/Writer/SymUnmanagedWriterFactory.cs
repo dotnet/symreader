@@ -21,7 +21,8 @@ namespace Microsoft.DiaSymReader
         /// Tries to load the implementation of the PDB writer from Microsoft.DiaSymReader.Native.{platform}.dll library first.
         /// It searches for this library in the directory Microsoft.DiaSymReader.dll is loaded from, 
         /// the application directory, the %WinDir%\System32 directory, and user directories in the DLL search path, in this order.
-        /// If not found in the above locations and <see cref="SymUnmanagedWriterCreationOptions.UseAlternativeLoadPath"/> option is specified
+        /// If not found in the above locations, the .NET runtime directory (shared framework) is also searched.
+        /// If still not found and <see cref="SymUnmanagedWriterCreationOptions.UseAlternativeLoadPath"/> option is specified
         /// the directory specified by MICROSOFT_DIASYMREADER_NATIVE_ALT_LOAD_PATH environment variable is also searched.
         /// If the Microsoft.DiaSymReader.Native.{platform}.dll library can't be found and <see cref="SymUnmanagedWriterCreationOptions.UseComRegistry"/> 
         /// option is specified checks if the PDB reader is available from a globally registered COM object. This COM object is provided 

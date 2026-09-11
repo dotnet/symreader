@@ -18,8 +18,6 @@ namespace Microsoft.DiaSymReader.UnitTests
 {
     public class SymUnmanagedWriterTests
     {
-        static SymUnmanagedWriterTests() => SymUnmanagedFactoryTests.SetLoadPath();
-
         [ConditionalFact(typeof(WindowsOnly))]
         public void Deterministic()
         {

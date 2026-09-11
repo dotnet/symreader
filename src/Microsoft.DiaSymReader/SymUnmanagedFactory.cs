@@ -58,29 +58,29 @@ namespace Microsoft.DiaSymReader
                 _ => throw new NotSupportedException()
             };
 
-        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories | DllImportSearchPath.UserDirectories)]
         [DllImport(DiaSymReaderModuleName32, EntryPoint = CreateSymReaderFactoryName)]
-        private static unsafe extern void CreateSymReader32([MarshalAs(UnmanagedType.LPStruct)] Guid id, IntPtr* symReader);
+        private static unsafe extern void CreateSymReader32(Guid* id, IntPtr* symReader);
 
-        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories | DllImportSearchPath.UserDirectories)]
         [DllImport(DiaSymReaderModuleNameAmd64, EntryPoint = CreateSymReaderFactoryName)]
-        private static unsafe extern void CreateSymReaderAmd64([MarshalAs(UnmanagedType.LPStruct)] Guid id, IntPtr* symReader);
+        private static unsafe extern void CreateSymReaderAmd64(Guid* id, IntPtr* symReader);
 
-        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories | DllImportSearchPath.UserDirectories)]
         [DllImport(DiaSymReaderModuleNameArm64, EntryPoint = CreateSymReaderFactoryName)]
-        private static unsafe extern void CreateSymReaderArm64([MarshalAs(UnmanagedType.LPStruct)] Guid id, IntPtr* symReader);
+        private static unsafe extern void CreateSymReaderArm64(Guid* id, IntPtr* symReader);
 
-        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories | DllImportSearchPath.UserDirectories)]
         [DllImport(DiaSymReaderModuleName32, EntryPoint = CreateSymWriterFactoryName)]
-        private static unsafe extern void CreateSymWriter32([MarshalAs(UnmanagedType.LPStruct)] Guid id, IntPtr* symWriter);
+        private static unsafe extern void CreateSymWriter32(Guid* id, IntPtr* symWriter);
 
-        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories | DllImportSearchPath.UserDirectories)]
         [DllImport(DiaSymReaderModuleNameAmd64, EntryPoint = CreateSymWriterFactoryName)]
-        private static unsafe extern void CreateSymWriterAmd64([MarshalAs(UnmanagedType.LPStruct)] Guid id, IntPtr* symWriter);
+        private static unsafe extern void CreateSymWriterAmd64(Guid* id, IntPtr* symWriter);
 
-        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories | DllImportSearchPath.UserDirectories)]
         [DllImport(DiaSymReaderModuleNameArm64, EntryPoint = CreateSymWriterFactoryName)]
-        private static unsafe extern void CreateSymWriterArm64([MarshalAs(UnmanagedType.LPStruct)] Guid id, IntPtr* symWriter);
+        private static unsafe extern void CreateSymWriterArm64(Guid* id, IntPtr* symWriter);
 
 
 #if NETSTANDARD2_0
@@ -124,7 +124,22 @@ namespace Microsoft.DiaSymReader
             }
         }
 
-        private static unsafe object TryLoadFromAlternativePath(Guid clsid, bool createReader)
+        private static object TryLoadFromRuntimeDirectory(Guid clsid, bool createReader)
+        {
+            string dir;
+            try
+            {
+                dir = RuntimeEnvironment.GetRuntimeDirectory();
+            }
+            catch
+            {
+                return null;
+            }
+
+            return TryLoadFromDirectory(dir, clsid, createReader, throwOnLoadFailure: false);
+        }
+
+        private static object TryLoadFromAlternativePath(Guid clsid, bool createReader)
         {
             var dir = GetEnvironmentVariable(AlternativeLoadPathEnvironmentVariableName);
             if (string.IsNullOrEmpty(dir))
@@ -132,9 +147,30 @@ namespace Microsoft.DiaSymReader
                 return null;
             }
 
-            var moduleHandle = LoadLibraryW(Path.Combine(dir, DiaSymReaderModuleName));
+            return TryLoadFromDirectory(dir, clsid, createReader, throwOnLoadFailure: true);
+        }
+
+        private static unsafe object TryLoadFromDirectory(string dir, Guid clsid, bool createReader, bool throwOnLoadFailure)
+        {
+            if (string.IsNullOrEmpty(dir))
+            {
+                return null;
+            }
+
+            var path = Path.Combine(dir, DiaSymReaderModuleName);
+            if (!throwOnLoadFailure && !File.Exists(path))
+            {
+                return null;
+            }
+
+            var moduleHandle = LoadLibraryW(path);
             if (moduleHandle == IntPtr.Zero)
             {
+                if (!throwOnLoadFailure)
+                {
+                    return null;
+                }
+
                 Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
             }
 
@@ -145,6 +181,11 @@ namespace Microsoft.DiaSymReader
                 var createAddress = GetProcAddress(moduleHandle, factoryName);
                 if (createAddress == IntPtr.Zero)
                 {
+                    if (!throwOnLoadFailure)
+                    {
+                        return null;
+                    }
+
                     Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
                 }
 
@@ -164,7 +205,10 @@ namespace Microsoft.DiaSymReader
             {
                 if (instance == null && !FreeLibrary(moduleHandle))
                 {
-                    Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
+                    if (throwOnLoadFailure)
+                    {
+                        Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
+                    }
                 }
             }
 
@@ -201,31 +245,32 @@ namespace Microsoft.DiaSymReader
             try
             {
                 DllNotFoundException loadExceptionCandidate = null;
+                bool altLoadPathOnly = useAlternativeLoadPath && GetEnvironmentVariable(AlternativeLoadPathOnlyEnvironmentVariableName) == "1";
 
                 try
                 {
-                    if (!(useAlternativeLoadPath && GetEnvironmentVariable(AlternativeLoadPathOnlyEnvironmentVariableName) == "1"))
+                    if (!altLoadPathOnly)
                     {
                         IntPtr rawInstance = default;
                         switch (RuntimeInformation.ProcessArchitecture, createReader)
                         {
                             case (Architecture.X86, true):
-                                CreateSymReader32(clsid, &rawInstance);
+                                CreateSymReader32(&clsid, &rawInstance);
                                 break;
                             case (Architecture.X86, false):
-                                CreateSymWriter32(clsid, &rawInstance);
+                                CreateSymWriter32(&clsid, &rawInstance);
                                 break;
                             case (Architecture.X64, true):
-                                CreateSymReaderAmd64(clsid, &rawInstance);
+                                CreateSymReaderAmd64(&clsid, &rawInstance);
                                 break;
                             case (Architecture.X64, false):
-                                CreateSymWriterAmd64(clsid, &rawInstance);
+                                CreateSymWriterAmd64(&clsid, &rawInstance);
                                 break;
                             case (Architecture.Arm64, true):
-                                CreateSymReaderArm64(clsid, &rawInstance);
+                                CreateSymReaderArm64(&clsid, &rawInstance);
                                 break;
                             case (Architecture.Arm64, false):
-                                CreateSymWriterArm64(clsid, &rawInstance);
+                                CreateSymWriterArm64(&clsid, &rawInstance);
                                 break;
                             default:
                                 throw new NotSupportedException();
@@ -252,10 +297,15 @@ namespace Microsoft.DiaSymReader
                         }
                     }
                 }
-                catch (DllNotFoundException e) when (useAlternativeLoadPath)
+                catch (DllNotFoundException e)
                 {
                     instance = null;
                     loadExceptionCandidate = e;
+                }
+
+                if (!altLoadPathOnly)
+                {
+                    instance ??= TryLoadFromRuntimeDirectory(clsid, createReader);
                 }
 
                 instance ??= TryLoadFromAlternativePath(clsid, createReader);
