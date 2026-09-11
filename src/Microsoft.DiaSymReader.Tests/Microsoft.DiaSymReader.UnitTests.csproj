@@ -3,11 +3,6 @@
   <PropertyGroup>
     <TargetFrameworks>$(NetCurrent);$(NetFrameworkCurrent)</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <!-- 
-      We would need to download 32bit dotnet cli, which would add extra time to PR runs 
-      Testing 64bit only on Desktop sufficiently covers our interop code paths.  
-    -->
-    <TestArchitectures Condition="$([MSBuild]::GetTargetFrameworkIdentifier('$(TargetFramework)')) == '.NETFramework'">x64</TestArchitectures>
   </PropertyGroup>
 
   <ItemGroup>
