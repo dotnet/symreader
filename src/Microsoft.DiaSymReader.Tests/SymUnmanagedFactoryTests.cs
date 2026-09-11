@@ -19,14 +19,6 @@ namespace Microsoft.DiaSymReader.UnitTests
 {
     public class SymUnmanagedFactoryTests
     {
-        internal static void SetLoadPath()
-            => Environment.SetEnvironmentVariable("MICROSOFT_DIASYMREADER_NATIVE_ALT_LOAD_PATH", DiaSymReaderNativeRuntime.GetNativeLibraryDirectory());
-
-        static SymUnmanagedFactoryTests()
-        {
-            SetLoadPath();
-        }
-
         [ConditionalFact(typeof(DesktopOnly), Skip = "https://github.com/dotnet/symreader/issues/96")]
         public void Create()
         {
@@ -66,7 +58,9 @@ namespace Microsoft.DiaSymReader.UnitTests
         [Fact]
         public void GetEnvironmentVariable()
         {
-            Assert.NotNull(SymUnmanagedFactory.GetEnvironmentVariable("MICROSOFT_DIASYMREADER_NATIVE_ALT_LOAD_PATH"));
+            const string name = "MICROSOFT_DIASYMREADER_NATIVE_TEST_ENV";
+            Environment.SetEnvironmentVariable(name, "value");
+            Assert.Equal("value", SymUnmanagedFactory.GetEnvironmentVariable(name));
         }
 
 #if NET9_0_OR_GREATER
@@ -79,7 +73,7 @@ namespace Microsoft.DiaSymReader.UnitTests
         {
             var pdbStream = new MemoryStream(TestResources.SourceLink.WindowsPdb);
             var reader = SymUnmanagedReaderFactory.CreateReader<ISymUnmanagedReader5>(pdbStream,
-                DummySymReaderMetadataProvider.Instance, SymUnmanagedReaderCreationOptions.UseAlternativeLoadPath);
+                DummySymReaderMetadataProvider.Instance);
             Assert.NotNull(reader);
 
             IUnsafeComStream stream = new ComMemoryStream();
