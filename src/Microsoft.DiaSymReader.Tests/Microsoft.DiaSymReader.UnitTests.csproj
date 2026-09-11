@@ -8,8 +8,6 @@
       Testing 64bit only on Desktop sufficiently covers our interop code paths.  
     -->
     <TestArchitectures Condition="$([MSBuild]::GetTargetFrameworkIdentifier('$(TargetFramework)')) == '.NETFramework'">x64</TestArchitectures>
-    <!-- Copy DSRN to a subdirectory of the output directory, so that we can test alternative load path -->
-    <DiaSymReaderNativeLinkDir>DSRN</DiaSymReaderNativeLinkDir>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,7 +15,5 @@
     <ProjectReference Include="..\PdbTestResources\PdbTestResources.csproj" />
     <ProjectReference Include="..\TestUtilities\TestUtilities.csproj" />
   </ItemGroup>
-
-  <Import Project="$(RepositoryEngineeringDir)DiaSymReaderNative.targets" />
 
 </Project>

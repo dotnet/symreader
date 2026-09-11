@@ -58,27 +58,27 @@ namespace Microsoft.DiaSymReader
                 _ => throw new NotSupportedException()
             };
 
-        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories | DllImportSearchPath.UserDirectories)]
         [DllImport(DiaSymReaderModuleName32, EntryPoint = CreateSymReaderFactoryName)]
         private static unsafe extern void CreateSymReader32([MarshalAs(UnmanagedType.LPStruct)] Guid id, IntPtr* symReader);
 
-        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories | DllImportSearchPath.UserDirectories)]
         [DllImport(DiaSymReaderModuleNameAmd64, EntryPoint = CreateSymReaderFactoryName)]
         private static unsafe extern void CreateSymReaderAmd64([MarshalAs(UnmanagedType.LPStruct)] Guid id, IntPtr* symReader);
 
-        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories | DllImportSearchPath.UserDirectories)]
         [DllImport(DiaSymReaderModuleNameArm64, EntryPoint = CreateSymReaderFactoryName)]
         private static unsafe extern void CreateSymReaderArm64([MarshalAs(UnmanagedType.LPStruct)] Guid id, IntPtr* symReader);
 
-        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories | DllImportSearchPath.UserDirectories)]
         [DllImport(DiaSymReaderModuleName32, EntryPoint = CreateSymWriterFactoryName)]
         private static unsafe extern void CreateSymWriter32([MarshalAs(UnmanagedType.LPStruct)] Guid id, IntPtr* symWriter);
 
-        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories | DllImportSearchPath.UserDirectories)]
         [DllImport(DiaSymReaderModuleNameAmd64, EntryPoint = CreateSymWriterFactoryName)]
         private static unsafe extern void CreateSymWriterAmd64([MarshalAs(UnmanagedType.LPStruct)] Guid id, IntPtr* symWriter);
 
-        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.SafeDirectories | DllImportSearchPath.UserDirectories)]
         [DllImport(DiaSymReaderModuleNameArm64, EntryPoint = CreateSymWriterFactoryName)]
         private static unsafe extern void CreateSymWriterArm64([MarshalAs(UnmanagedType.LPStruct)] Guid id, IntPtr* symWriter);
 

@@ -16,6 +16,4 @@
     <ProjectReference Include="..\TestUtilities\TestUtilities.csproj" />
   </ItemGroup>
 
-  <Import Project="$(RepositoryEngineeringDir)DiaSymReaderNative.targets" />
-
 </Project>

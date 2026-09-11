@@ -7,7 +7,6 @@
 
 using System;
 using System.IO;
-using System.Reflection;
 using Microsoft.DiaSymReader.Tools;
 using Roslyn.Test.Utilities;
 using Xunit;
@@ -21,7 +20,7 @@ namespace Microsoft.DiaSymReader.UnitTests
     public class SymUnmanagedFactoryTests
     {
         internal static void SetLoadPath()
-            => Environment.SetEnvironmentVariable("MICROSOFT_DIASYMREADER_NATIVE_ALT_LOAD_PATH", Path.Combine(Path.GetDirectoryName(typeof(SymUnmanagedFactoryTests).GetTypeInfo().Assembly.Location), "DSRN"));
+            => Environment.SetEnvironmentVariable("MICROSOFT_DIASYMREADER_NATIVE_ALT_LOAD_PATH", DiaSymReaderNativeRuntime.GetNativeLibraryDirectory());
 
         static SymUnmanagedFactoryTests()
         {
