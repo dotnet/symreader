@@ -20,6 +20,38 @@ namespace Microsoft.DiaSymReader.UnitTests
     {
         static SymUnmanagedWriterTests() => SymUnmanagedFactoryTests.SetLoadPath();
 
+        private sealed class SequencePointsSymWriterMock : SymWriterMock
+        {
+            public int DefineSequencePointsCallCount;
+
+            public override ISymUnmanagedDocumentWriter DefineDocument(string url, ref Guid language, ref Guid languageVendor, ref Guid documentType) => null;
+
+            public override void DefineSequencePoints(ISymUnmanagedDocumentWriter document, int count, int[] offsets, int[] lines, int[] columns, int[] endLines, int[] endColumns)
+                => DefineSequencePointsCallCount++;
+        }
+
+        [Fact]
+        public void DefineSequencePoints_Errors()
+        {
+            var symWriter = new SequencePointsSymWriterMock();
+            var writer = new SymUnmanagedWriterImpl(new ComMemoryStream(), symWriter, "mock");
+            int documentIndex = writer.DefineDocument("a.cs", default, default, default, default, [], null);
+
+            var array = new int[2];
+            var shortArray = new int[1];
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => writer.DefineSequencePoints(documentIndex, 2, shortArray, array, array, array, array));
+            Assert.Throws<ArgumentOutOfRangeException>(() => writer.DefineSequencePoints(documentIndex, 2, array, shortArray, array, array, array));
+            Assert.Throws<ArgumentOutOfRangeException>(() => writer.DefineSequencePoints(documentIndex, 2, array, array, shortArray, array, array));
+            Assert.Throws<ArgumentOutOfRangeException>(() => writer.DefineSequencePoints(documentIndex, 2, array, array, array, shortArray, array));
+            Assert.Throws<ArgumentOutOfRangeException>(() => writer.DefineSequencePoints(documentIndex, 2, array, array, array, array, shortArray));
+            Assert.Throws<ArgumentOutOfRangeException>(() => writer.DefineSequencePoints(documentIndex, -1, array, array, array, array, array));
+            Assert.Equal(0, symWriter.DefineSequencePointsCallCount);
+
+            writer.DefineSequencePoints(documentIndex, 2, array, array, array, array, array);
+            Assert.Equal(1, symWriter.DefineSequencePointsCallCount);
+        }
+
         [ConditionalFact(typeof(WindowsOnly))]
         public void Deterministic()
         {
