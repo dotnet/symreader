@@ -206,7 +206,7 @@ namespace Microsoft.DiaSymReader
             if (endLines == null) throw new ArgumentNullException(nameof(endLines));
             if (endColumns == null) throw new ArgumentNullException(nameof(endColumns));
 
-            if (count < 0 || count > startLines.Length || count > startColumns.Length || count > endLines.Length || count > endColumns.Length)
+            if (count < 0 || count > offsets.Length || count > startLines.Length || count > startColumns.Length || count > endLines.Length || count > endColumns.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
