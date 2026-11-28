@@ -8,12 +8,17 @@
     <Description>Microsoft DiaSymReader interop interfaces and utilities.</Description>
     <PackageReleaseNotes>Microsoft DiaSymReader interop interfaces and utilities</PackageReleaseNotes>
     <PackageTags>DiaSymReader ISymUnmanagedReader PDB COM interop debugging</PackageTags>
+    <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
     <IsAotCompatible Condition="'$(TargetFramework)' == '$(NetCurrent)'">true</IsAotCompatible>
   </PropertyGroup>
 
   <ItemGroup>
     <InternalsVisibleTo Include="Microsoft.DiaSymReader.PortablePdb" />
     <InternalsVisibleTo Include="Microsoft.DiaSymReader.UnitTests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="PACKAGE.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
